@@ -1,16 +1,23 @@
 public abstract class Zombie extends Characters{
-    protected double attackPower;
-
-    public Zombie(double health, double attackPower) {
-        super(health);
+    protected int attackPower;
+    protected int speed;
+    public Zombie(int attackPower,int speed) {
         this.attackPower = attackPower;
+        this.speed=speed;
     }
 
+    public Zombie(int attackPower, int x, int y, int health,int speed) {
+        super(x, y, health);
+        this.attackPower = attackPower;
+        this.speed=speed;
+    }
+
+   
     public double getAttackPower() {
         return attackPower;
     }
 
-    public void setAttackPower(double attackPower) {
+    public void setAttackPower(int attackPower) {
         this.attackPower = attackPower;
     }
 
@@ -26,39 +33,69 @@ public abstract class Zombie extends Characters{
      * @param health
      */
     @Override
-    public void setHealth(double health) {
+    public void setHealth(int health) {
         super.setHealth(health);
     }
-
-    /**
-     * @param position
-     */
-    @Override
-    public void setPosition(int[][] position) {
-        super.setPosition(position);
+@Override
+    public int getX() {
+        return x;
+    }
+@Override
+    public void setX(int x) {
+        this.x = x;
+    }
+@Override
+    public int getY() {
+        return y;
     }
 
-    /**
-     * @return
-     */
-    @Override
-    public int[][] getPosition() {
-        return super.getPosition();
+   @Override
+    public void setY(int y) {
+        this.y = y;
+    }
+@Override
+    public double getWaitingTime() {
+        return waitingTime;
+    }
+@Override
+    public void setWaitingTime(double waitingTime) {
+        this.waitingTime = waitingTime;
     }
 
-    /**
-     *
-     */
-    @Override
-    public void action() {
-        super.action();//to be implemented
+    public int getSpeed() {
+        return speed;
     }
 
-    /**
-     *
-     */
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+   
+    
+    public void move(){
+        while(isAlive()){
+            x--;
+        }
+        
+    }
+    
+
+    @Override
+    public void takeDamage(int damage) {
+        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public boolean isAlive() {
+        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
+    
     @Override
     public void disappear() {
-        super.disappear();//to be implemented
+      
+        System.out.println("zombie is dead");
+      
     }
 }

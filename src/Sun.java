@@ -30,29 +30,17 @@ public class Sun extends MainElements
         this.x = x;
     }
 
-    @Override
-    public void setPosition(int[][] position)
-    {
-        super.setPosition(position);
-    }
+   public void  move(){
+      y--;
+  }
 
-    @Override
-    public int[][] getPosition()
-    {
-        return super.getPosition();
-    }
-
-    @Override
-    public void action()
-    {
-
-        x--;
-    }
+  
 
 
     @Override
     public void disappear()
     {
+        
         System.out.println("sun collected");
         //assuming that the sun was collected and added to the player resources
     }

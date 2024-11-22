@@ -1,10 +1,10 @@
 public class ConeZombie extends Zombie
 {
-    public ConeZombie(double health, double attackPower)
-    {
-        super(health, attackPower);
-    }
 
+    public ConeZombie(int attackPower, int x, int y, int health, int speed) {
+        super(attackPower, x, y, health, speed);
+    }
+   
     @Override
     public double getAttackPower()
     {
@@ -12,7 +12,7 @@ public class ConeZombie extends Zombie
     }
 
     @Override
-    public void setAttackPower(double attackPower)
+    public void setAttackPower(int attackPower)
     {
         super.setAttackPower(attackPower);
     }
@@ -24,28 +24,67 @@ public class ConeZombie extends Zombie
     }
 
     @Override
-    public void setHealth(double health)
+    public void setHealth(int health)
     {
         super.setHealth(health);
     }
 
     @Override
-    public void setPosition(int[][] position)
-    {
-        super.setPosition(position);
+    public boolean isAlive() {
+        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override
-    public int[][] getPosition()
-    {
-        return super.getPosition();
+    public void takeDamage(int damage) {
+        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override
-    public void action()
-    {
-        //to be implemented
+    public void move() {
+        super.move(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
+
+    @Override
+    public void setSpeed(int speed) {
+        super.setSpeed(speed); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getSpeed() {
+        return super.getSpeed(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void setWaitingTime(double waitingTime) {
+        super.setWaitingTime(waitingTime); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public double getWaitingTime() {
+        return super.getWaitingTime(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getY() {
+        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getX() {
+        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+   
 
     @Override
     public void disappear()
