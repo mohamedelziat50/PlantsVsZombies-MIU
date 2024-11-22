@@ -1,16 +1,44 @@
 public abstract class Plants extends Characters
 {
     protected int cost;
-    protected double waitingTime;
-    protected int damage;//add in uml diagram
+    
+    
 
-    public Plants(double health, int cost, double waitingTime, int damage)
-    {
-        super(health);
+    public Plants() {
+    }
+
+   
+    public Plants(int cost, double waitingTime) {
         this.cost = cost;
         this.waitingTime = waitingTime;
-        this.damage=damage;
+        
     }
+
+    public Plants(int cost, double waitingTime, int x, int y, int health) {
+        super(x, y, health);
+        this.cost = cost;
+        this.waitingTime = waitingTime;
+        
+    }
+@Override
+    public int getX() {
+        return x;
+    }
+@Override
+    public void setX(int x) {
+        this.x = x;
+    }
+@Override
+    public int getY() {
+        return y;
+    }
+@Override
+    public void setY(int y) {
+        this.y = y;
+    }
+   
+
+  
 
     public int getCost() {
         return cost;
@@ -19,22 +47,17 @@ public abstract class Plants extends Characters
     public void setCost(int cost) {
         this.cost = cost;
     }
-
+@Override
     public double getWaitingTime() {
         return waitingTime;
     }
-
+@Override
     public void setWaitingTime(double waitingTime) {
         this.waitingTime = waitingTime;
     }
 
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
+  
+    public abstract void action();//in sunflower we will consider that it shoots suns 
 
     /**
      * @return
@@ -48,39 +71,15 @@ public abstract class Plants extends Characters
      * @param health
      */
     @Override
-    public void setHealth(double health) {
+    public void setHealth(int health) {
         super.setHealth(health);
     }
 
-    /**
-     * @param position
-     */
-    @Override
-    public void setPosition(int[][] position) {
-        super.setPosition(position);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public int[][] getPosition() {
-        return super.getPosition();
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void action() {
-        super.action();//to be implemented
-    }
-
-    /**
-     *
-     */
+ 
     @Override
     public void disappear() {
-        super.disappear();//to be inmplemented
+        
+        System.out.println("plant is dead");
+      
     }
 }

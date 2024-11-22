@@ -1,23 +1,38 @@
 abstract public class MainElements
 {
-    protected int[][] position;
+    protected int x;
+    protected int y;
 
     public MainElements()
     {
         // position to be initialized with some dimensions.
     }
 
-    public void setPosition(int[][] position)
-    {
-        this.position = position;
+    public MainElements(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public int[][] getPosition()
-    {
-        return position;
+    public int getX() {
+        return x;
     }
 
-    public abstract void action();    // to be overridden
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+   
+
+    
+
 
     public abstract void disappear();      // when an object dies
 

@@ -1,9 +1,11 @@
 public class Potato extends Plants
 {
-    public Potato(double health, int cost, double waitingtime, int damage)
-    {
-        super(health, cost, waitingtime, damage);
+
+    
+    public Potato(int cost, double waitingTime, int x, int y, int health) {
+        super(50, 15, x, y, 250);
     }
+   
 
     @Override
     public int getCost() {
@@ -26,6 +28,8 @@ public class Potato extends Plants
     /**
      * @param waitingTime
      */
+    
+    
     @Override
     public void setWaitingTime(double waitingTime) {
         super.setWaitingTime(waitingTime);
@@ -39,36 +43,37 @@ public class Potato extends Plants
         return super.getHealth();
     }
 
+    
+    
+    @Override
+    public int getX() {
+        return x;
+    }
+@Override
+    public void setX(int x) {
+        this.x = x;
+    }
+@Override
+    public int getY() {
+        return y;
+    }
+
     /**
      * @param health
      */
+    public void setY(int y) {
+        this.y = y;
+    }
+
     @Override
-    public void setHealth(double health) {
+    public void setHealth(int health) {
         super.setHealth(health);
     }
 
-    /**
-     * @param position
-     */
-    @Override
-    public void setPosition(int[][] position) {
-        super.setPosition(position);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public int[][] getPosition() {
-        return super.getPosition();
-    }
-
-    /**
-     *
-     */
+   
     @Override
     public void action() {
-        super.action();//to be implemented
+        //to be implemented
     }
 
     /**

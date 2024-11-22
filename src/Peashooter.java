@@ -1,7 +1,10 @@
 public class Peashooter extends Plants{
-    public Peashooter(double health, int cost, double waitingTime, int damage) {
-        super(health, cost, waitingTime, damage);
+
+   
+    public Peashooter( int x, int y) {
+        super(100, 10, x, y, 100);
     }
+   
 
     /**
      * @return
@@ -47,33 +50,44 @@ public class Peashooter extends Plants{
      * @param health
      */
     @Override
-    public void setHealth(double health) {
+    public void setHealth(int health) {
         super.setHealth(health);
     }
 
-    /**
-     * @param position
-     */
-    @Override
-    public void setPosition(int[][] position) {
-        super.setPosition(position);
+@Override
+    public int getX() {
+        return x;
+    }
+@Override
+    public void setX(int x) {
+        this.x = x;
+    }
+@Override
+    public int getY() {
+        return y;
+    }
+@Override
+    public void setY(int y) {
+        this.y = y;
     }
 
-    /**
-     * @return
-     */
     @Override
-    public int[][] getPosition() {
-        return super.getPosition();
+    public void takeDamage(int damage) {
+        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
-    /**
-     *
-     */
     @Override
-    public void action() {
-        super.action();//to be implemented
+    public boolean isAlive() {
+        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
+
+    @Override
+    public void action() {//to be implemented
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
+  
 
     /**
      *

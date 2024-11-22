@@ -1,83 +1,84 @@
 public class Guava extends Plants{
-    public Guava(double health, int cost, double waitingTime, int damage) {
-        super(health, cost, waitingTime, damage);
+
+    public Guava(int cost, double waitingTime, int x, int y, int health) {
+        super(cost, waitingTime, x, y, health);
     }
 
-    /**
-     * @return
-     */
+    
+    
+    
+    @Override
+    public void setHealth(int health) {
+        super.setHealth(health); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getY() {
+        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getX() {
+        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+  
+
+    
     @Override
     public int getCost() {
         return super.getCost();
     }
 
-    /**
-     * @param cost
-     */
+   
     @Override
     public void setCost(int cost) {
         super.setCost(cost);
     }
 
-    /**
-     * @return
-     */
+   
     @Override
     public double getWaitingTime() {
         return super.getWaitingTime();
     }
 
-    /**
-     * @param waitingTime
-     */
+    
     @Override
     public void setWaitingTime(double waitingTime) {
         super.setWaitingTime(waitingTime);
     }
 
-    /**
-     * @return
-     */
+   
     @Override
     public double getHealth() {
         return super.getHealth();
     }
 
-    /**
-     * @param health
-     */
     @Override
-    public void setHealth(double health) {
-        super.setHealth(health);
+    public void takeDamage(int damage) {
+        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
-    /**
-     * @param position
-     */
     @Override
-    public void setPosition(int[][] position) {
-        super.setPosition(position);
+    public boolean isAlive() {
+        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
-    /**
-     * @return
-     */
-    @Override
-    public int[][] getPosition() {
-        return super.getPosition();
-    }
-
-    /**
-     *
-     */
+    
     @Override
     public void action() {
-        super.action();//to be implemented
+        //to be implemented
     }
 
-    /**
-     *
-     */
     @Override
     public void disappear() {
         super.disappear();

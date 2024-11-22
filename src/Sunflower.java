@@ -1,9 +1,10 @@
 public class Sunflower extends Plants
 {
-    public Sunflower(double health, int cost, double waitingTime, int damage) {
-        super(health, cost, waitingTime, damage);
-    }
 
+    public Sunflower(int cost, double waitingTime, int x, int y, int health) {
+        super(50, 6, x, y, 40);
+    }
+    
     /**
      * @return
      */
@@ -48,32 +49,34 @@ public class Sunflower extends Plants
      * @param health
      */
     @Override
-    public void setHealth(double health) {
+    public void setHealth(int health) {
         super.setHealth(health);
     }
 
-    /**
-     * @param position
-     */
-    @Override
-    public void setPosition(int[][] position) {
-        super.setPosition(position);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public int[][] getPosition() {
-        return super.getPosition();
-    }
-
-    /**
-     *
-     */
+    
     @Override
     public void action() {
-        super.action();//to be implemented
+     //to be implemented
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getY() {
+        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getX() {
+        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     /**

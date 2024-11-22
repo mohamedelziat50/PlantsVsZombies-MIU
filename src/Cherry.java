@@ -1,9 +1,10 @@
 public class Cherry extends Plants
 {
-    public Cherry(double health, int cost, double waitingTime,int damage)
-    {
-        super(health, cost, waitingTime,damage);
+
+    public Cherry(int cost, double waitingTime, int x, int y, int health) {
+        super(cost, waitingTime, x, y, health);
     }
+    
 
     @Override
     public int getCost()
@@ -36,22 +37,32 @@ public class Cherry extends Plants
     }
 
     @Override
-    public void setHealth(double health)
+    public void setHealth(int health)
     {
         super.setHealth(health);
     }
 
     @Override
-    public void setPosition(int[][] position)
-    {
-        super.setPosition(position);
+    public void setY(int y) {
+        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override
-    public int[][] getPosition()
-    {
-        return super.getPosition();
+    public int getY() {
+        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    @Override
+    public int getX() {
+        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    
 
     @Override
     public void action()
