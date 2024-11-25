@@ -57,8 +57,7 @@ public class MainMenu implements FileOperations
         int userChoice = 0;
 
         // Exit loop when the user selects 5 or successful login happens
-        while (currentPlayer == null)
-        {
+        while (currentPlayer == null) {
             // Display Stars (Top Border)
             displayStars();
 
@@ -72,46 +71,37 @@ public class MainMenu implements FileOperations
             displayStars();
 
             // Try-Catch block in case of InputMismatch
-            try
-            {
+            try {
                 // Prompt user for input
                 System.out.print("Enter your choice: ");
                 userChoice = input.nextInt();
                 input.nextLine(); // Clear buffer
-            }
-            catch (InputMismatchException exception)
-            {
+            } catch (InputMismatchException exception) {
                 System.out.println("Exception inside displayMenu(): User entered invalid type for input. Exiting program");
                 System.exit(1);
             }
 
             // Handle user choice
-            switch (userChoice)
-            {
+            switch (userChoice) {
                 // Sign in
                 case 1:
                     System.out.println("Sign in selected.");
-                    if(!signIn(input))
+                    if (!signIn(input))
                         System.out.println("Sign-in failed.");
                     break;
                 // Create Account
                 case 2:
                     System.out.println("Create Account selected.");
                     // If successful!
-                    if(createAccount(input))
-                    {
+                    if (createAccount(input)) {
                         // Load all players from the file, since a new account has been added.
-                        try
-                        {
+                        try {
                             PlayersGameData = loadPlayers();
                             System.out.println("Account created successfully.");
-                        }
-                        catch (Exception exception)
-                        {
+                        } catch (Exception exception) {
                             System.out.println("Exception inside displayMenu(): " + exception);
                         }
-                    }
-                    else
+                    } else
                         System.out.println("Account creation failed.");
                     break;
                 // Display Users
@@ -127,76 +117,67 @@ public class MainMenu implements FileOperations
                     System.out.println("Invalid choice! Please select a valid option.");
                     break;
             }
+
+
+            // re-set userChoice
+            userChoice = 0;
+
+            // If successful login happens
+            while (currentPlayer != null && userChoice != 1) {
+                // Display Stars (Top Border)
+                displayStars();
+
+                // Display menu options
+                System.out.println("1. Start Adventure!");
+                System.out.println("2. Delete Account");
+                System.out.println("3. Exit");
+
+                // Display Stars (Bottom Border)
+                displayStars();
+
+                // Try-Catch block in case of InputMismatch
+                try {
+                    // Prompt user for input
+                    System.out.print("Enter your choice: ");
+                    userChoice = input.nextInt();
+                    input.nextLine(); // Clear buffer
+                } catch (InputMismatchException exception) {
+                    System.out.println("Exception inside displayMenu(): User entered invalid type for input. Exiting program");
+                    System.exit(1);
+                }
+
+                // Handle user choice
+                switch (userChoice) {
+                    // Start Adventure!
+                    case 1:
+                        System.out.println("Let's Start the Adventure!");
+                        break;
+                    // Delete Account
+                    case 2:
+                        System.out.println("Delete Account selected.");
+                        if (deleteAccount(input)) {
+                            // Load all players from the file, since an account has been deleted.
+                            try {
+                                PlayersGameData = loadPlayers();
+                                System.out.println("Account deleted successfully.");
+                            } catch (Exception exception) {
+                                System.out.println("Exception inside displayMenu(): " + exception);
+                            }
+                        } else
+                            System.out.println("Account deletion failed.");
+                        break;
+                    // Exit Program
+                    case 3:
+                        System.out.println("Exiting... Goodbye!");
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice! Please select a valid option.");
+                        break;
+                }
+            }
+
+            // To be continued
         }
-
-        // re-set userChoice
-        userChoice = 0;
-
-        // If successful login happens
-        while(currentPlayer != null && userChoice != 1)
-        {
-            // Display Stars (Top Border)
-            displayStars();
-
-            // Display menu options
-            System.out.println("1. Start Adventure!");
-            System.out.println("2. Delete Account");
-            System.out.println("3. Exit");
-
-            // Display Stars (Bottom Border)
-            displayStars();
-
-            // Try-Catch block in case of InputMismatch
-            try
-            {
-                // Prompt user for input
-                System.out.print("Enter your choice: ");
-                userChoice = input.nextInt();
-                input.nextLine(); // Clear buffer
-            }
-            catch (InputMismatchException exception)
-            {
-                System.out.println("Exception inside displayMenu(): User entered invalid type for input. Exiting program");
-                System.exit(1);
-            }
-
-            // Handle user choice
-            switch (userChoice)
-            {
-                // Start Adventure!
-                case 1:
-                    System.out.println("Let's Start the Adventure!");
-                    break;
-                // Delete Account
-                case 2:
-                    System.out.println("Delete Account selected.");
-                    if(deleteAccount(input))
-                    {
-                        // Load all players from the file, since an account has been deleted.
-                        try
-                        {
-                            PlayersGameData = loadPlayers();
-                            System.out.println("Account deleted successfully.");
-                        }
-                        catch (Exception exception)
-                        {
-                            System.out.println("Exception inside displayMenu(): " + exception);
-                        }
-                    }
-                    else
-                        System.out.println("Account deletion failed.");
-                    break;
-                // Exit Program
-                case 3:
-                    System.out.println("Exiting... Goodbye!");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice! Please select a valid option.");
-                    break;
-            }
-        }
-
-        // To be continued
     }
 
     public boolean signIn(Scanner input)
@@ -330,6 +311,9 @@ public class MainMenu implements FileOperations
             System.out.println("Exception inside deleteAccount(): Error deleting account: " + exception);
             return false;
         }
+
+        // Sign out, e.g: set currentPlayer = null
+        signOut();
 
         return true;
     }
