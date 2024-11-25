@@ -1,4 +1,4 @@
-public class Guava extends Plants{
+public class Guava extends Plant {
 
     public Guava(int cost, double waitingTime, int x, int y, int health) {
         super(cost, waitingTime, x, y, health);
