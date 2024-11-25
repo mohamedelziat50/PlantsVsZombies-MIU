@@ -1,4 +1,4 @@
-public class Potato extends Plants
+public class Potato extends Plant
 {
 
     

@@ -1,4 +1,4 @@
-public class IcedPea extends Plants{
+public class IcedPea extends Plant {
 
     public IcedPea(int cost, double waitingTime, int x, int y, int health) {
         super(cost, waitingTime, x, y, health);

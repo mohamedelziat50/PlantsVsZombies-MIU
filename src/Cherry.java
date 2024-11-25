@@ -1,4 +1,4 @@
-public class Cherry extends Plants
+public class Cherry extends Plant
 {
 
     public Cherry(int cost, double waitingTime, int x, int y, int health) {
