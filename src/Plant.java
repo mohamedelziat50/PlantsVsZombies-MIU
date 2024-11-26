@@ -1,20 +1,18 @@
-public abstract class Plants extends Characters
+public abstract class Plant extends Characters
 {
     protected int cost;
-    
-    
 
-    public Plants() {
+    public Plant() {
     }
 
    
-    public Plants(int cost, double waitingTime) {
+    public Plant(int cost, double waitingTime) {
         this.cost = cost;
         this.waitingTime = waitingTime;
         
     }
 
-    public Plants(int cost, double waitingTime, int x, int y, int health) {
+    public Plant(int cost, double waitingTime, int x, int y, int health) {
         super(x, y, health);
         this.cost = cost;
         this.waitingTime = waitingTime;

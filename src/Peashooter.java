@@ -1,4 +1,4 @@
-public class Peashooter extends Plants{
+public class Peashooter extends Plant {
 
    
     public Peashooter( int x, int y) {

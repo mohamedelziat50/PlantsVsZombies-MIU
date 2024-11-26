@@ -1,7 +1,7 @@
 public abstract class Characters extends MainElements
 {
     protected int health;
-   protected double waitingTime;
+    protected double waitingTime;
 
     public Characters() 
     {

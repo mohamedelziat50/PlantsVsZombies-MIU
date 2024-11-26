@@ -1,4 +1,4 @@
-public class Sunflower extends Plants
+public class Sunflower extends Plant
 {
 
     public Sunflower(int cost, double waitingTime, int x, int y, int health) {
