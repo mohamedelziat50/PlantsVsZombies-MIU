@@ -7,7 +7,7 @@ import java.util.HashMap;
 // Interface that implements default methods for common functionality between classes.
 public interface FileOperations
 {
-    String playersFilePath = "C:\\Users\\MH\\Desktop\\PlantsVsZombies-MIU\\src\\resources\\players.dat";
+    String playersFilePath = "players.dat";
 
     // Function to load players from the players.dat file
     default HashMap<String, Player> loadPlayers() throws IOException
