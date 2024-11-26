@@ -130,7 +130,7 @@ public class MainMenu implements FileOperations
                 // Display menu options
                 System.out.println("1. Start Adventure!");
                 System.out.println("2. Delete Account");
-                System.out.println("3. Exit");
+                System.out.println("3. logout");
 
                 // Display Stars (Bottom Border)
                 displayStars();
@@ -165,11 +165,12 @@ public class MainMenu implements FileOperations
                             }
                         } else
                             System.out.println("Account deletion failed.");
+
                         break;
                     // Exit Program
                     case 3:
-                        System.out.println("Exiting... Goodbye!");
-                        System.exit(0);
+                        signOut();
+                        break;
                     default:
                         System.out.println("Invalid choice! Please select a valid option.");
                         break;

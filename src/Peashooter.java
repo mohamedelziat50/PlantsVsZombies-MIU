@@ -1,6 +1,7 @@
 public class Peashooter extends Plant {
 
-   
+   private Pea pea=new Pea(20);
+   private Zombie zombie;
     public Peashooter( int x, int y) {
         super(100, 10, x, y, 100);
     }
@@ -83,7 +84,10 @@ public class Peashooter extends Plant {
 
     @Override
     public void action() {//to be implemented
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    while(isAlive()){
+        pea.shot(zombie);
+
+    }
     }
 
     

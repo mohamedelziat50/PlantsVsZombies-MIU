@@ -1,5 +1,6 @@
 public class IcedPea extends Plant {
-
+    private  Pea pea=new Pea(20);
+    private Zombie zombie;
     public IcedPea(int cost, double waitingTime, int x, int y, int health) {
         super(cost, waitingTime, x, y, health);
     }
@@ -71,7 +72,17 @@ public class IcedPea extends Plant {
 
     @Override
     public void action() {
-//to be implemented
+        int origzombieSpeed=zombie.getSpeed();
+        int zombieSpeed=zombie.getSpeed()-10;
+
+        while(isAlive()){
+            pea.shot(zombie);
+            if(pea.getPeaPositionX()== zombie.getX()) {
+                zombie.setSpeed(zombieSpeed);
+            }
+            //sleep
+            //zombie.setSpeed(origzombieSpeed);
+        }
     }
    
 
