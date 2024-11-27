@@ -1,9 +1,17 @@
-public abstract class Zombie extends Characters{
+public abstract class Zombie extends Characters
+{
     protected int attackPower;
     protected int speed;
-    public Zombie(int attackPower,int speed) {
+    // ADD WAITING TIME FOR ATTACKING
+
+    public Zombie() {}
+
+    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interfaace
+    public Zombie(int attackPower,int speed, int health)
+    {
         this.attackPower = attackPower;
-        this.speed=speed;
+        this.speed = speed;
+        this.health = health;
     }
 
     public Zombie(int attackPower, int x, int y, int health,int speed) {

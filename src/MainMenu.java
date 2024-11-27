@@ -12,6 +12,10 @@ public class MainMenu implements FileOperations
     // HashMap to swiftly access all the players' data.
     private HashMap<String, Player> PlayersGameData;
 
+    // Key is the level number, and the value is the corresponding Level object. This allows the Player to choose from the unlocked levels.
+    // MainMenu can filter LevelGameData using the unlockedLevels list to display only those levels for selection.
+    private HashMap<Integer, Level> LevelGameData;
+
     // Current player accessing the main menu.
     private Player currentPlayer;
 
@@ -28,10 +32,13 @@ public class MainMenu implements FileOperations
         {
             // Load players from file, so that the players' data is available for operations.
             PlayersGameData = loadPlayers();
+
+            // Load all levels' data from file
+            LevelGameData = loadLevels();
         }
         catch (Exception exception)
         {
-            System.out.println("Exception inside MainMenu(): Error loading player data from file: " + exception);
+            System.out.println("Exception inside MainMenu(): Error loading data from file: " + exception);
         }
     }
 
@@ -130,7 +137,7 @@ public class MainMenu implements FileOperations
                 // Display menu options
                 System.out.println("1. Start Adventure!");
                 System.out.println("2. Delete Account");
-                System.out.println("3. logout");
+                System.out.println("3. Sign Out");
 
                 // Display Stars (Bottom Border)
                 displayStars();
@@ -151,6 +158,7 @@ public class MainMenu implements FileOperations
                     // Start Adventure!
                     case 1:
                         System.out.println("Let's Start the Adventure!");
+                        displayLevels();
                         break;
                     // Delete Account
                     case 2:
@@ -169,6 +177,7 @@ public class MainMenu implements FileOperations
                         break;
                     // Exit Program
                     case 3:
+                        System.out.println("Sign out selected.");
                         signOut();
                         break;
                     default:
@@ -317,5 +326,29 @@ public class MainMenu implements FileOperations
         signOut();
 
         return true;
+    }
+
+    public void displayLevels()
+    {
+        // Exit if the LevelGameData is empty, then something wrong happened.
+        if(LevelGameData.isEmpty())
+        {
+            System.out.println("No Level Data to display. Logical Error Occurred. Exiting Program");
+            System.exit(1);
+        }
+
+        // Save data into arrayList and sort it!
+        ArrayList<Integer> sortedLevels = new ArrayList<>(LevelGameData.keySet());
+        Collections.sort(sortedLevels);
+
+        // Constant level in the game.
+        final int LEVEL_COUNT = 3;
+
+        // Display Levels
+        displayStars();
+        System.out.println("Levels: ");
+        for(int i = 1; i <= LEVEL_COUNT; i++)
+            System.out.println(i + ". Level " + i);
+        displayStars();
     }
 }

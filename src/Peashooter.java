@@ -1,8 +1,16 @@
 public class Peashooter extends Plant {
 
-   private Pea pea=new Pea(20);
+   private final Pea pea=new Pea(20);
    private Zombie zombie;
-    public Peashooter( int x, int y) {
+
+    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interface
+   public Peashooter()
+   {
+       super(100, 15, 50);
+   }
+
+    public Peashooter(int x, int y)
+    {
         super(100, 10, x, y, 100);
     }
    

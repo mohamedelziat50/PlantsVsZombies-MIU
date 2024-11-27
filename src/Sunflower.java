@@ -1,6 +1,6 @@
 public class Sunflower extends Plant
 {
-
+    public Sunflower() {}
     public Sunflower(int cost, double waitingTime, int x, int y, int health) {
         super(50, 6, x, y, 40);
     }

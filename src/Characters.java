@@ -1,14 +1,14 @@
-public abstract class Characters extends MainElements
+import java.io.Serializable;
+
+public abstract class Characters extends MainElements implements Serializable
 {
     protected int health;
     protected double waitingTime;
 
-    public Characters() 
-    {
-        
-    }
+    public Characters() {}
 
-    public Characters(int x, int y,int health) {
+    public Characters(int x, int y,int health)
+    {
         super(x, y);
         this.health=health;
     }

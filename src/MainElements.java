@@ -8,7 +8,8 @@ abstract public class MainElements
         // position to be initialized with some dimensions.
     }
 
-    public MainElements(int x, int y) {
+    public MainElements(int x, int y)
+    {
         this.x = x;
         this.y = y;
     }
