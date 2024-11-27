@@ -1,10 +1,9 @@
 import java.io.Serializable;
 
-public class Pea implements Serializable
+public class Pea extends Characters implements Serializable
 {
     protected int peaPositionX;
     protected int damage;
-
     
     public Pea(int damage)
     {
@@ -20,17 +19,19 @@ public class Pea implements Serializable
         return peaPositionX;
     }
 
-
-
     public void shot(Zombie zombie)
     {
         peaPositionX+=5; // for when the peashooter starts shooting peas
-        if(zombie.getX()==this.getPeaPositionX()){
+        if(zombie.getX()==this.getPeaPositionX())
+        {
             zombie.takeDamage(this.damage);
-            // delete the pea
+            disappear();
         }
     }
 
-
-
+    @Override
+    public void disappear()
+    {
+        System.out.println("Pea disappears.");
+    }
 }

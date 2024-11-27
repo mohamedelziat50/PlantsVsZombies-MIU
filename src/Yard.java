@@ -3,7 +3,8 @@ import java.util.Random;
 public class Yard
 {
     private  final int ROWS = 5, COLUMNS = 9;
-    private  Characters[][] grid;
+    private int zombieSpawnInterval = 60;
+    private Characters[][] grid;
     private LawnMower[] lawnMowers;
 
 
@@ -11,23 +12,23 @@ public class Yard
     also is used to make instance of the lawn mowers at the beginning of each row.*/
     public Yard()
     {
+        // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
+        // Intiliaze Lawn Mowers Object for each row.
         lawnMowers = new LawnMower[ROWS];
         for (int i = 0; i < ROWS; i++)
-        {
             lawnMowers[i] = new LawnMower();
-        }
     }
 
-
-    // getter
+    // Get character at the specific position inside the grid.
     public Characters getCharacter(int row, int col)
     {
+        // Validate position before returning character inside the cell.
         if (isValidPosition(row, col))
-        {
             return grid[row][col];
-        }
+
+        // Return Null for now, will be used in GUI.
         return null;
     }
 
@@ -38,30 +39,25 @@ public class Yard
         if (isValidPosition(row, col) && grid[row][col] == null)
         {
             grid[row][col] = plant;
-            System.out.println("plant placed successfully");
+            System.out.println("Plant Placed Successfully.");
         }
         else
-        {
-            System.out.println("failed to place plant, one already exists at this cell");
-        }
+            System.out.println("Failed to place plant, one already exists at this cell.");
 
     }
 
-
-    /* spawns a zombie, used the static method setZombieSpawnInterval in seconds to detect how much would it
+    /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
     public void spawnZombie(Zombie zombie, int col) throws InterruptedException
     {
-
         Random random = new Random();
         while(true)
         {
-            Thread.sleep(Level.getZombieSpawnInterval()*1000);
+            Thread.sleep(zombieSpawnInterval * 1000);
             int zombieSpawnRow = random.nextInt(5);
             grid[zombieSpawnRow][COLUMNS-1] = zombie;
             System.out.println("zombie placed at row" + zombieSpawnRow);
         }
-
     }
 
 
@@ -74,11 +70,9 @@ public class Yard
                 grid[row][col] = null;
                 return true;
             }
-
         }
         return false;
     }
-
 
     /* a method made to check if the current cell ur trying to place a plant at lies between the
      interval of rows and columns in the 2d array */
@@ -89,10 +83,10 @@ public class Yard
 
     public void moveLawnMower()
     {
-
         LawnMower lawnMower=new LawnMower();
-        int x=lawnMower.getX();
-        for (int col = 0; col < COLUMNS-1; col++) {
+        int x = lawnMower.getX();
+        for (int col = 0; col < COLUMNS-1; col++)
+        {
             if (grid[x][col+1] instanceof Zombie) {
                 grid[x][col+1] = null; // Remove zombie from the grid
             }
@@ -100,12 +94,12 @@ public class Yard
             lawnMower.setY(lawnMower.getY()+1);
         }
 
+        lawnMower.disappear();
     }
 
     public boolean activateLawnMower(int row)
     {
-        int position;
-        if (row >= 0 && row < ROWS && lawnMowers[row] != null)
+        if (row >= 0 && row < ROWS && lawnMowers[row] != null && grid[row][1] instanceof Zombie)
         {
             moveLawnMower();
             lawnMowers[row] = null;
@@ -113,10 +107,5 @@ public class Yard
         }
         return false;
     }
-
-
-
-
-
 
 }

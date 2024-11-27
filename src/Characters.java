@@ -12,8 +12,7 @@ public abstract class Characters extends MainElements implements Serializable
         super(x, y);
         this.health=health;
     }
-
-   
+    
     @Override
     public int getX() {
         return x;
@@ -39,9 +38,6 @@ public abstract class Characters extends MainElements implements Serializable
         this.waitingTime = waitingTime;
     }
 
-    
-    
-
     public double getHealth()
     {
         return health;
@@ -52,28 +48,23 @@ public abstract class Characters extends MainElements implements Serializable
         this.health = health;
     }
 
-    
     public boolean isAlive()
     {
         return health>0;
     }
-  
 
    public void takeDamage(int damage)
    {
-       if(isAlive()){
+       if(isAlive())
            health-=damage;
-       }
-       else{
+       else
            disappear();
-       }
    }
    
    
 
     @Override
     public abstract void disappear();
-    
 }
 
 

@@ -9,7 +9,6 @@ public class Level implements Serializable
     // Represents the level number, durationInSeconds, and zombie spawn interval for each specific level.
     private int levelNumber;
     private int durationInSeconds;
-    private static int zombieSpawnInterval;
 
     // Represents the unlocked plants & zombies for each level object.
     private ArrayList<Plant> unlockedPlants;
@@ -21,11 +20,10 @@ public class Level implements Serializable
         CONSTRUCTORS
      */
     // Normal Constructor
-    public Level(int levelNumber, int durationInSeconds, int zombieSpawnInterval, ArrayList<Plant> unlockedPlants, ArrayList<Zombie> unlockedZombies)
+    public Level(int levelNumber, int durationInSeconds, ArrayList<Plant> unlockedPlants, ArrayList<Zombie> unlockedZombies)
     {
         this.levelNumber = levelNumber;
         this.durationInSeconds = durationInSeconds;
-        this.zombieSpawnInterval = zombieSpawnInterval;
 
         // Correctly copy the object into a new object, not references.
         this.unlockedPlants = new ArrayList<>(unlockedPlants);
@@ -35,6 +33,12 @@ public class Level implements Serializable
     /*
         METHODS
      */
+
+    // Once Player selects a level, this function will be called to display the game and grid of the Yard.
+    public void startLevel()
+    {
+        currentYard = new Yard();
+    }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,
     // such as populating it with unlocked plants and handling zombies.
@@ -57,14 +61,6 @@ public class Level implements Serializable
 
     public void setDurationInSeconds(int durationInSeconds) {
         this.durationInSeconds = durationInSeconds;
-    }
-
-    public static int getZombieSpawnInterval() {
-        return zombieSpawnInterval;
-    }
-
-    public void setZombieSpawnInterval(int zombieSpawnInterval) {
-        this.zombieSpawnInterval = zombieSpawnInterval;
     }
 
     public ArrayList<Plant> getUnlockedPlants() {

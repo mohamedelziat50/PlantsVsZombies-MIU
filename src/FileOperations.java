@@ -220,7 +220,6 @@ public interface FileOperations
             Level level1 = new Level (
                     1,              // Level Number
                     60,                        // Duration in seconds
-                    15,                        // Zombie spawn interval
                     level1UnlockedPlants,      // Unlocked plants
                     level1UnlockedZombies     // Unlocked zombies
                     // Yard configuration is null
