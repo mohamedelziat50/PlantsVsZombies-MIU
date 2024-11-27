@@ -1,7 +1,7 @@
 public class LawnMower extends MainElements{
 
-    public LawnMower(int y) {
-        super(0, y);
+    public LawnMower() {
+
     }
 
     @Override
@@ -24,15 +24,7 @@ public class LawnMower extends MainElements{
         return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
- 
-    
 
-
-
-    
-    public void action() {
-     //if zombie x== lawnmower x clear the row
-    }
 
 
     @Override
