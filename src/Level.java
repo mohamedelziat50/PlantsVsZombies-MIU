@@ -7,7 +7,9 @@ public class Level implements Serializable
         MEMBER VARIABLES
      */
     // Represents the level number, durationInSeconds, and zombie spawn interval for each specific level.
-    private int levelNumber, durationInSeconds, zombieSpawnInterval;
+    private int levelNumber;
+    private int durationInSeconds;
+    private static int zombieSpawnInterval;
 
     // Represents the unlocked plants & zombies for each level object.
     private ArrayList<Plant> unlockedPlants;
@@ -57,7 +59,7 @@ public class Level implements Serializable
         this.durationInSeconds = durationInSeconds;
     }
 
-    public int getZombieSpawnInterval() {
+    public static int getZombieSpawnInterval() {
         return zombieSpawnInterval;
     }
 
