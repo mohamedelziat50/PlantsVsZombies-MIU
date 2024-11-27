@@ -9,8 +9,7 @@ public class Player implements Serializable
     // Username and Password
     private String username, password;
 
-    // Levels, indicating the levels unlocked by the player.
-    private ArrayList<Level> levelsUnlocked; // Will need a function to load levels unlocked from file.
+    // Removed unlockedLevels, will just let any player select any level!
 
     /*
         CONSTRUCTORS

@@ -2,14 +2,14 @@ public abstract class Plant extends Characters
 {
     protected int cost;
 
-    public Plant() {
-    }
+    public Plant() {}
 
-   
-    public Plant(int cost, double waitingTime) {
+    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Plant(int cost, double waitingTime, int health)
+    {
         this.cost = cost;
         this.waitingTime = waitingTime;
-        
+        this.health = health;
     }
 
     public Plant(int cost, double waitingTime, int x, int y, int health) {

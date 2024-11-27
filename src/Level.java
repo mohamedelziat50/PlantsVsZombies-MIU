@@ -1,58 +1,105 @@
-import java.util.List;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Level
+public class Level implements Serializable
 {
     /*
         MEMBER VARIABLES
      */
-    // Represents the level number
-    private int levelNumber;
+    // Represents the level number, durationInSeconds, and zombie spawn interval for each specific level.
+    private int levelNumber, durationInSeconds, zombieSpawnInterval;
+
+    // Represents the Dimensions for the Yard for each level which will be constant.
+    private final int ROWS = 5, COLUMNS = 9;
 
     // Represents the unlocked plants & zombies for each level object.
-    private List<Plant> unlockedPlants;
-    private List<Zombie> unlockedZombies;
+    private ArrayList<Plant> unlockedPlants;
+    private ArrayList<Zombie> unlockedZombies;
 
     private Yard currentYard;
 
     /*
         CONSTRUCTORS
      */
-    public Level(int levelNumber, List<Plant> unlockedPlants, List<Zombie> unlockedZombies, Yard currentYard)
+    // Normal Constructor
+    public Level(int levelNumber, int durationInSeconds, int zombieSpawnInterval, ArrayList<Plant> unlockedPlants, ArrayList<Zombie> unlockedZombies)
     {
         this.levelNumber = levelNumber;
-        this.unlockedPlants = unlockedPlants;
-        this.unlockedZombies = unlockedZombies;
-        this.currentYard = currentYard;
+        this.durationInSeconds = durationInSeconds;
+        this.zombieSpawnInterval = zombieSpawnInterval;
+
+        // Correctly copy the object into a new object, not references.
+        this.unlockedPlants = new ArrayList<>(unlockedPlants);
+        this.unlockedZombies = new ArrayList<>(unlockedZombies);
     }
 
+    /*
+        METHODS
+     */
+
+    // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,
+    // such as populating it with unlocked plants and handling zombies.
+
+    //
     /*
         GETTERS & SETTERS
      */
     public int getLevelNumber() {
         return levelNumber;
     }
+
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
     }
-    public List<Plant> getUnlockedPlants() {
+
+    public int getDurationInSeconds() {
+        return durationInSeconds;
+    }
+
+    public void setDurationInSeconds(int durationInSeconds) {
+        this.durationInSeconds = durationInSeconds;
+    }
+
+    public int getZombieSpawnInterval() {
+        return zombieSpawnInterval;
+    }
+
+    public void setZombieSpawnInterval(int zombieSpawnInterval) {
+        this.zombieSpawnInterval = zombieSpawnInterval;
+    }
+
+    public int getROWS() {
+        return ROWS;
+    }
+
+    public int getCOLUMNS() {
+        return COLUMNS;
+    }
+
+    public ArrayList<Plant> getUnlockedPlants() {
         return unlockedPlants;
     }
-    public void setUnlockedPlants(List<Plant> unlockedPlants) {
+
+    public void setUnlockedPlants(ArrayList<Plant> unlockedPlants) {
         this.unlockedPlants = unlockedPlants;
     }
-    public List<Zombie> getUnlockedZombies() {
+
+    public ArrayList<Zombie> getUnlockedZombies() {
         return unlockedZombies;
     }
-    public void setUnlockedZombies(List<Zombie> unlockedZombies) {
+
+    public void setUnlockedZombies(ArrayList<Zombie> unlockedZombies) {
         this.unlockedZombies = unlockedZombies;
     }
+
     public Yard getCurrentYard() {
         return currentYard;
     }
+
     public void setCurrentYard(Yard currentYard) {
         this.currentYard = currentYard;
     }
-
 }
 
 /*

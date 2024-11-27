@@ -1,4 +1,6 @@
-public class Pea
+import java.io.Serializable;
+
+public class Pea implements Serializable
 {
     protected int peaPositionX;
     protected int damage;
