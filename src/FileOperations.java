@@ -216,9 +216,6 @@ public interface FileOperations
             ArrayList<Zombie> level1UnlockedZombies = new ArrayList<>();
             level1UnlockedZombies.add(new DefaultZombie());
 
-            // Yard for each specfic level
-            Yard level1Yard = new Yard();
-
             // Create Levels manually.
             Level level1 = new Level (
                     1,              // Level Number

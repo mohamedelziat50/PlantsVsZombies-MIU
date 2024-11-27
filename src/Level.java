@@ -1,6 +1,5 @@
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.io.Serializable;
 
 public class Level implements Serializable
 {
@@ -9,9 +8,6 @@ public class Level implements Serializable
      */
     // Represents the level number, durationInSeconds, and zombie spawn interval for each specific level.
     private int levelNumber, durationInSeconds, zombieSpawnInterval;
-
-    // Represents the Dimensions for the Yard for each level which will be constant.
-    private final int ROWS = 5, COLUMNS = 9;
 
     // Represents the unlocked plants & zombies for each level object.
     private ArrayList<Plant> unlockedPlants;
@@ -67,14 +63,6 @@ public class Level implements Serializable
 
     public void setZombieSpawnInterval(int zombieSpawnInterval) {
         this.zombieSpawnInterval = zombieSpawnInterval;
-    }
-
-    public int getROWS() {
-        return ROWS;
-    }
-
-    public int getCOLUMNS() {
-        return COLUMNS;
     }
 
     public ArrayList<Plant> getUnlockedPlants() {

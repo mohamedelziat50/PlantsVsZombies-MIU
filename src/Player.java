@@ -10,7 +10,7 @@ public class Player implements Serializable
     private String username, password;
 
     // Removed unlockedLevels, will just let any player select any level!
-
+    int lastUnlockedLevel;
     /*
         CONSTRUCTORS
      */
@@ -18,6 +18,7 @@ public class Player implements Serializable
     {
         this.username = username;
         this.password = password;
+        lastUnlockedLevel = 1;
     }
 
     /*

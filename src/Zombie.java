@@ -2,6 +2,7 @@ public abstract class Zombie extends Characters
 {
     protected int attackPower;
     protected int speed;
+    // ADD WAITING TIME FOR ATTACKING
 
     public Zombie() {}
 

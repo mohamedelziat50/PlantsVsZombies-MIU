@@ -2,15 +2,8 @@ import java.util.Map;
 
 public class Yard
 {
-    /*
-        MEMBER VARIABLES
-     */
-    // Private class called Position.
-    private class ObjectPosition { public int x, y;}
-
-    // Map to manage state of game as a "grid"
-    Map<ObjectPosition, Plant> plantGrid; // Position will be constant untill it dies
-    Map<ObjectPosition, Zombie> zombieGrid; // Position will always be updated.
+    // Represents the Dimensions for the Yard for each level which will be constant.
+    private final int ROWS = 5, COLUMNS = 9;
 }
 
 /*
