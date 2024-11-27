@@ -30,14 +30,8 @@ abstract public class MainElements
         this.y = y;
     }
 
-   
-
-    
-
 
     public abstract void disappear();      // when an object dies
-
-
 }
 
 
