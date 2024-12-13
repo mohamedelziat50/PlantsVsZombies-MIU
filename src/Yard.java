@@ -121,8 +121,8 @@ public class Yard
 
         // Create the ImageView for the yard background
         ImageView yardImageView = new ImageView();
-        yardImageView.setFitHeight(650);  // Set the height as in FXML
-        yardImageView.setFitWidth(1278);  // Set the width as in FXML
+        yardImageView.setFitHeight(650);
+        yardImageView.setFitWidth(1278);
         yardImageView.setPickOnBounds(true);  // Ensure the ImageView reacts to clicks
 
         // Set the image for the ImageView

@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <AnchorPane prefHeight="650.0" prefWidth="1278.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="YardView">
    <children>
       <ImageView fitHeight="650.0" fitWidth="1278.0" pickOnBounds="true">
