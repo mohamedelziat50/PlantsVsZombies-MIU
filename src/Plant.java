@@ -4,7 +4,7 @@ public abstract class Plant extends Characters
 
     public Plant() {}
 
-    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interface
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Plant(int cost, double waitingTime, int health)
     {
         this.cost = cost;
@@ -12,31 +12,22 @@ public abstract class Plant extends Characters
         this.health = health;
     }
 
-    public Plant(int cost, double waitingTime, int x, int y, int health) {
-        super(x, y, health);
-        this.cost = cost;
-        this.waitingTime = waitingTime;
-        
-    }
-@Override
+    @Override
     public int getX() {
         return x;
     }
-@Override
+    @Override
     public void setX(int x) {
         this.x = x;
     }
-@Override
+    @Override
     public int getY() {
         return y;
     }
-@Override
+    @Override
     public void setY(int y) {
         this.y = y;
     }
-   
-
-  
 
     public int getCost() {
         return cost;
@@ -45,16 +36,16 @@ public abstract class Plant extends Characters
     public void setCost(int cost) {
         this.cost = cost;
     }
-@Override
+    @Override
     public double getWaitingTime() {
         return waitingTime;
     }
-@Override
+    @Override
     public void setWaitingTime(double waitingTime) {
         this.waitingTime = waitingTime;
     }
 
-  
+
     public abstract void action();//in sunflower we will consider that it shoots suns 
 
     /**
@@ -73,11 +64,10 @@ public abstract class Plant extends Characters
         super.setHealth(health);
     }
 
- 
+
     @Override
-    public void disappear() {
-        
+    public void disappear()
+    {
         System.out.println("plant is dead");
-      
     }
 }

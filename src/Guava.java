@@ -1,10 +1,18 @@
 public class Guava extends Plant {
 
-    public Guava(int cost, double waitingTime, int x, int y, int health) {
-        super(cost, waitingTime, x, y, health);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Guava()
+    {
+        super(150, 15, 50);
     }
 
-    
+    // Added to be used when placing a plant on the yard
+    public Guava(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
+    }
     
     
     @Override

@@ -1,10 +1,19 @@
 public class Cherry extends Plant
 {
 
-    public Cherry(int cost, double waitingTime, int x, int y, int health) {
-        super(cost, waitingTime, x, y, health);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Cherry()
+    {
+        super(100, 15, 50);
     }
-    
+
+    // Added to be used when placing a plant on the yard
+    public Cherry(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
+    }
 
     @Override
     public int getCost()

@@ -1,12 +1,19 @@
 public class JournalZombie extends Zombie {
 
-    public JournalZombie(int attackPower, int x, int y, int health, int speed) {
-        super(attackPower, x, y, health, speed);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public JournalZombie()
+    {
+        super(10, 5, 100);
     }
 
-    
-    
-    
+    // Added to be used when spawning a zombie on the yard
+    public JournalZombie(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
+    }
+
     @Override
     public boolean isAlive() {
         return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody

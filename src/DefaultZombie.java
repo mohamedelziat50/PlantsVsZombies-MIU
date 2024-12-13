@@ -1,16 +1,19 @@
 public class DefaultZombie extends Zombie
 {
-    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interface
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public DefaultZombie()
     {
         super(10, 5, 100);
     }
 
-    public DefaultZombie(int attackPower, int x, int y, int health,int speed) {
-        super(20, x, y, 100,speed);
+    // Added to be used when spawning a zombie on the yard
+    public DefaultZombie(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
     }
-    
-   
+
     
     
     @Override

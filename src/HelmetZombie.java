@@ -1,13 +1,19 @@
 public class HelmetZombie extends Zombie {
 
-    public HelmetZombie(int attackPower, int x, int y, int health,int speed) {
-        super(20, x, y, 150,speed);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public HelmetZombie()
+    {
+        super(10, 5, 100);
     }
-  
 
-    /**
-     * @return
-     */
+    // Added to be used when spawning a zombie on the yard
+    public HelmetZombie(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
+    }
+
     @Override
     public double getAttackPower() {
         return super.getAttackPower();

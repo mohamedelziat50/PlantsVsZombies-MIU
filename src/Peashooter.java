@@ -1,23 +1,21 @@
 public class Peashooter extends Plant {
 
-   private final Pea pea=new Pea(20);
-   private Zombie zombie;
+   private Pea pea;
 
-    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interface
+   // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
    public Peashooter()
    {
        super(100, 15, 50);
    }
 
-    public Peashooter(int x, int y)
-    {
-        super(100, 10, x, y, 100);
-    }
-   
+   // Added to be used when placing a plant on the yard
+   public Peashooter(int x, int y)
+   {
+       this();
+       super.x = x;
+       super.y = y;
+   }
 
-    /**
-     * @return
-     */
     @Override
     public int getCost() {
         return super.getCost();
@@ -91,19 +89,11 @@ public class Peashooter extends Plant {
     }
 
     @Override
-    public void action() {//to be implemented
-    while(isAlive()){
-        pea.shot(zombie);
+    public void action()
+    {//to be implemented
 
     }
-    }
 
-    
-  
-
-    /**
-     *
-     */
     @Override
     public void disappear() {
         super.disappear();

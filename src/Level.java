@@ -1,3 +1,5 @@
+import javafx.scene.Scene;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -6,6 +8,7 @@ public class Level implements Serializable
     /*
         MEMBER VARIABLES
      */
+
     // Represents the level number, durationInSeconds, and zombie spawn interval for each specific level.
     private int levelNumber;
     private int durationInSeconds;
@@ -35,9 +38,11 @@ public class Level implements Serializable
      */
 
     // Once Player selects a level, this function will be called to display the game and grid of the Yard.
+    // Thus it should return a scenee with the yard and everything on it! To be called in Main
     public void startLevel()
     {
         currentYard = new Yard();
+        currentYard.displayYard();
     }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,
