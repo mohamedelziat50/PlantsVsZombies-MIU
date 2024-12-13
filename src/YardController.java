@@ -1,45 +1,28 @@
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+
+import java.sql.SQLOutput;
 
 public class YardController
 {
     @FXML
-    private ImageView yardImageView; // Background image of the yard
+    private ImageView yardImageView;
     @FXML
-    private HBox plantCardBar; // Top bar for plant cards
-    @FXML
-    private GridPane yardGrid; // 5x9 grid for plant placement
+    private GridPane yardGrid;
     @FXML
     private ImageView peashooterCard; // Peashooter card
 
-    private boolean isPlantSelected = false; // Tracks if a plant is selected
+    private boolean isPlantSelected = false;
     private ImageView draggingPlant; // Plant PNG that follows the cursor
     private String selectedPlantType = null; // Tracks the type of plant selected (e.g., "Peashooter")
 
-    // Handle clicking a plant card
-    private void onPlantCardClick(String plantType)
-    {
-        isPlantSelected = true;
-        selectedPlantType = plantType;
-
-        // Show dragging plant PNG
-        if (draggingPlant == null)
-        {
-            draggingPlant = new ImageView();
-            draggingPlant.setFitHeight(80);
-            draggingPlant.setFitWidth(60);
-            yardImageView.getParent().getScene().getRoot().getChildrenUnmodifiable().add(draggingPlant);
-        }
-        draggingPlant.setImage(new Image("images/" + plantType.toLowerCase() + ".png"));
-
-        // Handle cursor following the plant
-        yardImageView.getScene().setOnMouseMoved(this::onMouseMove);
-    }
 
     // Update plant PNG to follow the mouse cursor
     private void onMouseMove(MouseEvent event)
@@ -51,7 +34,8 @@ public class YardController
     }
 
     // Handle clicking on a grid slot
-    private void onGridSlotClick(int row, int col, Button gridButton) {
+    private void onGridSlotClick(int row, int col, Button gridButton)
+    {
         if (isPlantSelected && selectedPlantType != null) {
             System.out.println("Planting " + selectedPlantType + " at (" + row + ", " + col + ")");
 
@@ -74,4 +58,30 @@ public class YardController
             draggingPlant = null;
         }
     }
+
+    public void onPlantCardClick(MouseEvent mouseEvent)
+    {
+        System.out.println("ehhhhhh");
+        isPlantSelected = true;
+
+        if (draggingPlant == null)
+        {
+            draggingPlant = new ImageView();
+            draggingPlant.setFitHeight(60);
+            draggingPlant.setFitWidth(60);
+            draggingPlant.setImage(new Image("images/plant.gif"));
+
+            // Add the draggingPlant to a parent node
+            if (yardImageView.getParent() instanceof AnchorPane pane)
+            {
+                pane.getChildren().add(draggingPlant);
+            } else {
+                System.out.println("Parent node is not a Pane. Cannot add draggingPlant.");
+                return;
+            }
+        }
+
+        yardImageView.getScene().setOnMouseMoved(this::onMouseMove);
+    }
+
 }
