@@ -1,8 +1,17 @@
 public class Sunflower extends Plant
 {
-    public Sunflower() {}
-    public Sunflower(int cost, double waitingTime, int x, int y, int health) {
-        super(50, 6, x, y, 40);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Sunflower()
+    {
+        super(100, 15, 50);
+    }
+
+    // Added to be used when placing a plant on the yard
+    public Sunflower(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
     }
     
     /**

@@ -1,12 +1,17 @@
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+
 import java.util.Random;
 
 public class Yard
 {
     private  final int ROWS = 5, COLUMNS = 9;
-    private int zombieSpawnInterval = 60;
+    private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
-
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
@@ -106,6 +111,31 @@ public class Yard
             return true;
         }
         return false;
+    }
+
+    // Added function called to display the yard when the level starts.
+    public void displayYard()
+    {
+        // Create the AnchorPane (root container)
+        AnchorPane root = new AnchorPane();
+
+        // Create the ImageView for the yard background
+        ImageView yardImageView = new ImageView();
+        yardImageView.setFitHeight(650);
+        yardImageView.setFitWidth(1278);
+        yardImageView.setPickOnBounds(true);  // Ensure the ImageView reacts to clicks
+
+        // Set the image for the ImageView
+        Image yardImage = new Image("images/Yard.png");  // Adjust the path to the image
+        yardImageView.setImage(yardImage);
+
+        // Add the ImageView to the root pane
+        root.getChildren().add(yardImageView);
+
+        // Create the scene and set it on the primary stage
+        Scene scene = new Scene(root, 1278, 650);
+
+        Main.primaryStage.setScene(scene);
     }
 
 }

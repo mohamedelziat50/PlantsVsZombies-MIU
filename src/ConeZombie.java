@@ -1,8 +1,18 @@
 public class ConeZombie extends Zombie
 {
 
-    public ConeZombie(int attackPower, int x, int y, int health, int speed) {
-        super(attackPower, x, y, health, speed);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public ConeZombie()
+    {
+        super(10, 5, 100);
+    }
+
+    // Added to be used when spawning a zombie on the yard
+    public ConeZombie(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
     }
    
     @Override

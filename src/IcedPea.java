@@ -1,8 +1,17 @@
-public class IcedPea extends Plant {
-    private  Pea pea=new Pea(20);
-    private Zombie zombie;
-    public IcedPea(int cost, double waitingTime, int x, int y, int health) {
-        super(cost, waitingTime, x, y, health);
+public class IcedPea extends Plant
+{
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public IcedPea()
+    {
+        super(150, 15, 50);
+    }
+
+    // Added to be used when placing a plant on the yard
+    public IcedPea(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
     }
 
     @Override
@@ -71,7 +80,10 @@ public class IcedPea extends Plant {
     }
 
     @Override
-    public void action() {
+    public void action()
+    {
+        /*
+
         int origzombieSpeed=zombie.getSpeed();
         int zombieSpeed=zombie.getSpeed()-10;
 
@@ -82,10 +94,8 @@ public class IcedPea extends Plant {
             }
             //sleep
             //zombie.setSpeed(origzombieSpeed);
-        }
-    }
-   
+            */
 
-    
+    }
    
 }

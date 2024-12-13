@@ -6,18 +6,12 @@ public abstract class Zombie extends Characters
 
     public Zombie() {}
 
-    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interfaace
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Zombie(int attackPower,int speed, int health)
     {
         this.attackPower = attackPower;
         this.speed = speed;
         this.health = health;
-    }
-
-    public Zombie(int attackPower, int x, int y, int health,int speed) {
-        super(x, y, health);
-        this.attackPower = attackPower;
-        this.speed=speed;
     }
 
    
