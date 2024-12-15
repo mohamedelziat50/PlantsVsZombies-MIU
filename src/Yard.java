@@ -1,4 +1,6 @@
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -116,25 +118,80 @@ public class Yard
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
-        // Create the AnchorPane (root container)
+        // Create AnchorPane
         AnchorPane root = new AnchorPane();
+        root.setPrefSize(1278, 650);
 
-        // Create the ImageView for the yard background
-        ImageView yardImageView = new ImageView();
-        yardImageView.setFitHeight(650);
+        // Create ImageView for the yard background
+        ImageView yardImageView = new ImageView(new Image("images/others/Yard.png"));
         yardImageView.setFitWidth(1278);
-        yardImageView.setPickOnBounds(true);  // Ensure the ImageView reacts to clicks
+        yardImageView.setFitHeight(650);
 
-        // Set the image for the ImageView
-        Image yardImage = new Image("images/Yard.png");  // Adjust the path to the image
-        yardImageView.setImage(yardImage);
+        // No need to preserve ratio, to make yard larger
+        yardImageView.setPreserveRatio(false);
 
-        // Add the ImageView to the root pane
         root.getChildren().add(yardImageView);
+
+        // Create GridPane for placing plants/zombies
+        GridPane yardGrid = new GridPane();
+
+        // prefSize refers to the GridPane's width and height! e.g prefWidth and Height
+        yardGrid.setPrefSize(680, 411);
+
+        // layout dimensions refer to the GridPane's placement on the screen!
+        yardGrid.setLayoutX(227);
+        yardGrid.setLayoutY(180);
+
+        yardGrid.setGridLinesVisible(true);
+
+        // Padding between buttons and each other
+        yardGrid.setPadding(new Insets(10, 10, 10, 10));
+
+        // Add Buttons to GridPane
+        for (int row = 0; row < ROWS; row++)
+        {
+            for (int col = 0; col < COLUMNS; col++)
+            {
+                // Create Button Object
+                Button placeButton = new Button("Place");
+                // Specify the button's size inside the cell (Was the problem of not big enough Grid)
+                placeButton.setPrefSize(73, 79);
+                // Semi-transparent
+                placeButton.setOpacity(0.25);
+                yardGrid.add(placeButton, col, row);
+            }
+        }
+        // Add GridPane to the AnchorPane
+        root.getChildren().add(yardGrid);
+
+        // Create ImageView for the Wooden Box that holds the cards
+        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox.png"));
+        // Specify its size
+        woodenBox.setFitWidth(528);
+        woodenBox.setFitHeight(320);
+        // Specify its placement
+        woodenBox.setLayoutX(227);
+        woodenBox.setLayoutY(14);
+        // Preserve Ratio, otherwise a corrupted image appears
+        woodenBox.setPreserveRatio(true);
+        root.getChildren().add(woodenBox);
+
+        // Create ImageView for the Peashooter card that holds the cards
+        ImageView peashooterCard = new ImageView(new Image("images/cards/peashooterCard.png"));
+        // Specify its size
+        peashooterCard.setFitWidth(47);
+        peashooterCard.setFitHeight(71);
+        // Specify its placement
+        peashooterCard.setLayoutX(304);
+        peashooterCard.setLayoutY(21);
+        // Preserve Ratio, otherwise a corrupted image appears
+        peashooterCard.setPreserveRatio(true);
+        root.getChildren().add(peashooterCard);
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, 1278, 650);
 
+        // Set the scene to display the yard!
         Main.primaryStage.setScene(scene);
     }
 
