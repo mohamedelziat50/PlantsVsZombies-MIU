@@ -1,6 +1,11 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
 public class Peashooter extends Plant {
 
    private Pea pea;
+   private ImageView peashooterImage;
 
    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
    public Peashooter()
@@ -14,6 +19,16 @@ public class Peashooter extends Plant {
        this();
        super.x = x;
        super.y = y;
+
+       // Initialize the Peashooter image
+       peashooterImage = new ImageView(new Image("images/plants/peashooter.gif"));
+       peashooterImage.setFitWidth(90);
+       peashooterImage.setFitHeight(85);
+       peashooterImage.setPreserveRatio(true);
+
+       // Set the position for the image
+       peashooterImage.setLayoutX((x - peashooterImage.getFitWidth() / 2) + 5);
+       peashooterImage.setLayoutY((y - peashooterImage.getFitHeight() / 2) - 25);
    }
 
     @Override
@@ -92,6 +107,13 @@ public class Peashooter extends Plant {
     public void action()
     {//to be implemented
 
+    }
+
+    @Override
+    public void appear(Pane root)
+    {
+        if(peashooterImage != null)
+            root.getChildren().add(peashooterImage);
     }
 
     @Override

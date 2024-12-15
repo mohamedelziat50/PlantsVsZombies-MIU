@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 import java.io.Serializable;
 
 public abstract class Characters extends MainElements implements Serializable
@@ -60,9 +62,9 @@ public abstract class Characters extends MainElements implements Serializable
        else
            disappear();
    }
-   
-   
 
+    @Override
+    public abstract void appear(Pane root);
     @Override
     public abstract void disappear();
 }

@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public abstract class Zombie extends Characters
 {
     protected int attackPower;
@@ -91,9 +93,14 @@ public abstract class Zombie extends Characters
     public boolean isAlive() {
         return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
-    
-    
-    
+
+
+    @Override
+    public void appear(Pane root)
+    {
+
+    }
+
     @Override
     public void disappear() {
       

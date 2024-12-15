@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public abstract class Plant extends Characters
 {
     protected int cost;
@@ -64,6 +66,12 @@ public abstract class Plant extends Characters
         super.setHealth(health);
     }
 
+
+    @Override
+    public void appear(Pane root)
+    {
+
+    }
 
     @Override
     public void disappear()
