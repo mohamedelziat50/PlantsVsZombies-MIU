@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public class LawnMower extends MainElements
 {
     public LawnMower() {}
@@ -22,6 +24,11 @@ public class LawnMower extends MainElements
         return super.getX();
     }
 
+    @Override
+    public void appear(Pane root)
+    {
+
+    }
     @Override
     public void disappear()
     {

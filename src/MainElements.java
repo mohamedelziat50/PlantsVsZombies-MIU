@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 abstract public class MainElements
 {
     protected int x;
@@ -30,7 +32,7 @@ abstract public class MainElements
         this.y = y;
     }
 
-
+    public abstract void appear(Pane root);
     public abstract void disappear();      // when an object dies
 }
 

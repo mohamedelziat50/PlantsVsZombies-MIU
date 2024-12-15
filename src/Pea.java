@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import javafx.scene.layout.Pane;
 
 public class Pea extends Characters implements Serializable
 {
@@ -29,6 +30,11 @@ public class Pea extends Characters implements Serializable
         }
     }
 
+    @Override
+    public void appear(Pane root)
+    {
+
+    }
     @Override
     public void disappear()
     {

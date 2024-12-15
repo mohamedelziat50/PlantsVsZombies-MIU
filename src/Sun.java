@@ -1,4 +1,4 @@
-import java.util.*;
+import javafx.scene.layout.Pane;
 
 
 public class Sun extends MainElements
@@ -34,8 +34,13 @@ public class Sun extends MainElements
       y--;
   }
 
-  
 
+
+    @Override
+    public void appear(Pane root)
+    {
+
+    }
 
     @Override
     public void disappear()
