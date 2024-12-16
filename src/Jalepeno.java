@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public class Jalepeno extends Plant {
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
@@ -12,11 +14,6 @@ public class Jalepeno extends Plant {
         this();
         super.x = x;
         super.y = y;
-    }
-
-    @Override
-    public void disappear() {
-        super.disappear(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override
@@ -83,7 +80,18 @@ public class Jalepeno extends Plant {
     public void action() {
         //to be implemented
     }
-    
+
+
+    @Override
+    public void appear(Pane root)
+    {
+
+    }
+
+    @Override
+    public void disappear() {
+
+    }
     
    
 }

@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public class Cherry extends Plant
 {
 
@@ -80,8 +82,13 @@ public class Cherry extends Plant
     }
 
     @Override
-    public void disappear()
+    public void appear(Pane root)
     {
-        //to be implemented
+
+    }
+
+    @Override
+    public void disappear() {
+
     }
 }

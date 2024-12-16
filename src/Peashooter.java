@@ -118,6 +118,6 @@ public class Peashooter extends Plant {
 
     @Override
     public void disappear() {
-        super.disappear();
+
     }
 }

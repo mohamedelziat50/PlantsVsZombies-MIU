@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class Yard
 {
-    private final int ROWS = 5, COLUMNS = 9;
+    private final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
@@ -43,11 +43,21 @@ public class Yard
 
 
     // placePlant checks if the current cell ur pointing at is empty, if it is, it places the desired plant.
-    public void placePlant(Plant plant, int row, int col) {
-        if (isValidPosition(row, col) && grid[row][col] == null) {
+    public void placePlant(Plant plant, AnchorPane root, int row, int col)
+    {
+        // Place the plant only if the position is valid: 1. no plant is on the cell, and 2. inside the yard
+        if (isValidPosition(row, col) && grid[row][col] == null)
+        {
+            // The grid is used to keep track whether the grid cell is taken up by a plant.
             grid[row][col] = plant;
-            System.out.println("Plant Placed Successfully.");
-        } else
+
+            // Call the plants' subclass over-ridden appear function.
+            plant.appear(root);
+
+            // For tracing
+            System.out.println("Plant Placed Successfully at [" + row + "]" + "[" + col + "]");
+        }
+        else
             System.out.println("Failed to place plant, one already exists at this cell.");
 
     }
@@ -78,7 +88,8 @@ public class Yard
 
     /* a method made to check if the current cell ur trying to place a plant at lies between the
      interval of rows and columns in the 2d array */
-    public boolean isValidPosition(int row, int col) {
+    public boolean isValidPosition(int row, int col)
+    {
         return row >= 0 && row < ROWS && col >= 0 && col < COLUMNS && grid[row][col] == null;
     }
 
@@ -106,15 +117,16 @@ public class Yard
     }
 
     // Added function called to display the yard when the level starts.
-    public void displayYard() {
+    public void displayYard()
+    {
         // Create AnchorPane
         AnchorPane root = new AnchorPane();
-        root.setPrefSize(1278, 650);
+        root.setPrefSize(WIDTH, HEIGHT);
 
         // Create ImageView for the yard background
         ImageView yardImageView = new ImageView(new Image("images/others/Yard.png"));
-        yardImageView.setFitWidth(1278);
-        yardImageView.setFitHeight(650);
+        yardImageView.setFitWidth(WIDTH);
+        yardImageView.setFitHeight(HEIGHT);
 
         // No need to preserve ratio, to make yard larger
         yardImageView.setPreserveRatio(false);
@@ -139,11 +151,15 @@ public class Yard
         yardGrid.setLayoutX(227);
         yardGrid.setLayoutY(180);
         yardGrid.setGridLinesVisible(true);
+
         // Padding between buttons and the edge of grid(space)
         yardGrid.setPadding(new Insets(10, 10, 10, 10));
 
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLUMNS; col++) {
+        // Place buttons inside for event handling
+        for (int row = 0; row < ROWS; row++)
+        {
+            for (int col = 0; col < COLUMNS; col++)
+            {
                 Button placeButton = new Button("Place");
                 placeButton.setPrefSize(73, 79);
                 placeButton.setOpacity(0.25);
@@ -154,79 +170,62 @@ public class Yard
         // Add the grid to the root
         root.getChildren().add(yardGrid);
 
-        // Card image
-        final ImageView peashooterCard = new ImageView(new Image("images/cards/peashooterCard.png"));
-        peashooterCard.setFitWidth(47);
-        peashooterCard.setFitHeight(71);
-        peashooterCard.setLayoutX(304);
-        peashooterCard.setLayoutY(21);
-        peashooterCard.setPreserveRatio(true);
-        root.getChildren().add(peashooterCard);
+        // Later we should add conditions based on level 1, 2, 3: A function to load the specific cards whether unlocked or locked and use gray cards
+        // Testing for generic cards.
 
-        // PNG when dropping a plant
-        final ImageView peashooterPNG = new ImageView(new Image("images/plants/peashooter.png"));
-        peashooterPNG.setFitWidth(61);
-        peashooterPNG.setFitHeight(74);
-        peashooterPNG.setPreserveRatio(true);
-        peashooterPNG.setVisible(false);
+        // PEASHOOTER CARD
+        Card PEASHOOTERCARD = new Card(
+            "images/cards/peashooterCard.png",
+            "images/plants/peashooter.png",
+            "images/plants/peashooter.gif", // Optional
+            Peashooter.class
+        );
 
-        // Start tracking the card drag
-        peashooterCard.setOnMousePressed(event -> {
-            peashooterPNG.setLayoutX(event.getSceneX() - 30);
-            peashooterPNG.setLayoutY(event.getSceneY() - 35);
-            peashooterPNG.setVisible(true); // Show the Peashooter image
-            root.getChildren().add(peashooterPNG); // Add to the root pane
-        });
+        PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
+        PEASHOOTERCARD.draggingImageViewSetProperties(61, 74, true, false);
+        PEASHOOTERCARD.hoverImageViewSetProperties(61, 74, true, false);
+        PEASHOOTERCARD.addToYard(root, yardGrid, this);
 
-        // Continuously update position during dragging
-        peashooterCard.setOnMouseDragged(event -> {
-            if (peashooterPNG.isVisible()) {
-                peashooterPNG.setLayoutX(event.getSceneX() - 30);
-                peashooterPNG.setLayoutY(event.getSceneY() - 35);
-            }
-        });
+        // SUNFLOWER CARD
+        Card SUNFLOWERCARD = new Card(
+                "images/cards/sunflowerCard.png",
+                "images/plants/sunflower.png",
+                "images/plants/sunflower.gif", // Optional
+                Sunflower.class
+        );
 
-        // Drop the Peashooter when the mouse is released
-        peashooterCard.setOnMouseReleased(event -> {
-            // Check if the drop is within any button
-            for (Node node : yardGrid.getChildren())
-            {
-                if (node instanceof Button)
-                {
-                    // Create a reference to current button node.
-                    Button button = (Button) node;
+        SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
+        SUNFLOWERCARD.draggingImageViewSetProperties(61, 66, true, false);
+        SUNFLOWERCARD.hoverImageViewSetProperties(61, 66, true, false);
+        SUNFLOWERCARD.addToYard(root, yardGrid, this);
 
-                    // Get button bounds on screen
-                    Bounds buttonBounds = button.localToScene(button.getBoundsInLocal());
+        // POTATO CARD
+        Card POTATOCARD = new Card(
+                "images/cards/potatoCard.png",
+                "images/plants/potato.png",
+                "images/plants/potato.gif", // Optional
+                Potato.class
+        );
 
-                    // Check if the drop point is within this button
-                    if (buttonBounds.contains(event.getSceneX(), event.getSceneY()))
-                    {
-                        // Calculate the button's center position
-                        double centerX = buttonBounds.getMinX() + buttonBounds.getWidth() / 2;
-                        double centerY = buttonBounds.getMinY() + buttonBounds.getHeight() / 2;
+        POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
+        POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
+        POTATOCARD.hoverImageViewSetProperties(59, 66, true, false);
+        POTATOCARD.addToYard(root, yardGrid, this);
 
-                        // Hide & remove the peashooterPNG
-                        peashooterPNG.setVisible(false);
-                        root.getChildren().remove(peashooterPNG);
+        // LOCKED CARDS
+        Card cherryLockedCard = new Card("images/lockedCards/cherryLockedCard.png");
+        cherryLockedCard.cardImageViewSetProperties(468, 21, 47, 66, true, true);
+        Card snowpeaLockedCard = new Card("images/lockedCards/snowpeaLockedCard.png");
+        snowpeaLockedCard.cardImageViewSetProperties(520, 21, 47, 66, true, true);
+        Card jalapenoLockedCard = new Card("images/lockedCards/jalapenoLockedCard.png");
+        jalapenoLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
+        Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
+        repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
 
-                        // Instantiate a new Peashooter at the button's center
-                        Peashooter peashooter = new Peashooter((int) centerX, (int) centerY);
-
-                        // Call the display method for the new Peashooter
-                        peashooter.appear(root); // Assuming display takes the root as a parameter to add itself
-                        return; // Exit after placing the plant, redundant if we continue in loop.
-                    }
-                }
-            }
-
-            // If not dropped on a button, remove the Peashooter image
-            peashooterPNG.setVisible(false);
-            root.getChildren().remove(peashooterPNG);
-        });
+        root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
 
         // Create the scene and set it on the primary stage
-        Scene scene = new Scene(root, 1278, 650);
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         Main.primaryStage.setScene(scene);
     }
 }

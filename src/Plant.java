@@ -68,14 +68,8 @@ public abstract class Plant extends Characters
 
 
     @Override
-    public void appear(Pane root)
-    {
-
-    }
+    public abstract void appear(Pane root);
 
     @Override
-    public void disappear()
-    {
-        System.out.println("plant is dead");
-    }
+    public abstract void disappear();
 }
