@@ -1,9 +1,15 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
 public class Potato extends Plant
 {
+    private ImageView potatoImage;
+
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Potato()
     {
-        super(100, 15, 50);
+        super(50, 15, 200);
     }
 
     // Added to be used when placing a plant on the yard
@@ -12,6 +18,16 @@ public class Potato extends Plant
         this();
         super.x = x;
         super.y = y;
+
+        // Initialize the Potato image
+        potatoImage = new ImageView(new Image("images/plants/potato.gif"));
+        potatoImage.setFitWidth(59);
+        potatoImage.setFitHeight(66);
+        potatoImage.setPreserveRatio(true);
+
+        // Set the position for the image
+        potatoImage.setLayoutX((x - potatoImage.getFitWidth() / 2) );
+        potatoImage.setLayoutY((y - potatoImage.getFitHeight() / 2) - 10);
     }
    
 
@@ -66,9 +82,6 @@ public class Potato extends Plant
         return y;
     }
 
-    /**
-     * @param health
-     */
     public void setY(int y) {
         this.y = y;
     }
@@ -84,11 +97,15 @@ public class Potato extends Plant
         //to be implemented
     }
 
-    /**
-     *
-     */
+    @Override
+    public void appear(Pane root)
+    {
+        if(potatoImage != null)
+            root.getChildren().add(potatoImage);
+    }
+
     @Override
     public void disappear() {
-        super.disappear();
+
     }
 }

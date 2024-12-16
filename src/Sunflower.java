@@ -1,9 +1,15 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
 public class Sunflower extends Plant
 {
+    private ImageView sunflowerImage;
+
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Sunflower()
     {
-        super(100, 15, 50);
+        super(50, 15, 30);
     }
 
     // Added to be used when placing a plant on the yard
@@ -12,6 +18,16 @@ public class Sunflower extends Plant
         this();
         super.x = x;
         super.y = y;
+
+        // Initialize the Sunflower image
+        sunflowerImage = new ImageView(new Image("images/plants/sunflower.gif"));
+        sunflowerImage.setFitWidth(73);
+        sunflowerImage.setFitHeight(70);
+        sunflowerImage.setPreserveRatio(true);
+
+        // Set the position for the image
+        sunflowerImage.setLayoutX((x - sunflowerImage.getFitWidth() / 2) + 5);
+        sunflowerImage.setLayoutY((y - sunflowerImage.getFitHeight() / 2) - 15);
     }
     
     /**
@@ -88,11 +104,18 @@ public class Sunflower extends Plant
         return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
-    /**
-     *
-     */
+
+
     @Override
-    public void disappear() {
-        super.disappear();
+    public void appear(Pane root)
+    {
+        if(sunflowerImage != null)
+            root.getChildren().add(sunflowerImage);
+    }
+
+    @Override
+    public void disappear()
+    {
+
     }
 }

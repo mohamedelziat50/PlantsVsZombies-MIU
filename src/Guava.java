@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public class Guava extends Plant {
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
@@ -88,7 +90,13 @@ public class Guava extends Plant {
     }
 
     @Override
+    public void appear(Pane root)
+    {
+
+    }
+
+    @Override
     public void disappear() {
-        super.disappear();
+
     }
 }
