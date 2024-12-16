@@ -87,22 +87,27 @@ public class Yard
     }
 
     // shovel is used to remove plants from the grid
-    public void removePlant(AnchorPane root, int row, int col) {
+    public void removePlant(AnchorPane root, int row, int col)
+    {
         // Find the plant in the specified grid cell
         Plant plantToRemove = getPlantAt(row, col); // Helper method to find the plant
 
-        if (plantToRemove != null) {
+        if (plantToRemove != null)
+        {
 
             grid[row][col].disappear();
             grid[row][col] = null; // Clear the grid cell
 
             ImageView plantImageView = plantToRemove.getImageView(); // Assume Plant stores its ImageView
-            if (plantImageView != null) {
+            if (plantImageView != null)
+            {
                 root.getChildren().remove(plantImageView); // Remove the graphical representation
             }
 
             System.out.println("Plant removed at row: " + row + ", col: " + col);
-        } else {
+        }
+        else
+        {
             System.out.println("No plant found at row: " + row + ", col: " + col);
         }
     }
@@ -167,7 +172,7 @@ public class Yard
         root.getChildren().add(woodenBox);
         //lawnMower place in the yard
 
-     lawnMowers=new LawnMower[5];
+        lawnMowers=new LawnMower[5];
 
         for (int i=0;i<5;i++) {
             lawnMowers[i]=new LawnMower();
@@ -189,6 +194,7 @@ public class Yard
         yardGrid.setLayoutX(227);
         yardGrid.setLayoutY(180);
         yardGrid.setGridLinesVisible(true);
+        yardGrid.setVisible(false);
 
         // Padding between buttons and the edge of grid(space)
         yardGrid.setPadding(new Insets(10, 10, 10, 10));
@@ -221,10 +227,10 @@ public class Yard
 
         // PEASHOOTER CARD
         Card PEASHOOTERCARD = new Card(
-            "images/cards/peashooterCard.png",
-            "images/plants/peashooter.png",
-            "images/plants/peashooter.gif", // Optional
-            Peashooter.class
+                "images/cards/peashooterCard.png",
+                "images/plants/peashooter.png",
+                "images/plants/peashooter.gif", // Optional
+                Peashooter.class
         );
 
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);

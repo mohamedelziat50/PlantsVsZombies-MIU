@@ -13,14 +13,10 @@ public class LawnMower extends MainElements
     public LawnMower() {
       lawnMowerImage=new ImageView( new Image("images/plants/LawnMower.png"));
 
-        lawnMowerImage.setFitWidth(80);
-        lawnMowerImage.setFitHeight(95);
+        lawnMowerImage.setFitWidth(65);
+        lawnMowerImage.setFitHeight(80);
         lawnMowerImage.setPreserveRatio(true);
 
-
-        // Set the position for the image
-        lawnMowerImage.setLayoutX((x - lawnMowerImage.getFitWidth() / 2) + 5);
-        lawnMowerImage.setLayoutY((y - lawnMowerImage.getFitHeight() / 2) - 25);
     }
 
     @Override
