@@ -1,8 +1,10 @@
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public abstract class Plant extends Characters
 {
     protected int cost;
+    private ImageView plantImage;//need to use for all plants so should be in plant not in only peashooter
 
     public Plant() {}
 
@@ -72,4 +74,13 @@ public abstract class Plant extends Characters
 
     @Override
     public abstract void disappear();
+
+    public Plant(String imagePath) {
+        // Initialize the imageView with an Image object
+        plantImage = new ImageView(imagePath); // Path to the plant's image
+    }
+
+    public ImageView getImageView() {
+        return plantImage;
+    }
 }

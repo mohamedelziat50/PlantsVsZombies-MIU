@@ -140,54 +140,56 @@ public class Card
         // Drop the plant when the mouse is released
         cardImageView.setOnMouseReleased(event -> {
             // Check if the drop is within any button
-            for (Node node : yardGrid.getChildren())
-            {
+            for (Node node : yardGrid.getChildren()) {
                 if (node instanceof Button) {
-                    // Create a reference to current button node.
                     Button button = (Button) node;
 
                     // Get button bounds on screen
                     Bounds buttonBounds = button.localToScene(button.getBoundsInLocal());
 
                     // Check if the drop point is within this button
-                    if (buttonBounds.contains(event.getSceneX(), event.getSceneY()))
-                    {
+                    if (buttonBounds.contains(event.getSceneX(), event.getSceneY())) {
                         // Calculate the button's center position
                         double centerX = buttonBounds.getMinX() + buttonBounds.getWidth() / 2;
                         double centerY = buttonBounds.getMinY() + buttonBounds.getHeight() / 2;
 
                         // Hide & remove the draggingImageView
-                        // dropped[0] = true; fashalt eni a3melha
                         draggingImageView.setVisible(false);
                         root.getChildren().remove(draggingImageView);
 
-                        // Instantiate the plant dynamically using reflection
-                        try
-                        {
-                            // Since we don't know what type of plant the user will select.
-                            Plant plant = plantType.getDeclaredConstructor(int.class, int.class).newInstance((int) centerX, (int) centerY);
+                        // If plantType is null, assume this is a shovel and remove the plant
+                        if (plantType == null) {
+                            System.out.println("Shovel used at (" + GridPane.getRowIndex(button) + ", " + GridPane.getColumnIndex(button) + ")");
 
-                            // Place the plant in the yard and display it
-                            yard.placePlant(plant, root, GridPane.getRowIndex(button), GridPane.getColumnIndex(button));
-                        }
-                        catch (Exception e)
-                        {
-                            System.out.println("An exception occured: " + e);
-                            System.exit(1);
+                            // Call a method to remove the plant and its image
+                            yard.removePlant(root, GridPane.getRowIndex(button), GridPane.getColumnIndex(button));
+
+                        } else {
+                            // Instantiate the plant dynamically using reflection
+                            try {
+                                // Create the plant instance
+                                Plant plant = plantType.getDeclaredConstructor(int.class, int.class).newInstance((int) centerX, (int) centerY);
+
+                                // Place the plant in the yard and display it
+                                yard.placePlant(plant, root, GridPane.getRowIndex(button), GridPane.getColumnIndex(button));
+                            } catch (Exception e) {
+                                System.out.println("An exception occurred: " + e);
+                                System.exit(1);
+                            }
                         }
 
-                        return; // Exit after placing the plant, redundant if we continue in loop.
+                        return; // Exit after handling the drop
                     }
                 }
             }
 
             // If not dropped on a button, remove the dragging image
-            // dropped[0] = true; fashalt
             draggingImageView.setVisible(false);
             root.getChildren().remove(draggingImageView);
 
             event.consume();
         });
+
     }
 
     public ImageView getCardImageView() {

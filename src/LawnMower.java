@@ -1,8 +1,27 @@
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.awt.*;
 
 public class LawnMower extends MainElements
 {
-    public LawnMower() {}
+    private ImageView lawnMowerImage;
+    public LawnMower() {
+      lawnMowerImage=new ImageView( new Image("images/plants/LawnMower.png"));
+
+        lawnMowerImage.setFitWidth(80);
+        lawnMowerImage.setFitHeight(95);
+        lawnMowerImage.setPreserveRatio(true);
+
+
+        // Set the position for the image
+        lawnMowerImage.setLayoutX((x - lawnMowerImage.getFitWidth() / 2) + 5);
+        lawnMowerImage.setLayoutY((y - lawnMowerImage.getFitHeight() / 2) - 25);
+    }
 
     @Override
     public void setY(int y) {
@@ -34,4 +53,8 @@ public class LawnMower extends MainElements
     {
         System.out.println("The Lawn Mower Disappeared");
     }
+    public ImageView getLawnMowerImage(){
+        return lawnMowerImage;
+    }
+
 }

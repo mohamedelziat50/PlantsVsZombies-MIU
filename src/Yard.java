@@ -9,6 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.util.Random;
 
@@ -53,7 +56,7 @@ public class Yard
 
             // Call the plants' subclass over-ridden appear function.
             plant.appear(root);
-
+            plantPlacedAudio();
             // For tracing
             System.out.println("Plant Placed Successfully at [" + row + "]" + "[" + col + "]");
         }
@@ -67,23 +70,41 @@ public class Yard
     public void spawnZombie(Zombie zombie, int col) throws InterruptedException {
         Random random = new Random();
         while (true) {
-            Thread.sleep(zombieSpawnInterval * 1000);
-            int zombieSpawnRow = random.nextInt(5);
-            grid[zombieSpawnRow][COLUMNS - 1] = zombie;
-            System.out.println("zombie placed at row" + zombieSpawnRow);
+            Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
+            int zombieSpawnRow = random.nextInt(ROWS); // Random row for spawning
+            grid[zombieSpawnRow][col] = zombie; // Place the zombie in the selected row and column
+            System.out.println("Zombie placed at row: " + zombieSpawnRow + ", col: " + col);
         }
     }
 
 
-    // shovel is used to remove plants from the grid
-    public boolean shovel(int row, int col) {
-        if (isValidPosition(row, col) && grid[row][col] != null) {
-            if (grid[row][col] instanceof Plant) {
-                grid[row][col] = null;
-                return true;
-            }
+    public Plant getPlantAt(int row, int col) {
+        // Ensure the grid position contains a Plant instance
+        if (grid[row][col] instanceof Plant) {
+            return (Plant) grid[row][col]; // Cast to Plant if it's an instance of Plant
         }
-        return false;
+        return null; // Return null if no plant found at the given coordinates
+    }
+
+    // shovel is used to remove plants from the grid
+    public void removePlant(AnchorPane root, int row, int col) {
+        // Find the plant in the specified grid cell
+        Plant plantToRemove = getPlantAt(row, col); // Helper method to find the plant
+
+        if (plantToRemove != null) {
+
+            grid[row][col].disappear();
+            grid[row][col] = null; // Clear the grid cell
+
+            ImageView plantImageView = plantToRemove.getImageView(); // Assume Plant stores its ImageView
+            if (plantImageView != null) {
+                root.getChildren().remove(plantImageView); // Remove the graphical representation
+            }
+
+            System.out.println("Plant removed at row: " + row + ", col: " + col);
+        } else {
+            System.out.println("No plant found at row: " + row + ", col: " + col);
+        }
     }
 
     /* a method made to check if the current cell ur trying to place a plant at lies between the
@@ -144,6 +165,23 @@ public class Yard
         // Preserve Ratio, otherwise a corrupted image appears
         woodenBox.setPreserveRatio(true);
         root.getChildren().add(woodenBox);
+        //lawnMower place in the yard
+
+     lawnMowers=new LawnMower[5];
+
+        for (int i=0;i<5;i++) {
+            lawnMowers[i]=new LawnMower();
+            lawnMowers[i].getLawnMowerImage().setLayoutX(155);
+        }
+
+        lawnMowers[0].getLawnMowerImage().setLayoutY(186);
+        lawnMowers[1].getLawnMowerImage().setLayoutY(268);
+        lawnMowers[2].getLawnMowerImage().setLayoutY(342);
+        lawnMowers[3].getLawnMowerImage().setLayoutY(419);
+        lawnMowers[4].getLawnMowerImage().setLayoutY(501);
+
+
+        root.getChildren().addAll(lawnMowers[0].getLawnMowerImage(),lawnMowers[1].getLawnMowerImage(),lawnMowers[2].getLawnMowerImage(),lawnMowers[3].getLawnMowerImage(),lawnMowers[4].getLawnMowerImage());
 
         // Create GridPane for placing plants/zombies
         GridPane yardGrid = new GridPane();
@@ -172,6 +210,14 @@ public class Yard
 
         // Later we should add conditions based on level 1, 2, 3: A function to load the specific cards whether unlocked or locked and use gray cards
         // Testing for generic cards.
+
+        //SHOVEL CARD
+        Card SHOVELCARD=new Card("images/cards/shovel.png","images/plants/shovel.png",null,null);//need to make the a plant type for shovel
+        SHOVELCARD.cardImageViewSetProperties(681,14,80,88,true,true);
+        SHOVELCARD.draggingImageViewSetProperties(61,70,true,false);
+        SHOVELCARD.hoverImageViewSetProperties(61,70,true,false);
+        SHOVELCARD.addToYard(root,yardGrid,this);
+
 
         // PEASHOOTER CARD
         Card PEASHOOTERCARD = new Card(
@@ -222,10 +268,42 @@ public class Yard
         Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
         repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
 
+
+
+
+
+
         root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         Main.primaryStage.setScene(scene);
     }
+
+    public void plantPlacedAudio() {
+        try {
+            String path = getClass().getResource("/music/plantplaced.mp3").toExternalForm();
+            System.out.println("Path: " + path);
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(1.0);
+
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing planting sound: " + e.getMessage());
+        }
+    }
+
+    public void plantSelectedAudio() {
+        try {
+            String path = getClass().getResource("/music/plant selected.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing planting sound: " + e.getMessage());
+        }
+    }
+
 }
