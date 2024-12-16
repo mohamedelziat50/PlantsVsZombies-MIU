@@ -26,6 +26,7 @@ public class Peashooter extends Plant {
        peashooterImage.setFitHeight(85);
        peashooterImage.setPreserveRatio(true);
 
+
        // Set the position for the image
        peashooterImage.setLayoutX((x - peashooterImage.getFitWidth() / 2) + 5);
        peashooterImage.setLayoutY((y - peashooterImage.getFitHeight() / 2) - 25);
@@ -118,6 +119,6 @@ public class Peashooter extends Plant {
 
     @Override
     public void disappear() {
-
+        peashooterImage.setVisible(false);
     }
 }

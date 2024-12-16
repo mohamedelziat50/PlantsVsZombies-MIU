@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -92,8 +93,8 @@ public class Yard
 
         if (plantToRemove != null) {
 
+            grid[row][col].disappear();
             grid[row][col] = null; // Clear the grid cell
-
 
             ImageView plantImageView = plantToRemove.getImageView(); // Assume Plant stores its ImageView
             if (plantImageView != null) {
@@ -164,6 +165,23 @@ public class Yard
         // Preserve Ratio, otherwise a corrupted image appears
         woodenBox.setPreserveRatio(true);
         root.getChildren().add(woodenBox);
+        //lawnMower place in the yard
+
+     lawnMowers=new LawnMower[5];
+
+        for (int i=0;i<5;i++) {
+            lawnMowers[i]=new LawnMower();
+            lawnMowers[i].getLawnMowerImage().setLayoutX(155);
+        }
+
+        lawnMowers[0].getLawnMowerImage().setLayoutY(186);
+        lawnMowers[1].getLawnMowerImage().setLayoutY(268);
+        lawnMowers[2].getLawnMowerImage().setLayoutY(342);
+        lawnMowers[3].getLawnMowerImage().setLayoutY(419);
+        lawnMowers[4].getLawnMowerImage().setLayoutY(501);
+
+
+        root.getChildren().addAll(lawnMowers[0].getLawnMowerImage(),lawnMowers[1].getLawnMowerImage(),lawnMowers[2].getLawnMowerImage(),lawnMowers[3].getLawnMowerImage(),lawnMowers[4].getLawnMowerImage());
 
         // Create GridPane for placing plants/zombies
         GridPane yardGrid = new GridPane();

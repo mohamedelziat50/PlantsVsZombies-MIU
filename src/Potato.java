@@ -106,6 +106,6 @@ public class Potato extends Plant
 
     @Override
     public void disappear() {
-
+        potatoImage.setVisible(false);
     }
 }

@@ -31,6 +31,7 @@ public class Main extends Application
 
         Level testLevel = new Level(1, 60, unlockedPlants, unlockedZombies);
         testLevel.startLevel();
+
         primaryStage.show();
 
       /*

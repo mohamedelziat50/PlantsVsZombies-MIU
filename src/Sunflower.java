@@ -116,6 +116,6 @@ public class Sunflower extends Plant
     @Override
     public void disappear()
     {
-
+    sunflowerImage.setVisible(false);
     }
 }
