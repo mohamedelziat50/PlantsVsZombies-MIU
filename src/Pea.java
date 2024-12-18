@@ -43,18 +43,21 @@ public class Pea extends Characters implements Serializable, Runnable
                     }
                 });
 
-                /*
-                    // Check for collisions with zombies (example logic)
-                    Zombie target = checkForCollision();
-                    if (target != null) {
-                        target.takeDamage(damage);
-                        disappear((Pane) elementImage.getParent()); // Remove pea on collision
-                        return; // Stop further movement
-                    }
-                */
+                // Check for collision
+                Zombie target = checkForCollision();
+
+                if (target != null)
+                {
+                    // Do damage
+                    target.takeDamage(damage);
+                    System.out.println("Pea touched a zombie");
+
+                    disappear(Yard.root); // Remove pea
+                    return; // Stop further movement
+                }
 
                 // Slow down the while loop (PEA MOVEMENT SPEED), otherwise a lot of lag happens when the pea moves!
-                Thread.sleep(50);
+                Thread.sleep(5);
             }
 
             // If it reached out of bounds or plant died, make it disappear
@@ -71,7 +74,18 @@ public class Pea extends Characters implements Serializable, Runnable
 
     private Zombie checkForCollision()
     {
-        return new DefaultZombie();
+        synchronized (Yard.zombies)
+        {
+            for (Zombie zombie : Yard.zombies)
+            {
+                if (zombie.isColliding(elementImage))
+                {
+                    // Return the first zombie it collides with
+                    return zombie;
+                }
+            }
+        }
+        return null; // No collision
     }
 
     public int getDamage() {

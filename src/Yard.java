@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Yard extends Thread
@@ -17,6 +18,9 @@ public class Yard extends Thread
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
     public static AnchorPane root;
+
+    // Used for collision handling
+    public static volatile ArrayList<Zombie> zombies = new ArrayList<>();
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
@@ -121,22 +125,33 @@ public class Yard extends Thread
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public  void spawnZombie() throws InterruptedException {
+    public  void spawnZombie() throws InterruptedException
+    {
         int[] specificNumbers = {158, 231, 308, 386, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
         Random random = new Random();
-        while (true) {
+
+        while (true)
+        {
             Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
             int randomIndex = random.nextInt(specificNumbers.length); // Generate a random index for Y position
             int y = specificNumbers[randomIndex];
             int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
 
+
             Zombie zombie = new DefaultZombie(x, y); // Create a new zombie at the random position
+            zombie.setAlive(true);
+
+            // Added to be used with collision handling (with pea)
+            Yard.zombies.add(zombie);
+
             zombie.appear(root, x, y); // Place the zombie on the yard
+
             System.out.println("Zombie placed at x: " + x + ", y: " + y);
             new Thread(() -> {
-                while (zombie.isAlive()) {
+                while (zombie.isAlive())
+                {
                     zombie.move();
 
                     try {
@@ -146,7 +161,6 @@ public class Yard extends Thread
                     }
                 }
             }).start();
-
         }
     }
 

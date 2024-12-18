@@ -42,8 +42,8 @@ public class Peashooter extends Plant
                 // Shoot a pea every 5 seconds
                 Thread.sleep(5000);
 
-                // Pass this plant as a reference to stop the thread incase plant dies!
-                Pea pea = new Pea(10, this);
+                // Pass this plant as a reference to stop the thread in case plant dies!
+                Pea pea = new Pea(50, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
@@ -59,7 +59,8 @@ public class Peashooter extends Plant
                     peaThread.start();
                 });
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 System.out.println("Peashooter thread interrupted: " + e.getMessage());
                 Thread.currentThread().interrupt();
                 break;
