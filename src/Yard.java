@@ -12,10 +12,13 @@ import java.util.Random;
 
 public class Yard
 {
-    private final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
+    public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
+
+    // THE ANCHOR PANE IS NOW STATIC
+    public static AnchorPane root = new AnchorPane();
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
@@ -72,13 +75,18 @@ public class Yard
             grid[row][col] = plant;
 
             // Call the plants' subclass over-ridden appear function.
-            plant.appear(root);
+            plant.appear(root); // Sets alive with true inside!
 
             // Audio for placing a plant.
             plantPlacedAudio();
 
             // For tracing
             System.out.println("Plant Placed Successfully at [" + row + "]" + "[" + col + "]");
+
+            // Create a plant object thread, in order to intitate it's action!
+            // plant.setAlive(true); -> No need i added it into appear of plant super class
+            Thread plantThread = new Thread(plant);
+            plantThread.start();
         }
         else
             System.out.println("Failed to place plant, one already exists at this cell.");
@@ -149,8 +157,7 @@ public class Yard
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
-        // Create AnchorPane
-        AnchorPane root = new AnchorPane();
+        // Create AnchorPane (MADE IT STATIC)
         root.setPrefSize(WIDTH, HEIGHT);
 
         // Create ImageView for the yard background

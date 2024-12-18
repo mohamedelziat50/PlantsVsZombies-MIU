@@ -23,6 +23,12 @@ public class IcedPea extends Plant
     }
 
     @Override
+    public void run()
+    {
+
+    }
+
+    @Override
     public void action()
     {
         /*

@@ -1,7 +1,9 @@
+import javafx.application.Platform;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
-public abstract class Plant extends Characters
+// A plant is now a thread
+public abstract class Plant extends Characters implements Runnable
 {
     protected int cost;
 
@@ -24,21 +26,40 @@ public abstract class Plant extends Characters
 
     public abstract void takeDamage(int damage);
 
+    // Will be over-ridden by subclasses different actions
+    public abstract void run();
+
     @Override
     public abstract void action();
+
 
     @Override
     public void appear(Pane root)
     {
-        if(elementImage != null)
-            root.getChildren().add(elementImage);
+        Platform.runLater(() -> {
+            if (elementImage != null) {
+                root.getChildren().add(elementImage);
+                System.out.println("Plant appears.");
+            }
+        });
+
+        // Alive-flag used with threads.
+        setAlive(true);
     }
 
     @Override
     public void disappear(Pane root)
     {
-        elementImage.setVisible(false);
-        if (elementImage != null)
-            root.getChildren().remove(elementImage);
+        Platform.runLater(() -> {
+            elementImage.setVisible(false);
+            if (elementImage != null)
+            {
+                root.getChildren().remove(elementImage);
+                System.out.println("Plant appears.");
+            }
+        });
+
+        // Make the thread flag to be false to stop the plant!
+        setAlive(false);
     }
 }
