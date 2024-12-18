@@ -1,6 +1,7 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -10,7 +11,7 @@ import javafx.util.Duration;
 import java.util.Random;
 
 
-public class Sun extends MainElements implements Runnable
+public class Sun extends MainElements
 {
     public Sun()
     {
@@ -46,7 +47,7 @@ public class Sun extends MainElements implements Runnable
             {
                 try
                 {
-                    Thread.sleep(15000); // spawn kol 3 seconds
+                    Thread.sleep(3000); // spawn kol 3 seconds
 
                     javafx.application.Platform.runLater(() ->
                     {
@@ -84,6 +85,9 @@ public class Sun extends MainElements implements Runnable
                             collectAnimation.setOnFinished(event2 -> root.getChildren().remove(sun.getElementImage())); // remove after collection
                             collectAnimation.play();
 
+                            Yard.sunCounter+=25;
+                            Yard.label.setText(String.valueOf(Yard.sunCounter));
+
                             // Stop the drop animation once clicked
                             dropAnimation.stop();
                         });
@@ -106,10 +110,7 @@ public class Sun extends MainElements implements Runnable
                     System.out.println("Sun spawning thread interrupted.");
                     return;
                 }
-
-
             }
-
         });
 
         sunThread.setDaemon(true); // Thread stops when application closes
@@ -122,8 +123,4 @@ public class Sun extends MainElements implements Runnable
 
     }
 
-    @Override
-    public void run() {
-
-    }
 }

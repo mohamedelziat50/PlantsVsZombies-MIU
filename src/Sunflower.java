@@ -37,7 +37,6 @@ public class Sunflower extends Plant
     @Override
     public void run()
     {
-
     }
 
     @Override
