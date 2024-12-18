@@ -26,11 +26,10 @@ public class Card
     }
 
     // Constructor used for unlocked cards
-    public Card(String cardImagePath, String draggingImagePath, String plantGifPath, Class<? extends Plant> plantType)
+    public Card(String cardImagePath, String draggingImagePath, Class<? extends Plant> plantType)
     {
         this.cardImagePath = cardImagePath;
         this.draggingImagePath = draggingImagePath;
-        this.plantGifPath = plantGifPath;
         this.plantType = plantType;
 
         this.cardImageView = new ImageView(new Image(cardImagePath));

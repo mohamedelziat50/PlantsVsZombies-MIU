@@ -1,27 +1,28 @@
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
-public class IcedPea extends Plant
+public class Repeater extends Plant
 {
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
-    public IcedPea()
+    public Repeater()
     {
         super(100, 15, 50);
     }
 
     // Added to be used when placing a plant on the yard
-    public IcedPea(int x, int y)
+    public Repeater(int x, int y)
     {
         this();
         super.x = x;
         super.y = y;
 
         // Initialize the Peashooter image
-        elementImage = new ImageView(new Image("images/plants/icedpeashooter.png"));
-        elementImage.setFitWidth(90);
-        elementImage.setFitHeight(70);
+        elementImage = new ImageView(new Image("images/plants/repeater.gif"));
+        elementImage.setFitWidth(95);
+        elementImage.setFitHeight(95);
         elementImage.setPreserveRatio(true);
 
 
@@ -38,8 +39,8 @@ public class IcedPea extends Plant
         {
             try
             {
-                // Shoot a pea every 5 seconds
-                Thread.sleep(5000);
+                // Shoot a pea every 2.5 seconds since it is faster (repeater plant)
+                Thread.sleep(2000);
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
                 Pea pea = new Pea(50, this);
@@ -77,19 +78,7 @@ public class IcedPea extends Plant
     @Override
     public void action()
     {
-        /*
-
-        int origzombieSpeed=zombie.getSpeed();
-        int zombieSpeed=zombie.getSpeed()-10;
-
-        while(isAlive()){
-            pea.shot(zombie);
-            if(pea.getPeaPositionX()== zombie.getX()) {
-                zombie.setSpeed(zombieSpeed);
-            }
-            //sleep
-            //zombie.setSpeed(origzombieSpeed);
-            */
 
     }
+
 }
