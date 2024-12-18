@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Yard extends Thread
 {
-    private final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
+    public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
