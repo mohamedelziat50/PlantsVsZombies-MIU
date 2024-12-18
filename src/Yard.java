@@ -12,20 +12,20 @@ import java.util.Random;
 
 public class Yard extends Thread
 {
-    private final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
+    public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
-    AnchorPane root ;
+    public static AnchorPane root;
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
     public Yard()
     {
+        root = new AnchorPane();
         zombieSpawnInterval=5;
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
-        root = new AnchorPane();
 
         /*
         THIS CODE IS REDUNDANT, WE INTILAIZE LAWNS MOWERS IN THE generateLawnMowers FUNCTION
@@ -46,7 +46,6 @@ public class Yard extends Thread
         IS NOW A SYNCHRONIZED METHOD (AT THE MOMENT IS THE grid[][] array)
         in placePlant, removePlant, getPlantAt, spawnZombie, isValidPosition
      */
-
 
     /* a method made to check if the current cell ur trying to place a plant at lies between the
      interval of rows and columns in the 2d array */
@@ -83,6 +82,11 @@ public class Yard extends Thread
 
             // For tracing
             System.out.println("Plant Placed Successfully at [" + row + "]" + "[" + col + "]");
+
+            // Create a plant object thread, in order to intitate it's action!
+            // plant.setAlive(true); -> No need i added it into appear of plant super class
+            Thread plantThread = new Thread(plant);
+            plantThread.start();
         }
         else
             System.out.println("Failed to place plant, one already exists at this cell.");
@@ -117,8 +121,6 @@ public class Yard extends Thread
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
-     take to spawn another zombie */
     public  void spawnZombie() throws InterruptedException {
         int[] specificNumbers = {158, 231, 308, 386, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
@@ -147,17 +149,16 @@ public class Yard extends Thread
 
         }
     }
-    @Override
-    public void run(){
 
+    @Override
+    public void run()
+    {
         try {
             spawnZombie();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 
     public void moveLawnMower() {
         LawnMower lawnMower = new LawnMower();
@@ -185,8 +186,7 @@ public class Yard extends Thread
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
-        // Create AnchorPane
-
+        // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
 
         // Create ImageView for the yard background
