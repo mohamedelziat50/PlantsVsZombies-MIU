@@ -41,6 +41,11 @@ public class HelmetZombie extends Zombie {
     }
 
     @Override
+    public void appear(Pane root, int x, int y) {
+
+    }
+
+    @Override
     public void disappear(Pane root)
     {
         //to be implemented
