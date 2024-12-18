@@ -1,3 +1,6 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.util.Random;
 
@@ -16,6 +20,7 @@ public class Yard
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
+
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
@@ -113,9 +118,11 @@ public class Yard
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public synchronized void spawnZombie(Zombie zombie, int col) throws InterruptedException {
+    public synchronized void spawnZombie(Zombie zombie, int col) throws InterruptedException
+    {
         Random random = new Random();
-        while (true) {
+        while (true)
+        {
             Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
             int zombieSpawnRow = random.nextInt(ROWS); // Random row for spawning
             grid[zombieSpawnRow][col] = zombie; // Place the zombie in the selected row and column
@@ -152,6 +159,7 @@ public class Yard
         // Create AnchorPane
         AnchorPane root = new AnchorPane();
         root.setPrefSize(WIDTH, HEIGHT);
+        root.setStyle("-fx-background-color: black;");
 
         // Create ImageView for the yard background
         generateYardImageView(root);
@@ -168,7 +176,11 @@ public class Yard
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Sun sun = new Sun();
+        sun.appear(root);
+
         Main.primaryStage.setScene(scene);
+
     }
 
     public void plantPlacedAudio() {
@@ -342,4 +354,9 @@ public class Yard
         root.getChildren().addAll(lawnMowers[0].getElementImage(),lawnMowers[1].getElementImage(),lawnMowers[2].getElementImage(),lawnMowers[3].getElementImage(),lawnMowers[4].getElementImage());
     }
 
+    public void generateSun(AnchorPane root)
+    {
+
+
+    }
 }
