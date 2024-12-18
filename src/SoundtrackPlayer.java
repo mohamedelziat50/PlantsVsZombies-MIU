@@ -1,7 +1,7 @@
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-public class Soundtrackplayer
+public class SoundtrackPlayer
 {
     public void playSoundtrack()
     {

@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 public class HelmetZombie extends Zombie {
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
@@ -15,94 +17,32 @@ public class HelmetZombie extends Zombie {
     }
 
     @Override
-    public double getAttackPower() {
-        return super.getAttackPower();
-    }
+    public void takeDamage(int damage)
+    {
 
-    /**
-     * @param attackPower
-     */
-    @Override
-    public void setAttackPower(int attackPower) {
-        super.setAttackPower(attackPower);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public double getHealth() {
-        return super.getHealth();
-    }
-
-    /**
-     * @param health
-     */
-    @Override
-    public void setHealth(int health) {
-        super.setHealth(health);
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-    
-    
-
-    @Override
-    public boolean isAlive() {
-        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
     @Override
-    public void takeDamage(int damage) {
-        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    public void move()
+    {
+
     }
 
     @Override
-    public void move() {
-        super.move(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    public void action()
+    {
+
     }
 
     @Override
-    public void setWaitingTime(double waitingTime) {
-        super.setWaitingTime(waitingTime); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    public void appear(Pane root)
+    {
+        //to be implemented
     }
 
     @Override
-    public double getWaitingTime() {
-        return super.getWaitingTime(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setY(int y) {
-        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getY() {
-        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setX(int x) {
-        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getX() {
-        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    
-
-  
-    @Override
-    public void disappear() {
-        super.disappear();
+    public void disappear(Pane root)
+    {
+        //to be implemented
     }
 }

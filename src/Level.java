@@ -38,7 +38,7 @@ public class Level implements Serializable
      */
 
     // Once Player selects a level, this function will be called to display the game and grid of the Yard.
-    // Thus it should return a scenee with the yard and everything on it! To be called in Main
+    // Thus it should return a scene with the yard and everything on it! To be called in Main
     public void startLevel()
     {
         currentYard = new Yard();
