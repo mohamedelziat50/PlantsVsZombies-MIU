@@ -24,6 +24,12 @@ public class Cherry extends Plant
     }
 
     @Override
+    public void run()
+    {
+
+    }
+
+    @Override
     public void action()
     {
         //to be implemented

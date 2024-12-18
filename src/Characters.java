@@ -7,6 +7,9 @@ public abstract class Characters extends MainElements implements Serializable
     protected int health;
     protected double waitingTime;
 
+    // Added Volatile in order to be read by other threads
+    private volatile boolean alive;
+
     public Characters() {}
 
     public Characters(int health, double waitingTime)
@@ -33,9 +36,16 @@ public abstract class Characters extends MainElements implements Serializable
         this.health = health;
     }
 
+    public void setAlive(boolean alive)
+    {
+        this.alive = alive;
+    }
+
+    // To be used with threads
     public boolean isAlive()
     {
-        return health > 0;
+        // Used with threads!
+        return alive;
     }
 
     // Added this to be over-ridden by plants, pea, and zombies.

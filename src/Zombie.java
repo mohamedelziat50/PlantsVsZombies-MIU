@@ -32,7 +32,7 @@ public abstract class Zombie extends Characters
         this.speed = speed;
     }
 
-    
+
     public abstract void move();
 
     public abstract void takeDamage(int damage);
@@ -42,6 +42,8 @@ public abstract class Zombie extends Characters
 
     @Override
     public abstract void appear(Pane root);
+    public abstract void appear(Pane root,int x,int y);
+
 
     @Override
     public abstract void disappear(Pane root);

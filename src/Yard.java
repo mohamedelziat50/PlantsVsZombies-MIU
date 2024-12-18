@@ -1,6 +1,3 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,22 +7,23 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
 import java.util.Random;
 
-public class Yard
+public class Yard extends Thread
 {
-    private final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
+    public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
-
+    public static AnchorPane root;
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
     public Yard()
     {
+        root = new AnchorPane();
+        zombieSpawnInterval=5;
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
@@ -84,6 +82,11 @@ public class Yard
 
             // For tracing
             System.out.println("Plant Placed Successfully at [" + row + "]" + "[" + col + "]");
+
+            // Create a plant object thread, in order to intitate it's action!
+            // plant.setAlive(true); -> No need i added it into appear of plant super class
+            Thread plantThread = new Thread(plant);
+            plantThread.start();
         }
         else
             System.out.println("Failed to place plant, one already exists at this cell.");
@@ -118,15 +121,42 @@ public class Yard
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public synchronized void spawnZombie(Zombie zombie, int col) throws InterruptedException
-    {
+    public  void spawnZombie() throws InterruptedException {
+        int[] specificNumbers = {158, 231, 308, 386, 468}; // Predefined Y positions for zombie spawn
+        int minx = 957; // Minimum X position
+        int maxx = 1202; // Maximum X position
         Random random = new Random();
-        while (true)
-        {
+        while (true) {
             Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
-            int zombieSpawnRow = random.nextInt(ROWS); // Random row for spawning
-            grid[zombieSpawnRow][col] = zombie; // Place the zombie in the selected row and column
-            System.out.println("Zombie placed at row: " + zombieSpawnRow + ", col: " + col);
+            int randomIndex = random.nextInt(specificNumbers.length); // Generate a random index for Y position
+            int y = specificNumbers[randomIndex];
+            int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
+
+            Zombie zombie = new DefaultZombie(x, y); // Create a new zombie at the random position
+            zombie.appear(root, x, y); // Place the zombie on the yard
+            System.out.println("Zombie placed at x: " + x + ", y: " + y);
+            new Thread(() -> {
+                while (zombie.isAlive()) {
+                    zombie.move();
+
+                    try {
+                        Thread.sleep(100); // Control the speed of the zombie movement
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        }
+    }
+
+    @Override
+    public void run()
+    {
+        try {
+            spawnZombie();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -156,10 +186,8 @@ public class Yard
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
-        // Create AnchorPane
-        AnchorPane root = new AnchorPane();
+        // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
-        root.setStyle("-fx-background-color: black;");
 
         // Create ImageView for the yard background
         generateYardImageView(root);
@@ -178,9 +206,8 @@ public class Yard
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         Sun sun = new Sun();
         sun.appear(root);
-
         Main.primaryStage.setScene(scene);
-
+        this.start();
     }
 
     public void plantPlacedAudio() {
@@ -354,9 +381,4 @@ public class Yard
         root.getChildren().addAll(lawnMowers[0].getElementImage(),lawnMowers[1].getElementImage(),lawnMowers[2].getElementImage(),lawnMowers[3].getElementImage(),lawnMowers[4].getElementImage());
     }
 
-    public void generateSun(AnchorPane root)
-    {
-
-
-    }
 }
