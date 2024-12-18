@@ -9,27 +9,10 @@ public abstract class Characters extends MainElements implements Serializable
 
     public Characters() {}
 
-    public Characters(int x, int y,int health)
+    public Characters(int health, double waitingTime)
     {
-        super(x, y);
-        this.health=health;
-    }
-    
-    @Override
-    public int getX() {
-        return x;
-    }
-    @Override
-    public void setX(int x) {
-        this.x = x;
-    }
-    @Override
-    public int getY() {
-        return y;
-    }
-    @Override
-    public void setY(int y) {
-        this.y = y;
+        this.health = health;
+        this.waitingTime = waitingTime;
     }
 
     public double getWaitingTime() {
@@ -52,21 +35,17 @@ public abstract class Characters extends MainElements implements Serializable
 
     public boolean isAlive()
     {
-        return health>0;
+        return health > 0;
     }
 
-   public void takeDamage(int damage)
-   {
-       if(isAlive())
-           health-=damage;
-       else
-           disappear();
-   }
+    // Added this to be over-ridden by plants, pea, and zombies.
+    public abstract void action();
 
     @Override
     public abstract void appear(Pane root);
+
     @Override
-    public abstract void disappear();
+    public abstract void disappear(Pane root);
 }
 
 

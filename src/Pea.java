@@ -3,31 +3,35 @@ import javafx.scene.layout.Pane;
 
 public class Pea extends Characters implements Serializable
 {
-    protected int peaPositionX;
     protected int damage;
     
     public Pea(int damage)
     {
         this.damage = damage;
     }
-    
-    public int getDamage()
-    {
+
+    public int getDamage() {
         return damage;
     }
 
-    public int getPeaPositionX() {
-        return peaPositionX;
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     public void shot(Zombie zombie)
     {
-        peaPositionX+=5; // for when the peashooter starts shooting peas
-        if(zombie.getX()==this.getPeaPositionX())
+        this.x+=5; // for when the peashooter starts shooting peas
+        if(zombie.getX()==this.x)
         {
             zombie.takeDamage(this.damage);
-            disappear();
+            // disappear(); comented out for now
         }
+    }
+
+    @Override
+    public void action()
+    {
+
     }
 
     @Override
@@ -35,8 +39,9 @@ public class Pea extends Characters implements Serializable
     {
 
     }
+
     @Override
-    public void disappear()
+    public void disappear(Pane root)
     {
         System.out.println("Pea disappears.");
     }

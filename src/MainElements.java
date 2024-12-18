@@ -1,12 +1,15 @@
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-abstract public class MainElements
+public abstract class MainElements
 {
     protected int x;
     protected int y;
 
-    public MainElements()
-    {
+    // Now all elements inherit an imageview!
+    protected ImageView elementImage;
+
+    public MainElements() {
         // position to be initialized with some dimensions.
     }
 
@@ -32,8 +35,16 @@ abstract public class MainElements
         this.y = y;
     }
 
+    public ImageView getElementImage() {
+        return elementImage;
+    }
+
+    public void setElementImage(ImageView elementImage) {
+        this.elementImage = elementImage;
+    }
+
     public abstract void appear(Pane root);
-    public abstract void disappear();      // when an object dies
+    public abstract void disappear(Pane root);      // when an object dies
 }
 
 
