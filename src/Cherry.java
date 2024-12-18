@@ -1,3 +1,5 @@
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class Cherry extends Plant
@@ -15,12 +17,17 @@ public class Cherry extends Plant
         this();
         super.x = x;
         super.y = y;
-    }
 
-    @Override
-    public void takeDamage(int damage)
-    {
+        // Initialize the Peashooter image
+        elementImage = new ImageView(new Image("images/plants/cherry.png"));
+        elementImage.setFitWidth(80);
+        elementImage.setFitHeight(70);
+        elementImage.setPreserveRatio(true);
 
+
+        // Set the position for the image
+        elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) + 5);
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 25);
     }
 
     @Override
@@ -30,8 +37,14 @@ public class Cherry extends Plant
     }
 
     @Override
+    public void takeDamage(int damage)
+    {
+
+    }
+
+    @Override
     public void action()
     {
-        //to be implemented
+
     }
 }
