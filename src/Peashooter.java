@@ -43,7 +43,7 @@ public class Peashooter extends Plant
                 Thread.sleep(5000);
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                Pea pea = new Pea(50, this);
+                Pea pea = new Pea(20, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);

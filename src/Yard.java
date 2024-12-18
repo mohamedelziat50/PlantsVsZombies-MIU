@@ -132,6 +132,8 @@ public class Yard extends Thread
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
+
+
         while (true)
         {
             Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
@@ -139,14 +141,39 @@ public class Yard extends Thread
             int y = specificNumbers[randomIndex];
             int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
 
+            int z=random.nextInt((4-1)+1)+1;
+            Zombie zombie;
+            if(z==1){
+                zombie = new DefaultZombie(x, y);
+            }
 
-            Zombie zombie = new DefaultZombie(x, y); // Create a new zombie at the random position
+            else if(z==2){
+            zombie=new HelmetZombie(x,y);
+            }
+            else if(z==3){
+                zombie=new ConeZombie(x,y-10);
+            }
+            else {
+                zombie=new FootballZombie(x,y);
+            }
+
+
+
+           // Create a new zombie at the random position
             zombie.setAlive(true);
 
             // Added to be used with collision handling (with pea)
             Yard.zombies.add(zombie);
 
-            zombie.appear(root, x, y); // Place the zombie on the yard
+            if(zombie instanceof ConeZombie){
+                zombie.appear(root, x, y); // Place the zombie on the yard
+
+            }
+            else{
+                zombie.appear(root,x,y);
+            }
+
+
 
             System.out.println("Zombie placed at x: " + x + ", y: " + y);
             new Thread(() -> {
