@@ -121,7 +121,8 @@ public class Yard extends Thread
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public  void spawnZombie() throws InterruptedException {
+    public  void spawnZombie() throws InterruptedException
+    {
         int[] specificNumbers = {158, 231, 308, 386, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
@@ -146,7 +147,6 @@ public class Yard extends Thread
                     }
                 }
             }).start();
-
         }
     }
 
