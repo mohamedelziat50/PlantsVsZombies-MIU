@@ -10,19 +10,22 @@ import javafx.scene.media.MediaPlayer;
 
 import java.util.Random;
 
-public class Yard
+public class Yard extends Thread
 {
     private final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
+    AnchorPane root ;
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
     public Yard()
     {
+        zombieSpawnInterval=5;
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
+        root = new AnchorPane();
 
         /*
         THIS CODE IS REDUNDANT, WE INTILAIZE LAWNS MOWERS IN THE generateLawnMowers FUNCTION
@@ -43,6 +46,7 @@ public class Yard
         IS NOW A SYNCHRONIZED METHOD (AT THE MOMENT IS THE grid[][] array)
         in placePlant, removePlant, getPlantAt, spawnZombie, isValidPosition
      */
+
 
     /* a method made to check if the current cell ur trying to place a plant at lies between the
      interval of rows and columns in the 2d array */
@@ -113,15 +117,47 @@ public class Yard
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public synchronized void spawnZombie(Zombie zombie, int col) throws InterruptedException {
+    /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
+     take to spawn another zombie */
+    public  void spawnZombie() throws InterruptedException {
+        int[] specificNumbers = {158, 231, 308, 386, 468}; // Predefined Y positions for zombie spawn
+        int minx = 957; // Minimum X position
+        int maxx = 1202; // Maximum X position
         Random random = new Random();
         while (true) {
             Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
-            int zombieSpawnRow = random.nextInt(ROWS); // Random row for spawning
-            grid[zombieSpawnRow][col] = zombie; // Place the zombie in the selected row and column
-            System.out.println("Zombie placed at row: " + zombieSpawnRow + ", col: " + col);
+            int randomIndex = random.nextInt(specificNumbers.length); // Generate a random index for Y position
+            int y = specificNumbers[randomIndex];
+            int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
+
+            Zombie zombie = new DefaultZombie(x, y); // Create a new zombie at the random position
+            zombie.appear(root, x, y); // Place the zombie on the yard
+            System.out.println("Zombie placed at x: " + x + ", y: " + y);
+            new Thread(() -> {
+                while (zombie.isAlive()) {
+                    zombie.move();
+
+                    try {
+                        Thread.sleep(100); // Control the speed of the zombie movement
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
         }
     }
+    @Override
+    public void run(){
+
+        try {
+            spawnZombie();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     public void moveLawnMower() {
         LawnMower lawnMower = new LawnMower();
@@ -150,7 +186,7 @@ public class Yard
     public void displayYard()
     {
         // Create AnchorPane
-        AnchorPane root = new AnchorPane();
+
         root.setPrefSize(WIDTH, HEIGHT);
 
         // Create ImageView for the yard background
@@ -169,6 +205,7 @@ public class Yard
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         Main.primaryStage.setScene(scene);
+        this.start();
     }
 
     public void plantPlacedAudio() {
