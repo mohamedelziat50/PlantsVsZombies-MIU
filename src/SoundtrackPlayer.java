@@ -14,8 +14,9 @@ public class SoundtrackPlayer
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);// Loop playback
-            mediaPlayer.setVolume(0.02);
+            mediaPlayer.setVolume(0);
             mediaPlayer.play();
+
 
         } catch (Exception e)
         {

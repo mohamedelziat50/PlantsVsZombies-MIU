@@ -54,7 +54,7 @@ public class Pea extends Characters implements Serializable, Runnable
                 */
 
                 // Slow down the while loop (PEA MOVEMENT SPEED), otherwise a lot of lag happens when the pea moves!
-                Thread.sleep(50);
+                Thread.sleep(5);
             }
 
             // If it reached out of bounds or plant died, make it disappear
