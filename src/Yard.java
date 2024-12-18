@@ -204,6 +204,8 @@ public class Yard extends Thread
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Sun sun = new Sun();
+        sun.appear(root);
         Main.primaryStage.setScene(scene);
         this.start();
     }

@@ -9,7 +9,8 @@ public abstract class MainElements
     // Now all elements inherit an imageview!
     protected ImageView elementImage;
 
-    public MainElements() {
+    public MainElements()
+    {
         // position to be initialized with some dimensions.
     }
 
