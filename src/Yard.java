@@ -211,8 +211,9 @@ public class Yard extends Thread
 
         // Later we should add conditions based on level 1, 2, 3: A function to load the specific cards whether unlocked or locked and use gray cards
 
-        // Generate cards on root pane
-        generateCards(root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+        // Generate cards on root pane // LEVEL 1 IS HARDCODED FOR NOW
+        generateCards(3, root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+
         // Generate lawnmowers on root pane
         generateLawnMowers(root);
 
@@ -295,7 +296,7 @@ public class Yard extends Thread
     }
 
     // Later will add a parameter for level number and conditions inside.
-    private void generateCards(AnchorPane root, GridPane yardGrid)
+    private void generateCards(int levelNumber, AnchorPane root, GridPane yardGrid)
     {
         // Create ImageView for the Wooden Box that holds the cards
         ImageView woodenBox = new ImageView(new Image("images/others/woodenBox.png"));
@@ -313,7 +314,6 @@ public class Yard extends Thread
         Card SHOVELCARD=new Card(
                 "images/cards/shovel.png",
                 "images/others/shovel.png",
-                null,
                 null
         ); // NULL is used as a workaround to avoid creating a shovel class
         SHOVELCARD.cardImageViewSetProperties(681,14,80,88,true,true);
@@ -325,7 +325,6 @@ public class Yard extends Thread
         Card PEASHOOTERCARD = new Card(
                 "images/cards/peashooterCard.png",
                 "images/plants/peashooter.png",
-                "images/plants/peashooter.gif", // Optional
                 Peashooter.class
         );
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
@@ -337,7 +336,6 @@ public class Yard extends Thread
         Card SUNFLOWERCARD = new Card(
                 "images/cards/sunflowerCard.png",
                 "images/plants/sunflower.png",
-                "images/plants/sunflower.gif", // Optional
                 Sunflower.class
         );
         SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
@@ -349,13 +347,52 @@ public class Yard extends Thread
         Card POTATOCARD = new Card(
                 "images/cards/potatoCard.png",
                 "images/plants/potato.png",
-                "images/plants/potato.gif", // Optional
                 Potato.class
         );
         POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
         POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
         POTATOCARD.hoverImageViewSetProperties(59, 66, true, false);
         POTATOCARD.addToYard(root, yardGrid, this);
+
+        // CHERRY CARD
+        Card CHERRYCARD = new Card(
+                "images/cards/cherryCard.png",
+                "images/plants/cherry.png",
+                Cherry.class
+        );
+        CHERRYCARD.cardImageViewSetProperties(466, 21, 47, 66, true, true);
+        CHERRYCARD.draggingImageViewSetProperties(80, 70, true, false);
+        CHERRYCARD.hoverImageViewSetProperties(80, 70, true, false);
+
+        // ICED PEA CARD
+        Card ICEDPEACARD = new Card(
+                "images/cards/icedpeashooterCard.png",
+                "images/plants/icedpeashooter.png",
+                IcedPea.class
+        );
+        ICEDPEACARD.cardImageViewSetProperties(520, 21, 47, 66, true, true);
+        ICEDPEACARD.draggingImageViewSetProperties(90, 70, true, false);
+        ICEDPEACARD.hoverImageViewSetProperties(90, 70, true, false);
+
+        // JALAPENO CARD
+        Card JALAPENOCARD = new Card(
+                "images/cards/jalapenoCard.png",
+                "images/plants/jalapeno.png",
+                Jalepeno.class
+        );
+        JALAPENOCARD.cardImageViewSetProperties(573, 21, 47, 66, true, true);
+        JALAPENOCARD.draggingImageViewSetProperties(41, 78, true, false);
+        JALAPENOCARD.hoverImageViewSetProperties(41, 78, true, false);
+
+        // REPEATER CARD
+        Card REPEATERCARD = new Card(
+                "images/cards/repeaterCard.png",
+                "images/plants/repeater.png",
+                Repeater.class
+        );
+        REPEATERCARD.cardImageViewSetProperties(627, 21, 47, 66, true, true);
+        REPEATERCARD.draggingImageViewSetProperties(61, 107, true, false);
+        REPEATERCARD.hoverImageViewSetProperties(61, 107, true, false);
 
         // LOCKED CARDS
         Card cherryLockedCard = new Card("images/lockedCards/cherryLockedCard.png");
@@ -370,8 +407,29 @@ public class Yard extends Thread
         Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
         repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
 
-        // Add all locked cards to the root pane.
-        root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+        // Switch the level number to display correct cards for each level
+        switch(levelNumber)
+        {
+            case 1:
+                // Add all locked cards to the root pane.
+                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                break;
+            case 2:
+                // Only last 2 cards are not unlocked
+                root.getChildren().addAll(jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                CHERRYCARD.addToYard(root, yardGrid, this);
+                ICEDPEACARD.addToYard(root, yardGrid, this);
+
+                break;
+            case 3:
+                // All cards are unlocked in level 3
+                System.out.println("All cards are unlocked in " + levelNumber);
+                CHERRYCARD.addToYard(root, yardGrid, this);
+                ICEDPEACARD.addToYard(root, yardGrid, this);
+                JALAPENOCARD.addToYard(root, yardGrid, this);
+                REPEATERCARD.addToYard(root, yardGrid, this);
+                break;
+        }
     }
 
     private void generateLawnMowers(AnchorPane root)
