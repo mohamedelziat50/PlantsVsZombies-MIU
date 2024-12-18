@@ -1,3 +1,4 @@
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public abstract class Zombie extends Characters
@@ -32,6 +33,23 @@ public abstract class Zombie extends Characters
         this.speed = speed;
     }
 
+    // Used in collision handling
+    public boolean isColliding(ImageView pea)
+    {
+        // Shrink bounds for more precise collision detection
+        double margin = 50; // Adjust as needed
+        var zombieBounds = elementImage.getBoundsInParent(); // var -> specify any datatype you want, no need to explicitly declare it
+        var peaBounds = pea.getBoundsInParent();
+
+        var adjustedZombieBounds = new javafx.geometry.BoundingBox(
+                zombieBounds.getMinX() + margin,
+                zombieBounds.getMinY() + margin,
+                zombieBounds.getWidth() - 2 * margin,
+                zombieBounds.getHeight() - 2 * margin
+        );
+
+        return adjustedZombieBounds.intersects(peaBounds);
+    }
 
     public abstract void move();
 
