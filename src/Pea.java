@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Pea extends Characters implements Serializable, Runnable
 {
@@ -80,6 +82,7 @@ public class Pea extends Characters implements Serializable, Runnable
             {
                 if (zombie.isColliding(elementImage))
                 {
+                    peaHitsZombieAudio();
                     // Return the first zombie it collides with
                     return zombie;
                 }
@@ -87,6 +90,18 @@ public class Pea extends Characters implements Serializable, Runnable
         }
         return null; // No collision
     }
+
+    public void peaHitsZombieAudio() {
+    try {
+        String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
+        Media media = new Media(path);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.7);
+        mediaPlayer.play();
+    } catch (Exception e) {
+        System.out.println("Error playing pea hit sound: " + e.getMessage());
+    }
+}
 
     public int getDamage() {
         return damage;}

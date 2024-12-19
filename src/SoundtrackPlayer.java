@@ -3,21 +3,24 @@ import javafx.scene.media.MediaPlayer;
 
 public class SoundtrackPlayer
 {
-    public void playSoundtrack()
+    private static MediaPlayer sound_track_player;
+
+    public static void playSoundtrack()
     {
         try
         {
-            // Load the soundtrack from the resources folder
-            String path = getClass().getResource("/music/background music.mp3").toExternalForm();
+            String path = SoundtrackPlayer.class.getResource("/music/background music.mp3").toExternalForm();
 
-            // Play the soundtrack
+            // Create a new MediaPlayer for the soundtrack
             Media media = new Media(path);
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);// Loop playback
-            mediaPlayer.setVolume(0.02);
-            mediaPlayer.play();
+            sound_track_player = new MediaPlayer(media);
 
+            // Set the background music to loop
+            sound_track_player.setCycleCount(MediaPlayer.INDEFINITE);
+            sound_track_player.setVolume(0.2);  // Adjust volume if necessary
 
+            // Start playing the soundtrack
+            sound_track_player.play();
         } catch (Exception e)
         {
             System.out.println("Error playing soundtrack: " + e.getMessage());

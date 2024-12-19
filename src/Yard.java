@@ -1,13 +1,23 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -20,6 +30,9 @@ public class Yard extends Thread
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
     public static AnchorPane root;
+    private ProgressBar levelProgressBar;  // The progress bar to track level duration
+    private double levelDuration = 60.0;  // Total duration for the level (in seconds)
+    private double timeLeft = levelDuration;
     public static int sunCounter = 50;
     public static Label label = new Label("50");
 
@@ -119,6 +132,7 @@ public class Yard extends Thread
         {
             grid[row][col].disappear(root); // Now disappear removes from the root directly! (Notice changes in "Plant" class)
             grid[row][col] = null; // Clear the grid cell
+            plantSelectedAudio();
 
             System.out.println("Plant removed at row: " + row + ", col: " + col);
         }
@@ -171,6 +185,8 @@ public class Yard extends Thread
 
             if(zombie instanceof ConeZombie){
                 zombie.appear(root, x, y); // Place the zombie on the yard
+
+            zombieSpawnAudio();
 
             }
             else{
@@ -229,6 +245,96 @@ public class Yard extends Thread
         return false;
     }
 
+    private void createLevelDurationBar(AnchorPane root) {
+        // Load the background image
+        Image backgroundImage = new Image("images/seifsImages/progressBar.png");
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setFitWidth(180);  // Set the width of the background image
+        backgroundImageView.setFitHeight(30); // Set the height of the background image
+        backgroundImageView.setLayoutX(720);   // Adjust X position
+        backgroundImageView.setLayoutY(603);   // Adjust Y position
+
+        // Create the progress bar
+        levelProgressBar = new ProgressBar(1.0);  // Start with full progress
+        levelProgressBar.setPrefWidth(137);
+        levelProgressBar.setPrefHeight(11);
+        levelProgressBar.setStyle("-fx-accent: green; -fx-background-color: transparent;");
+        levelProgressBar.setLayoutX(725);  // Match the layout to align with the background
+        levelProgressBar.setLayoutY(612);
+        // Add the components to the root layout
+        root.getChildren().addAll(backgroundImageView, levelProgressBar);
+    }
+
+
+    // Start the level timer and update the progress bar
+    public void startLevelTimer() {
+        // Create a Timeline to update progress every second
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (timeLeft > 0) {
+                timeLeft -= 1;  // Decrease the remaining time by 1 second
+                double progress = timeLeft / levelDuration;  // Calculate progress as a fraction of time left
+                levelProgressBar.setProgress(progress);  // Update the progress bar
+            } else {
+                // Level is over, handle level completion logic here
+                System.out.println("Level Completed!");
+                zombieWaveAudio();
+            }
+        }));
+        // Set the timeline to repeat indefinitely (so it updates every second)
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();  // Start the timeline (the countdown)
+    }
+
+    private void readySetPlant() {
+        // Create "Ready" text
+        Text readyText = new Text("READY...");
+        readyText.setFont(Font.font("Comic Sans MS", 85));
+        readyText.setFill(Color.DARKRED);
+        readyText.setLayoutX(WIDTH / 2 - 75);
+        readyText.setLayoutY(HEIGHT / 2);
+        root.getChildren().add(readyText);
+
+        // Show "Ready" for 1.5 seconds
+        PauseTransition readyPause = new PauseTransition(Duration.seconds(1.5));
+        readyPause.setOnFinished(event -> {
+            // Remove "Ready" text
+            root.getChildren().remove(readyText);
+
+            // Show "Set" text
+            Text setText = new Text("SET...");
+            setText.setFont(Font.font("Comic Sans MS", 85));
+            setText.setFill(Color.DARKRED);
+            setText.setLayoutX(WIDTH / 2 - 75);
+            setText.setLayoutY(HEIGHT / 2);
+            root.getChildren().add(setText);
+
+            // Show "Set" for 1.5 seconds
+            PauseTransition setPause = new PauseTransition(Duration.seconds(1.5));
+            setPause.setOnFinished(setEvent -> {
+                // Remove "Set" text
+                root.getChildren().remove(setText);
+
+                // Show "Plant!" text
+                Text plantText = new Text("PLANT!");
+                plantText.setFont(Font.font("Comic Sans MS", 85));
+                plantText.setFill(Color.DARKRED);
+                plantText.setLayoutX(WIDTH / 2 - 75);
+                plantText.setLayoutY(HEIGHT / 2);
+                root.getChildren().add(plantText);
+
+                // Show "PLANT!" for 1.5 seconds and then proceed
+                PauseTransition plantPause = new PauseTransition(Duration.seconds(1.5));
+                plantPause.setOnFinished(goEvent -> {
+                    // Remove "Plant!" text
+                    root.getChildren().remove(plantText);
+                });
+                plantPause.play();
+            });
+            setPause.play();
+        });
+        readyPause.play();
+    }
+
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
@@ -237,6 +343,12 @@ public class Yard extends Thread
 
         // Create ImageView for the yard background
         generateYardImageView(root);
+
+        //Create progress bar
+        if (levelProgressBar != null) {
+            root.getChildren().add(levelProgressBar);
+        }
+        createLevelDurationBar(root);
 
         // Create Grid Pane
         GridPane yardGrid = generateGridPane(root);
@@ -255,9 +367,18 @@ public class Yard extends Thread
 
         generateSunCounter();
 
+        readySetPlant();
+
+        zombiesArrivalAudio();
+
+        startLevelTimer();
+
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+        scene.setCursor(new ImageCursor(new Image("images/others/cursor.png")));
+
         Sun sun = new Sun();
+
         sun.appear(root);
         Main.primaryStage.setScene(scene);
         this.start();
@@ -265,12 +386,11 @@ public class Yard extends Thread
 
     public void plantPlacedAudio() {
         try {
-            String path = getClass().getResource("/music/plantplaced.mp3").toExternalForm();
+            String path = getClass().getResource("/music/plant placed.mp3").toExternalForm();
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(1.0);
-
+            mediaPlayer.setVolume(0.7);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing planting sound: " + e.getMessage());
@@ -282,10 +402,64 @@ public class Yard extends Thread
             String path = getClass().getResource("/music/plant selected.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.3);
+            mediaPlayer.setVolume(0.7);
             mediaPlayer.play();
         } catch (Exception e) {
-            System.out.println("Error playing planting sound: " + e.getMessage());
+            System.out.println("Error playing selecting sound: " + e.getMessage());
+        }
+    }
+
+    public void zombiesArrivalAudio() {
+        try {
+            String path = getClass().getResource("/music/zombies arrive.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.7);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing zombie sound: " + e.getMessage());
+        }
+    }
+
+    private static MediaPlayer zombieSpawnMediaPlayer; // Keep a reference to the MediaPlayer for zombie spawn sound
+
+    public void zombieSpawnAudio() {
+        try {
+            // Check if a zombie spawn sound is already playing
+                zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
+            // List of audio file paths for random selection
+            String[] audioPaths = {
+                    getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
+                    getClass().getResource("/music/zombie s2.mp3").toExternalForm(),
+                    getClass().getResource("/music/zombie s3.mp3").toExternalForm()
+            };
+
+            // Randomly select one of the audio paths
+            Random random = new Random();
+            int randomIndex = random.nextInt(audioPaths.length); // Random index between 0 and 2
+            String selectedAudioPath = audioPaths[randomIndex];
+            Media media = new Media(selectedAudioPath);
+
+            // Create a new MediaPlayer for the selected audio
+            zombieSpawnMediaPlayer = new MediaPlayer(media);
+            zombieSpawnMediaPlayer.setVolume(0.4); // Adjust volume as needed
+            zombieSpawnMediaPlayer.play(); // Play the selected audio
+
+        } catch (Exception e) {
+            System.out.println("Error playing zombie spawn sound: " + e.getMessage());
+        }
+    }
+
+    public void zombieWaveAudio() {
+        try {
+            String path = getClass().getResource("/music/zombie wave.mp3").toExternalForm();
+            System.out.println("Path: " + path);
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.9);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing zombie wave sound: " + e.getMessage());
         }
     }
 

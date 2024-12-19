@@ -18,7 +18,6 @@ public class Main extends Application
         SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
         soundtrackplayer.playSoundtrack();
 
-
         // Only testing for logic, not actual Main Code
         ArrayList<Plant> unlockedPlants = new ArrayList<>();
         unlockedPlants.add(new Peashooter());

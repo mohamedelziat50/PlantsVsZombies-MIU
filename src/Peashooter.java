@@ -3,6 +3,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Peashooter extends Plant
 {
@@ -57,6 +59,7 @@ public class Peashooter extends Plant
                     Thread peaThread = new Thread(pea);
                     peaThread.setDaemon(true); // Ensure it stops with the app
                     peaThread.start();
+                    peaShooterAudio();
                 });
             }
             catch (Exception e)
@@ -67,6 +70,18 @@ public class Peashooter extends Plant
             }
         }
         System.out.println("Peashooter thread ended.");
+    }
+
+    public void peaShooterAudio() {
+        try {
+            String path = getClass().getResource("/music/peashooter shoots.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.9);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing peashooter sound: " + e.getMessage());
+        }
     }
 
     @Override

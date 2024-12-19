@@ -9,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -105,10 +107,11 @@ public class Card
             }
 
             // Placed the handling into a thread, since it updates the root pane continuously
-            new Thread(() ->
-            {
+            cardSelectedAudio();
+            new Thread(() -> {
                 try
                 {
+                    // Simulate a delay or background processing.
                     Thread.sleep(20); // If you increase, then the click read will be delayed
 
                     /*
@@ -366,4 +369,18 @@ public class Card
     }
 
 
+
+    public void cardSelectedAudio() {
+        try {
+            String path = getClass().getResource("/music/card selected.mp3").toExternalForm();
+            System.out.println("Path: " + path);
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing card sound: " + e.getMessage());
+        }
+    }
 }
