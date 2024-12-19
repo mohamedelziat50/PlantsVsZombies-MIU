@@ -6,6 +6,7 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,8 +18,8 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Color;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -32,6 +33,8 @@ public class Yard extends Thread
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
     private double levelDuration = 60.0;  // Total duration for the level (in seconds)
     private double timeLeft = levelDuration;
+    public static int sunCounter = 50;
+    public static Label label = new Label("50");
 
     // Used for collision handling
     public static volatile ArrayList<Zombie> zombies = new ArrayList<>();
@@ -147,6 +150,8 @@ public class Yard extends Thread
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
+
+
         while (true)
         {
             Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
@@ -154,16 +159,41 @@ public class Yard extends Thread
             int y = specificNumbers[randomIndex];
             int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
 
+            int z=random.nextInt((4-1)+1)+1;
+            Zombie zombie;
+            if(z==1){
+                zombie = new DefaultZombie(x, y);
+            }
 
-            Zombie zombie = new DefaultZombie(x, y); // Create a new zombie at the random position
+            else if(z==2){
+            zombie=new HelmetZombie(x,y);
+            }
+            else if(z==3){
+                zombie=new ConeZombie(x,y-10);
+            }
+            else {
+                zombie=new FootballZombie(x,y);
+            }
+
+
+
+           // Create a new zombie at the random position
             zombie.setAlive(true);
 
             // Added to be used with collision handling (with pea)
             Yard.zombies.add(zombie);
 
-            zombie.appear(root, x, y); // Place the zombie on the yard
+            if(zombie instanceof ConeZombie){
+                zombie.appear(root, x, y); // Place the zombie on the yard
 
             zombieSpawnAudio();
+
+            }
+            else{
+                zombie.appear(root,x,y);
+            }
+
+
 
             System.out.println("Zombie placed at x: " + x + ", y: " + y);
             new Thread(() -> {
@@ -178,6 +208,7 @@ public class Yard extends Thread
                     }
                 }
             }).start();
+
         }
     }
 
@@ -324,10 +355,17 @@ public class Yard extends Thread
 
         // Later we should add conditions based on level 1, 2, 3: A function to load the specific cards whether unlocked or locked and use gray cards
 
-        // Generate cards on root pane
-        generateCards(root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+        // Generate cards on root pane // LEVEL 1 IS HARDCODED FOR NOW
+        generateCards(3, root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+
         // Generate lawnmowers on root pane
         generateLawnMowers(root);
+
+        label.setLayoutX(50); // Positioning the label
+        label.setLayoutY(50);
+        root.getChildren().add(label);
+
+        generateSunCounter();
 
         readySetPlant();
 
@@ -468,10 +506,10 @@ public class Yard extends Thread
     }
 
     // Later will add a parameter for level number and conditions inside.
-    private void generateCards(AnchorPane root, GridPane yardGrid)
+    private void generateCards(int levelNumber, AnchorPane root, GridPane yardGrid)
     {
         // Create ImageView for the Wooden Box that holds the cards
-        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox.png"));
+        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox(1).png"));
         // Specify its size
         woodenBox.setFitWidth(528);
         woodenBox.setFitHeight(320);
@@ -487,7 +525,7 @@ public class Yard extends Thread
                 "images/cards/shovel.png",
                 "images/others/shovel.png",
                 null,
-                null
+                0
         ); // NULL is used as a workaround to avoid creating a shovel class
         SHOVELCARD.cardImageViewSetProperties(681,14,80,88,true,true);
         SHOVELCARD.draggingImageViewSetProperties(61,70,true,false);
@@ -498,8 +536,8 @@ public class Yard extends Thread
         Card PEASHOOTERCARD = new Card(
                 "images/cards/peashooterCard.png",
                 "images/plants/peashooter.png",
-                "images/plants/peashooter.gif", // Optional
-                Peashooter.class
+                Peashooter.class,
+                100
         );
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
         PEASHOOTERCARD.draggingImageViewSetProperties(61, 74, true, false);
@@ -510,8 +548,8 @@ public class Yard extends Thread
         Card SUNFLOWERCARD = new Card(
                 "images/cards/sunflowerCard.png",
                 "images/plants/sunflower.png",
-                "images/plants/sunflower.gif", // Optional
-                Sunflower.class
+                Sunflower.class,
+                50
         );
         SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
         SUNFLOWERCARD.draggingImageViewSetProperties(61, 66, true, false);
@@ -522,13 +560,57 @@ public class Yard extends Thread
         Card POTATOCARD = new Card(
                 "images/cards/potatoCard.png",
                 "images/plants/potato.png",
-                "images/plants/potato.gif", // Optional
-                Potato.class
+                Potato.class,
+                50
         );
         POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
         POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
         POTATOCARD.hoverImageViewSetProperties(59, 66, true, false);
         POTATOCARD.addToYard(root, yardGrid, this);
+
+        // CHERRY CARD
+        Card CHERRYCARD = new Card(
+                "images/cards/cherryCard.png",
+                "images/plants/cherry.png",
+                Cherry.class,
+                150
+        );
+        CHERRYCARD.cardImageViewSetProperties(466, 21, 47, 66, true, true);
+        CHERRYCARD.draggingImageViewSetProperties(80, 70, true, false);
+        CHERRYCARD.hoverImageViewSetProperties(80, 70, true, false);
+
+        // ICED PEA CARD
+        Card ICEDPEACARD = new Card(
+                "images/cards/icedpeashooterCard.png",
+                "images/plants/icedpeashooter.png",
+                IcedPea.class,
+                150
+        );
+        ICEDPEACARD.cardImageViewSetProperties(520, 21, 47, 66, true, true);
+        ICEDPEACARD.draggingImageViewSetProperties(90, 70, true, false);
+        ICEDPEACARD.hoverImageViewSetProperties(90, 70, true, false);
+
+        // JALAPENO CARD
+        Card JALAPENOCARD = new Card(
+                "images/cards/jalapenoCard.png",
+                "images/plants/jalapeno.png",
+                Jalepeno.class,
+                125
+        );
+        JALAPENOCARD.cardImageViewSetProperties(573, 21, 47, 66, true, true);
+        JALAPENOCARD.draggingImageViewSetProperties(41, 78, true, false);
+        JALAPENOCARD.hoverImageViewSetProperties(41, 78, true, false);
+
+        // REPEATER CARD
+        Card REPEATERCARD = new Card(
+                "images/cards/repeaterCard.png",
+                "images/plants/repeater.png",
+                Repeater.class,
+                200
+        );
+        REPEATERCARD.cardImageViewSetProperties(627, 21, 47, 66, true, true);
+        REPEATERCARD.draggingImageViewSetProperties(61, 107, true, false);
+        REPEATERCARD.hoverImageViewSetProperties(61, 107, true, false);
 
         // LOCKED CARDS
         Card cherryLockedCard = new Card("images/lockedCards/cherryLockedCard.png");
@@ -543,8 +625,29 @@ public class Yard extends Thread
         Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
         repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
 
-        // Add all locked cards to the root pane.
-        root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+        // Switch the level number to display correct cards for each level
+        switch(levelNumber)
+        {
+            case 1:
+                // Add all locked cards to the root pane.
+                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                break;
+            case 2:
+                // Only last 2 cards are not unlocked
+                root.getChildren().addAll(jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                CHERRYCARD.addToYard(root, yardGrid, this);
+                ICEDPEACARD.addToYard(root, yardGrid, this);
+
+                break;
+            case 3:
+                // All cards are unlocked in level 3
+                System.out.println("All cards are unlocked in " + levelNumber);
+                CHERRYCARD.addToYard(root, yardGrid, this);
+                ICEDPEACARD.addToYard(root, yardGrid, this);
+                JALAPENOCARD.addToYard(root, yardGrid, this);
+                REPEATERCARD.addToYard(root, yardGrid, this);
+                break;
+        }
     }
 
     private void generateLawnMowers(AnchorPane root)
@@ -566,6 +669,23 @@ public class Yard extends Thread
         lawnMowers[4].getElementImage().setLayoutY(501);
 
         root.getChildren().addAll(lawnMowers[0].getElementImage(),lawnMowers[1].getElementImage(),lawnMowers[2].getElementImage(),lawnMowers[3].getElementImage(),lawnMowers[4].getElementImage());
+    }
+
+    public void generateSunCounter()
+    {
+        // Make sure sunCounterLabel is initialized and positioned properly
+        // Only set the initial label if it's not set yet
+            Yard.label.setText(String.valueOf(sunCounter)); // Initial value of sun counter
+            Yard.label.setStyle("-fx-font-size: 20px; -fx-text-fill: black; -fx-font-weight: bold;"); // Style the label
+            Yard.label.setLayoutX(248); // Position on the X-axis
+            Yard.label.setLayoutY(65); // Position on the Y-axis
+
+
+        // Add the label to the root pane to ensure it's visible on the screen
+        if (!root.getChildren().contains(Yard.label))
+        {
+            root.getChildren().add(Yard.label); // Add the label to the scene (root pane)
+        }
     }
 
 }

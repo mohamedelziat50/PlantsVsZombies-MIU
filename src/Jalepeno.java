@@ -1,3 +1,5 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public class Jalepeno extends Plant {
@@ -5,7 +7,7 @@ public class Jalepeno extends Plant {
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Jalepeno()
     {
-        super(150, 15, 50);
+        super(100, 15, 50);
     }
 
     // Added to be used when placing a plant on the yard
@@ -14,12 +16,17 @@ public class Jalepeno extends Plant {
         this();
         super.x = x;
         super.y = y;
-    }
 
-    @Override
-    public void takeDamage(int damage)
-    {
+        // Initialize the Peashooter image
+        elementImage = new ImageView(new Image("images/plants/jalapeno.png"));
+        elementImage.setFitWidth(41);
+        elementImage.setFitHeight(78);
+        elementImage.setPreserveRatio(true);
 
+
+        // Set the position for the image
+        elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) + 5);
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 25);
     }
 
     @Override
@@ -29,7 +36,14 @@ public class Jalepeno extends Plant {
     }
 
     @Override
-    public void action() {
-        //to be implemented
+    public void takeDamage(int damage)
+    {
+
+    }
+
+    @Override
+    public void action()
+    {
+
     }
 }

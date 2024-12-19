@@ -1,11 +1,20 @@
+import javafx.animation.PauseTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 public class HelmetZombie extends Zombie {
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public HelmetZombie()
     {
-        super(10, 5, 100);
+        super(10, 2, 100);
+        elementImage=new ImageView(new Image("images/zombies/helmetZombie.gif"));
+        elementImage.setFitWidth(168);
+        elementImage.setFitHeight(130);
+        elementImage.setPreserveRatio(true);
+
     }
 
     // Added to be used when spawning a zombie on the yard
@@ -17,37 +26,14 @@ public class HelmetZombie extends Zombie {
     }
 
     @Override
-    public void takeDamage(int damage)
-    {
-
-    }
-
-    @Override
-    public void move()
-    {
-
-    }
-
-    @Override
     public void action()
     {
 
     }
 
     @Override
-    public void appear(Pane root)
-    {
-        //to be implemented
-    }
-
-    @Override
-    public void appear(Pane root, int x, int y) {
+    public void appear(Pane root) {
 
     }
 
-    @Override
-    public void disappear(Pane root)
-    {
-        //to be implemented
-    }
 }

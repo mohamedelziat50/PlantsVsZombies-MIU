@@ -10,10 +10,10 @@ import javafx.scene.media.MediaPlayer;
 public class Pea extends Characters implements Serializable, Runnable
 {
     // Reference to check whether it's alive or not
-    private Peashooter parent;
+    private Plant parent;
     protected int damage;
     
-    public Pea(int damage, Peashooter parent)
+    public Pea(int damage, Plant parent)
     {
         this.damage = damage;
         this.parent = parent; // Reference to the Peashooter

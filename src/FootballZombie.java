@@ -1,32 +1,29 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class JournalZombie extends Zombie {
+public class FootballZombie extends Zombie {
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
-    public JournalZombie()
+    public FootballZombie()
     {
-        super(10, 5, 100);
+        super(10, 10, 100);
+        elementImage=new ImageView(new Image("images/zombies/footballZombie.gif"));
+        elementImage.setFitWidth(194);
+        elementImage.setFitHeight(150);
+        elementImage.setPreserveRatio(true);
+
+
     }
 
     // Added to be used when spawning a zombie on the yard
-    public JournalZombie(int x, int y)
+    public FootballZombie(int x, int y)
     {
         this();
         super.x = x;
         super.y = y;
     }
 
-    @Override
-    public void takeDamage(int damage)
-    {
-
-    }
-
-    @Override
-    public void move()
-    {
-
-    }
 
     @Override
     public void action()
@@ -40,14 +37,7 @@ public class JournalZombie extends Zombie {
         //to be implemented
     }
 
-    @Override
-    public void appear(Pane root, int x, int y) {
 
-    }
 
-    @Override
-    public void disappear(Pane root)
-    {
-        //to be implemented
-    }
+
 }
