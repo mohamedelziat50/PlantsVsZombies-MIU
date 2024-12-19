@@ -40,11 +40,10 @@ public class Card
     }
 
     // Constructor used for unlocked cards
-    public Card(String cardImagePath, String draggingImagePath, String plantGifPath, Class<? extends Plant> plantType, int cost)
+    public Card(String cardImagePath, String draggingImagePath, Class<? extends Plant> plantType, int cost)
     {
         this.cardImagePath = cardImagePath;
         this.draggingImagePath = draggingImagePath;
-        this.plantGifPath = plantGifPath;
         this.plantType = plantType;
         this.cost = cost;
 
@@ -89,6 +88,7 @@ public class Card
 
     public void addToYard(AnchorPane root, GridPane yardGrid, Yard yard)
     {
+        // Add card to the root pane
         root.getChildren().add(cardImageView);
 
 
@@ -111,6 +111,14 @@ public class Card
                 {
                     Thread.sleep(20); // If you increase, then the click read will be delayed
 
+                    /*
+                    JavaFX UI updates must happen on the JavaFX Application Thread.
+                    If another thread (like a background thread) tries to modify the UI directly, it can cause errors.
+                    Platform.runLater safely schedules UI updates on the JavaFX Application Thread: Run this code on the JavaFX Application Thread when it's safe to do so
+                    You don’t need Platform.runLater if all your code runs on event handlers, which are already on the JavaFX Application Thread. Only use it when you create separate threads.
+                     */
+
+                    // Update UI safely after background work
                     Platform.runLater(() -> {
                         // Activate dragging
                         draggingImageView.setLayoutX(event.getSceneX() - 30);
@@ -146,10 +154,11 @@ public class Card
             {
                 try
                 {
+                    // Simulate a delay or background processing.
                     Thread.sleep(20); // If you increase, then the dragging will be delayed
 
-                    Platform.runLater(() ->
-                    {
+                    // Update UI safely after background work
+                    Platform.runLater(() -> {
                         if (draggingImageView.isVisible())
                         {
                             // Update dragging image position
@@ -204,6 +213,7 @@ public class Card
                                 hoverImageView.setVisible(false);
                             }
                         }
+
                     });
                 } catch (InterruptedException e) {
                     System.out.println("Exception: " + e);
@@ -212,7 +222,6 @@ public class Card
 
             event.consume();
         });
-
 
         // Drop the plant when the mouse is released
         cardImageView.setOnMouseReleased(event ->
@@ -250,6 +259,8 @@ public class Card
 
                                     if (plantType == null) {
                                         System.out.println("Shovel used at (" + GridPane.getRowIndex(button) + ", " + GridPane.getColumnIndex(button) + ")");
+
+
                                         // Call a method to remove the plant and its image
                                         yard.removePlant(root, GridPane.getRowIndex(button), GridPane.getColumnIndex(button));
                                     } else {
@@ -287,7 +298,8 @@ public class Card
                         hoverImageView.setVisible(false); // Hide hover image if drop fails
                         root.getChildren().remove(hoverImageView); // Remove hover image from scene
                     });
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e)
+                {
                     System.out.println("Exception: " + e);
                 }
             }).start();

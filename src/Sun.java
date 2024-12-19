@@ -49,7 +49,6 @@ public class Sun extends MainElements
                 {
                     Thread.sleep(3000); // spawn kol 3 seconds
 
-
                     javafx.application.Platform.runLater(() ->
                     {
                         Sun sun = new Sun();
@@ -75,7 +74,6 @@ public class Sun extends MainElements
                         // pressing on the sun logic and animation
                         sun.getElementImage().setOnMouseClicked(event ->
                         {
-
                             // pressing on the sun logic and animation
                             Timeline collectAnimation = new Timeline(
                                     new KeyFrame(Duration.ZERO, new KeyValue(sun.getElementImage().layoutXProperty(), sun.getElementImage().getLayoutX())),
@@ -92,7 +90,6 @@ public class Sun extends MainElements
 
                             // Stop the drop animation once clicked
                             dropAnimation.stop();
-
                         });
 
                         dropAnimation.setOnFinished(e ->
