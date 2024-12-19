@@ -1,12 +1,14 @@
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 
 import java.util.Random;
 
@@ -17,6 +19,8 @@ public class Yard extends Thread
     private Characters[][] grid;
     private LawnMower[] lawnMowers;
     public static AnchorPane root;
+    public static int sunCounter = 50;
+    public static Label label = new Label("50");
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
@@ -199,8 +203,15 @@ public class Yard extends Thread
 
         // Generate cards on root pane
         generateCards(root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+
         // Generate lawnmowers on root pane
         generateLawnMowers(root);
+
+        label.setLayoutX(50); // Positioning the label
+        label.setLayoutY(50);
+        root.getChildren().add(label);
+
+        generateSunCounter();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -284,7 +295,7 @@ public class Yard extends Thread
     private void generateCards(AnchorPane root, GridPane yardGrid)
     {
         // Create ImageView for the Wooden Box that holds the cards
-        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox.png"));
+        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox(1).png"));
         // Specify its size
         woodenBox.setFitWidth(528);
         woodenBox.setFitHeight(320);
@@ -300,7 +311,8 @@ public class Yard extends Thread
                 "images/cards/shovel.png",
                 "images/others/shovel.png",
                 null,
-                null
+                null,
+                0
         ); // NULL is used as a workaround to avoid creating a shovel class
         SHOVELCARD.cardImageViewSetProperties(681,14,80,88,true,true);
         SHOVELCARD.draggingImageViewSetProperties(61,70,true,false);
@@ -312,7 +324,8 @@ public class Yard extends Thread
                 "images/cards/peashooterCard.png",
                 "images/plants/peashooter.png",
                 "images/plants/peashooter.gif", // Optional
-                Peashooter.class
+                Peashooter.class,
+                100
         );
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
         PEASHOOTERCARD.draggingImageViewSetProperties(61, 74, true, false);
@@ -324,7 +337,8 @@ public class Yard extends Thread
                 "images/cards/sunflowerCard.png",
                 "images/plants/sunflower.png",
                 "images/plants/sunflower.gif", // Optional
-                Sunflower.class
+                Sunflower.class,
+                50
         );
         SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
         SUNFLOWERCARD.draggingImageViewSetProperties(61, 66, true, false);
@@ -336,7 +350,8 @@ public class Yard extends Thread
                 "images/cards/potatoCard.png",
                 "images/plants/potato.png",
                 "images/plants/potato.gif", // Optional
-                Potato.class
+                Potato.class,
+                50
         );
         POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
         POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
@@ -379,6 +394,23 @@ public class Yard extends Thread
         lawnMowers[4].getElementImage().setLayoutY(501);
 
         root.getChildren().addAll(lawnMowers[0].getElementImage(),lawnMowers[1].getElementImage(),lawnMowers[2].getElementImage(),lawnMowers[3].getElementImage(),lawnMowers[4].getElementImage());
+    }
+
+    public void generateSunCounter()
+    {
+        // Make sure sunCounterLabel is initialized and positioned properly
+        // Only set the initial label if it's not set yet
+            Yard.label.setText(String.valueOf(sunCounter)); // Initial value of sun counter
+            Yard.label.setStyle("-fx-font-size: 20px; -fx-text-fill: black; -fx-font-weight: bold;"); // Style the label
+            Yard.label.setLayoutX(248); // Position on the X-axis
+            Yard.label.setLayoutY(65); // Position on the Y-axis
+
+
+        // Add the label to the root pane to ensure it's visible on the screen
+        if (!root.getChildren().contains(Yard.label))
+        {
+            root.getChildren().add(Yard.label); // Add the label to the scene (root pane)
+        }
     }
 
 }

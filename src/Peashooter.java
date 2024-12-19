@@ -59,7 +59,8 @@ public class Peashooter extends Plant
                     peaThread.start();
                 });
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 System.out.println("Peashooter thread interrupted: " + e.getMessage());
                 Thread.currentThread().interrupt();
                 break;
