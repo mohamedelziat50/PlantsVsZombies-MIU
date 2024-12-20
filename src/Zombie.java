@@ -13,7 +13,6 @@ public abstract class Zombie extends Characters
 
     private volatile boolean isAttacking = false;
 
-
     public Zombie() {}
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
@@ -89,21 +88,25 @@ public abstract class Zombie extends Characters
 
         if (targetPlant != null && targetPlant.isAlive()) {
             attack(targetPlant); // Handle attack
-        }
-        else
-        {
+        } else {
             Platform.runLater(() -> {
                 elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
-        }
 
-        try {
-            Thread.sleep(10); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("Zombie movement thread interrupted");
+            if (elementImage.getLayoutX() < 0) {
+                System.out.println("game over");
+                System.exit(0);//change to a reasonble function
+            }
+
+            try {
+                Thread.sleep(10); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("Zombie movement thread interrupted");
+            }
         }
     }
+
 
     @Override
     public void takeDamage(int damage)

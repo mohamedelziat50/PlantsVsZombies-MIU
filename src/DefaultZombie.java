@@ -13,9 +13,9 @@ public class DefaultZombie extends Zombie
         // 0.02 instead of 2 to mantain the smoothness without delaying movement of zombies and lagging
         super(10, 0.2, 100);
         elementImage=new ImageView(new Image("images/zombies/walking-plants-vs-zombies.gif"));
-        elementImage.setFitHeight(132);
+        elementImage.setFitHeight(140);
         elementImage.setFitWidth(187);
-        elementImage.setPreserveRatio(true);
+        //elementImage.setPreserveRatio(true);
 
     }
 

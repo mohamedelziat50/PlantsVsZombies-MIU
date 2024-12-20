@@ -11,9 +11,9 @@ public class HelmetZombie extends Zombie {
     {
         super(10, 0.2, 100);
         elementImage=new ImageView(new Image("images/zombies/helmetZombie.gif"));
-        elementImage.setFitWidth(168);
+        elementImage.setFitWidth(170);
         elementImage.setFitHeight(130);
-        elementImage.setPreserveRatio(true);
+        //elementImage.setPreserveRatio(true);
 
     }
 
