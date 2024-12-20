@@ -6,7 +6,6 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,7 +19,6 @@ import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class Yard extends Thread
@@ -36,12 +34,11 @@ public class Yard extends Thread
     public static volatile ArrayList<Zombie> zombies = new ArrayList<>(); // Collision With peas
     public static volatile ArrayList<Plant> plants = new ArrayList<>(); // Collision with plants (zombies side)
 
-
     // Variables specific to each level!
     private int zombieSpawnInterval;
     private double levelDuration = 60.0;  // Total duration for the level (in seconds)
     private double timeLeft = levelDuration;
-    public static int sunCounter = 700;
+    public static int sunCounter = 1500;
 
     // GUI-related variables
     public static AnchorPane root;
@@ -53,7 +50,7 @@ public class Yard extends Thread
     public Yard()
     {
         root = new AnchorPane();
-        zombieSpawnInterval=5;
+        zombieSpawnInterval = 5 ;
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
@@ -108,7 +105,7 @@ public class Yard extends Thread
             plant.setX(row);
             plant.setY(col);
 
-            // Also add the the ArrayList of plants to handle collision
+            // Also add the ArrayList of plants to handle collision
             synchronized (plants)
             {
                 plants.add(plant);
@@ -400,7 +397,7 @@ public class Yard extends Thread
 
         zombiesArrivalAudio();
 
-        // startLevelTimer(); Comment out for now to test berahtna
+        startLevelTimer();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -613,13 +610,13 @@ public class Yard extends Thread
         // ICED PEA CARD
         Card ICEDPEACARD = new Card(
                 "images/cards/icedpeashooterCard.png",
-                "images/plants/icedpeashooter.png",
-                IcedPea.class,
+                "images/plants/icedpeashooter.gif",
+                IcedPeashooter.class,
                 175
         );
         ICEDPEACARD.cardImageViewSetProperties(520, 21, 47, 66, true, true);
-        ICEDPEACARD.draggingImageViewSetProperties(90, 70, true, false);
-        ICEDPEACARD.hoverImageViewSetProperties(90, 70, true, false);
+        ICEDPEACARD.draggingImageViewSetProperties(73, 78, true, false);
+        ICEDPEACARD.hoverImageViewSetProperties(73, 78, true, false);
 
         // JALAPENO CARD
         Card JALAPENOCARD = new Card(
