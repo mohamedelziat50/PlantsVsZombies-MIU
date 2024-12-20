@@ -56,7 +56,9 @@ public abstract class Plant extends Characters implements Runnable
     {
         Platform.runLater(() -> {
             if (elementImage != null) {
-                root.getChildren().add(elementImage);
+                if (!root.getChildren().contains(elementImage)) // Check to avoid duplicates
+                    root.getChildren().add(elementImage);
+
                 System.out.println("Plant appears.");
             }
         });

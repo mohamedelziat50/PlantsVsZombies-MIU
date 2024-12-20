@@ -9,7 +9,7 @@ public class HelmetZombie extends Zombie {
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public HelmetZombie()
     {
-        super(10, 0.2, 100);
+        super(10, 0.5, 100);
         elementImage=new ImageView(new Image("images/zombies/helmetZombie.gif"));
         elementImage.setFitWidth(170);
         elementImage.setFitHeight(130);
