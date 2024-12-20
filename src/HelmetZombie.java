@@ -10,10 +10,10 @@ public class HelmetZombie extends Zombie {
     public HelmetZombie()
     {
         super(10, 0.5, 100);
-        elementImage=new ImageView(new Image("images/zombies/helmetZombie.gif"));
-        elementImage.setFitWidth(170);
-        elementImage.setFitHeight(130);
-        //elementImage.setPreserveRatio(true);
+        elementImage=new ImageView(new Image("images/zombies1/BucketheadZombie.gif"));
+        elementImage.setFitWidth(135);
+        elementImage.setFitHeight(120);
+        elementImage.setPreserveRatio(true);
 
     }
 

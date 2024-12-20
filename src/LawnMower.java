@@ -13,9 +13,10 @@ public class LawnMower extends MainElements {
         this.isActive = false;
 
         // Set the lawnmower image
-        this.elementImage = new ImageView(new Image("images/plants/LawnMower.png"));
-        this.elementImage.setFitWidth(70); // Adjust the size as needed
-        this.elementImage.setFitHeight(50);
+        this.elementImage = new ImageView(new Image("images/zombies1/LawnCleaner.png"));
+        this.elementImage.setFitWidth(76); // Adjust the size as needed
+        this.elementImage.setFitHeight(70);
+        elementImage.setPreserveRatio(true);
     }
 
     public ImageView getElementImage() {
@@ -37,7 +38,9 @@ public class LawnMower extends MainElements {
             isActive = true;
             // Start a new thread or animation to move the lawnmower
             new Thread(() -> {
-                elementImage.setImage(new Image("images/plants/animatedLawnMower.gif"));
+                elementImage.setImage(new Image("images/zombies1/LawnCleaner1.png"));
+                this.elementImage.setFitWidth(76); // Adjust the size as needed
+                this.elementImage.setFitHeight(70);
                 moveLawnMower(root);
             }).start();
         }
@@ -60,10 +63,10 @@ public class LawnMower extends MainElements {
             for (Zombie zombie : Yard.zombies) {
                 if (zombie.isAlive()) {
                     // Create a smaller bounding box for collision detection
-                    double lawnMowerLeft = elementImage.getLayoutX() + 10; // Adjust bounds by adding a margin
-                    double lawnMowerRight = elementImage.getLayoutX() + elementImage.getFitWidth() - 10; // Adjust bounds by subtracting a margin
-                    double lawnMowerTop = elementImage.getLayoutY() + 10;
-                    double lawnMowerBottom = elementImage.getLayoutY() + elementImage.getFitHeight() - 30;
+                    double lawnMowerLeft = elementImage.getLayoutX() ; // Adjust bounds by adding a margin
+                    double lawnMowerRight = elementImage.getLayoutX() + elementImage.getFitWidth() ; // Adjust bounds by subtracting a margin
+                    double lawnMowerTop = elementImage.getLayoutY()+10 ;
+                    double lawnMowerBottom = elementImage.getLayoutY() + elementImage.getFitHeight()-60 ;
 
                     // Check if this specific lawnmower intersects with the zombie
                     if (zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop)) {

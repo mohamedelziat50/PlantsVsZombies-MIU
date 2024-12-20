@@ -108,7 +108,7 @@ public abstract class Zombie extends Characters
             }
 
             try {
-                Thread.sleep(10); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
+                Thread.sleep(1); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 System.err.println("Zombie movement thread interrupted");
@@ -154,6 +154,31 @@ public abstract class Zombie extends Characters
 
         // Stop movement
         setSpeed(0);
+        if(this instanceof FootballZombie){
+            elementImage.setImage(new Image("images/zombies1/FootballZombieAttack.gif"));
+            elementImage.setFitWidth(120);
+            elementImage.setFitHeight(125);
+            elementImage.setPreserveRatio(true);
+
+        }
+       else if(this instanceof ConeZombie){
+            elementImage.setImage(new Image("images/zombies1/ConeheadZombieAttack.gif"));
+            elementImage.setFitHeight(155);
+            elementImage.setFitWidth(134);
+            elementImage.setPreserveRatio(true);
+        }
+       else if(this instanceof DefaultZombie){
+            elementImage.setImage(new Image("images/zombies1/ZombieAttack.gif"));
+            elementImage.setFitHeight(155);
+            elementImage.setFitWidth(134);
+            elementImage.setPreserveRatio(true);
+        }
+       else if(this instanceof HelmetZombie){
+            elementImage.setImage(new Image("images/zombies1/BucketheadZombieAttack.gif"));
+            elementImage.setFitHeight(155);
+            elementImage.setFitWidth(134);
+            elementImage.setPreserveRatio(true);
+        }
 
         // Attack the plant
         Thread attackThread = new Thread(() -> {
@@ -171,6 +196,34 @@ public abstract class Zombie extends Characters
                 System.err.println("Attack thread interrupted");
             } finally {
                 isAttacking = false;
+                Platform.runLater(()->{
+                    if(this instanceof FootballZombie){
+                        elementImage.setImage(new Image("images/zombies1/FootballZombie.gif"));
+                        elementImage.setFitWidth(120);
+                        elementImage.setFitHeight(125);
+                        elementImage.setPreserveRatio(true);
+                    }
+                    else if(this instanceof DefaultZombie){
+                          elementImage.setImage(new Image("images/zombies1/Zombie.gif"));
+                        elementImage.setFitHeight(155);
+                        elementImage.setFitWidth(134);
+                        elementImage.setPreserveRatio(true);
+
+                    }
+                    else if(this instanceof ConeZombie){
+                        elementImage.setImage(new Image("images/zombies1/ConeZombie.gif"));
+                        elementImage.setFitHeight(155);
+                        elementImage.setFitWidth(134);
+                        elementImage.setPreserveRatio(true);
+                    }
+                    else if(this instanceof HelmetZombie){
+                       elementImage.setImage(new Image("images/zombies1/BucketheadZombie.gif"));
+                        elementImage.setFitHeight(155);
+                        elementImage.setFitWidth(134);
+                        elementImage.setPreserveRatio(true);
+                    }
+                });
+
                 setSpeed(originalSpeed);
             }
         });
@@ -203,7 +256,19 @@ public abstract class Zombie extends Characters
     public void disappear(Pane root)
     {
         System.out.println("Zombie died!");
-        elementImage.setImage(new Image("images/zombies/dyingDefaultZombie.gif"));
+        if(this instanceof FootballZombie){
+            elementImage.setImage(new Image("images/zombies1/FootballZombieDie.gif"));
+            elementImage.setFitWidth(134);
+            elementImage.setFitHeight(150);
+            elementImage.setPreserveRatio(true);
+        }
+        else{
+            elementImage.setImage(new Image("images/zombies1/ZombieDie.gif"));
+            elementImage.setFitHeight(155);
+            elementImage.setFitWidth(134);
+            elementImage.setPreserveRatio(true);
+        }
+
 
         double gifDurationInSeconds = 2; // Replace with the actual duration of the GIF
 

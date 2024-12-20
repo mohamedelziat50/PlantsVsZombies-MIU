@@ -11,11 +11,11 @@ public class ConeZombie extends Zombie
     public ConeZombie()
     {
         super(10, 0.5, 100);
-        elementImage=new ImageView(new Image("images/zombies/coneZombie.gif"));
+        elementImage=new ImageView(new Image("images/zombies1/ConeZombie.gif"));
         //ImageView image = new ImageView(new Image("images/zombies/walking-plants-vs-zombies.gif"));
-        elementImage.setFitHeight(127);
-        elementImage.setFitWidth(100);
-        //elementImage.setPreserveRatio(true);
+        elementImage.setFitHeight(155);
+        elementImage.setFitWidth(134);
+        elementImage.setPreserveRatio(true);
 
 
     }
