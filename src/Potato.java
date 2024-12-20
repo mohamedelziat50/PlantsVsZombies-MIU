@@ -28,13 +28,29 @@ public class Potato extends Plant
         elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 10);
     }
 
+
+    // Over-ride Potato to display different health-stages
     @Override
     public void takeDamage(int damage)
     {
         // Call the superclass implementation to apply damage
         super.takeDamage(damage);
 
-        // Add any specific behavior for this subclass if needed
+        // Calculate health percentage based on original health (this.health is the current health)
+        double healthPercentage = (double) this.health / 200;  // 200 is the original health value for Potato
+
+        // Change image based on health percentage
+        if (healthPercentage <= 0.30)
+        {
+            // Change to "potato-cracked2.gif" if health is 30% or less
+            elementImage.setImage(new Image("images/plants/potato-cracked2.gif"));
+        } else if (healthPercentage <= 0.75)
+        {
+            // Change to "potato-cracked1.gif" if health is 75% or less
+            elementImage.setImage(new Image("images/plants/potato-cracked1.gif"));
+        }
+
+        // Log the current health for debugging
         System.out.println("Potato takes damage: " + damage + " Current health: " + this.health);
     }
 

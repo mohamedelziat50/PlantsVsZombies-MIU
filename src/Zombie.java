@@ -12,6 +12,7 @@ public abstract class Zombie extends Characters
     // ADD WAITING TIME FOR ATTACKING
 
     private volatile boolean isAttacking = false;
+    private volatile boolean slowed = false;
 
     public Zombie() {}
 
@@ -21,6 +22,14 @@ public abstract class Zombie extends Characters
         this.attackPower = attackPower;
         this.speed = speed;
         this.health = health;
+    }
+
+    public boolean isSlowed() {
+        return slowed;
+    }
+
+    public void setSlowed(boolean slowed) {
+        this.slowed = slowed;
     }
 
     public double getAttackPower() {
