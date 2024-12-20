@@ -14,7 +14,7 @@
    <children>
       <ImageView fx:id="yardImageView" fitHeight="650.0" fitWidth="1278.0" pickOnBounds="true">
          <image>
-            <Image url="@images/others/Yard.png" />
+            <Image url="@images/yard-related/Yard.png" />
          </image>
       </ImageView>
       <GridPane fx:id="yardGrid" accessibleRole="IMAGE_VIEW" alignment="CENTER_LEFT" layoutX="227.0" layoutY="180.0" prefHeight="411.0" prefWidth="680.0">
@@ -241,7 +241,7 @@
       </GridPane>
       <ImageView fitHeight="320.0" fitWidth="528.0" layoutX="227.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@images/others/woodenBox.png" />
+            <Image url="@images/yard-related/woodenBox.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="71.0" fitWidth="47.0" layoutX="304.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
@@ -343,6 +343,16 @@
       <ImageView fitHeight="70.0" fitWidth="80.0" layoutX="998.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/plants/cherry.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="151.0" fitWidth="209.0" layoutX="911.0" layoutY="386.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/zombies/footballZombie.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="132.0" fitWidth="187.0" layoutX="1048.0" layoutY="386.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/zombies/defaultZombie.gif" />
          </image>
       </ImageView>
    </children>
