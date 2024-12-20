@@ -8,13 +8,16 @@ import javafx.util.Duration;
 public abstract class Zombie extends Characters
 {
     protected int attackPower;
-    protected int speed;
+    protected double speed;
     // ADD WAITING TIME FOR ATTACKING
+
+    private volatile boolean isAttacking = false;
+
 
     public Zombie() {}
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
-    public Zombie(int attackPower,int speed, int health)
+    public Zombie(int attackPower,double speed, int health)
     {
         this.attackPower = attackPower;
         this.speed = speed;
@@ -29,22 +32,27 @@ public abstract class Zombie extends Characters
         this.attackPower = attackPower;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
-    // Used in collision handling
-    public boolean isColliding(ImageView pea)
+    // Used in collision handling with any object!
+    public boolean isColliding(ImageView object)
     {
         // Shrink bounds for more precise collision detection
         double margin = 50; // Adjust as needed
-        var zombieBounds = elementImage.getBoundsInParent(); // var -> specify any datatype you want, no need to explicitly declare it
-        var peaBounds = pea.getBoundsInParent();
 
+        // Get the zombie's bounds
+        var zombieBounds = elementImage.getBoundsInParent(); // var -> specify any datatype you want, no need to explicitly declare it
+
+        // Get the object's bounds (Pea or plant)
+        var objectBounds = object.getBoundsInParent();
+
+        // Shrink the zombie bounds for more precise bounds with a specific margin
         var adjustedZombieBounds = new javafx.geometry.BoundingBox(
                 zombieBounds.getMinX() + margin,
                 zombieBounds.getMinY() + margin,
@@ -52,44 +60,60 @@ public abstract class Zombie extends Characters
                 zombieBounds.getHeight() - 2 * margin
         );
 
-        return adjustedZombieBounds.intersects(peaBounds);
+        // Use built-in intersects object of the Bounds class
+        return adjustedZombieBounds.intersects(objectBounds);
     }
 
-
-    public void move()
+    // This function checks whether the current zombie thread collided with a plant through the zombie's isColliding function
+    public Plant checkForPlantCollision()
     {
-        synchronized (this)
+        synchronized (Yard.plants)
         {
-            // Synchronize this zombie's movement to avoid interference
-            if (isAlive())
+            for (Plant plant: Yard.plants)
             {
-                // Only move if the zombie is alive
-                Platform.runLater(() -> {
-                    // Update the zombie's position on the UI thread
-                    elementImage.setLayoutX(elementImage.getLayoutX() - speed); // Move left by 1 unit
-                });
-
-                // Simulate movement delay to avoid excessive CPU usage
-                try {
-                    Thread.sleep(50); // Adjust this value for desired movement speed
-                } catch (InterruptedException e)
-                {
-                    Thread.currentThread().interrupt();
-                    System.err.println("Zombie movement thread interrupted");
+                if (isColliding(plant.elementImage)) {
+                    return plant; // Return the first plant it collides with
                 }
             }
         }
-
-
+        return null; // No collision
     }
 
+    // This function moves the zombie thread throughout its lifetime
+    public synchronized void move()
+    {
+        // Skip movement if already attacking or dead
+        if (!isAlive() || isAttacking) return;
+
+        Plant targetPlant = checkForPlantCollision();
+
+        if (targetPlant != null && targetPlant.isAlive()) {
+            attack(targetPlant); // Handle attack
+        }
+        else
+        {
+            Platform.runLater(() -> {
+                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
+            });
+        }
+
+        try {
+            Thread.sleep(10); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("Zombie movement thread interrupted");
+        }
+    }
+
+    @Override
     public void takeDamage(int damage)
     {
         health -= damage;
-        System.out.println("Zombie damaged!");
+        System.out.println("Zombie takes damage: " + damage);
+
         if (health <= 0)
         {
-            // Set the volatile thread flag to be false
+            // Set the volatile thread flag to be false / Mark As Dead
             setAlive(false);
 
             Platform.runLater(() -> {
@@ -102,6 +126,47 @@ public abstract class Zombie extends Characters
             }
         }
     }
+
+    // This functions attacks a collided plant (Thread since it also accesses shared resources of itself, and Plant array list)
+    private void attack(Plant targetPlant)
+    {
+        // If zombie is current attacking, prevent many threads for attacking.
+        if (isAttacking)
+            return;
+
+        // Set is attacking to be true to create a new attacking thread
+        isAttacking = true;
+
+        // Store original speed to use later
+        double originalSpeed = this.getSpeed();
+
+        // Stop movement
+        setSpeed(0);
+
+        // Attack the plant
+        Thread attackThread = new Thread(() -> {
+            try {
+                while (isAlive() && targetPlant.isAlive() && isColliding(targetPlant.elementImage))
+                {
+                    targetPlant.takeDamage(attackPower);
+
+                    // Attack every 3 seconds
+                    Thread.sleep(3000);
+                }
+            } catch (InterruptedException e)
+            {
+                Thread.currentThread().interrupt();
+                System.err.println("Attack thread interrupted");
+            } finally {
+                isAttacking = false;
+                setSpeed(originalSpeed);
+            }
+        });
+
+        attackThread.setDaemon(true);
+        attackThread.start();
+    }
+
 
     @Override
     public abstract void action();
@@ -117,6 +182,8 @@ public abstract class Zombie extends Characters
 
             root.getChildren().add(elementImage);
         });
+
+        setAlive(true);
     }
 
 
@@ -125,7 +192,6 @@ public abstract class Zombie extends Characters
     {
         System.out.println("Zombie died!");
         elementImage.setImage(new Image("images/zombies/dyingDefaultZombie.gif"));
-
 
         double gifDurationInSeconds = 2; // Replace with the actual duration of the GIF
 

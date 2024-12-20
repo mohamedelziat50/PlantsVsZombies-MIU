@@ -6,7 +6,6 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,26 +17,35 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Yard extends Thread
 {
+    // YARD CONSTANT VARIABLES
     public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
-    private int zombieSpawnInterval;
-    private Characters[][] grid;
+
+    // IMPORTANT ARRAYS FOR GAMEPLAY TRACKING OF PLANTS & LAWNMOWERS
+    public static volatile Characters[][] grid; // Used Placement of plants
     private LawnMower[] lawnMowers;
-    public static AnchorPane root;
-    private ProgressBar levelProgressBar;  // The progress bar to track level duration
+
+    // Used for collision handling between plants/peas & zombies
+    public static volatile ArrayList<Zombie> zombies = new ArrayList<>(); // Collision With peas
+    public static volatile ArrayList<Plant> plants = new ArrayList<>(); // Collision with plants (zombies side)
+
+
+    // Variables specific to each level!
+    private int zombieSpawnInterval;
     private double levelDuration = 60.0;  // Total duration for the level (in seconds)
     private double timeLeft = levelDuration;
-    public static int sunCounter = 50;
-    public static Label label = new Label("50");
+    public static int sunCounter = 700;
 
-    // Used for collision handling
-    public static volatile ArrayList<Zombie> zombies = new ArrayList<>();
+    // GUI-related variables
+    public static AnchorPane root;
+    public static Label label = new Label("50");
+    private ProgressBar levelProgressBar;  // The progress bar to track level duration
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
@@ -95,6 +103,16 @@ public class Yard extends Thread
             // The grid is used to keep track whether the grid cell is taken up by a plant.
             grid[row][col] = plant;
 
+            // Add x and y to be used with collision handling
+            plant.setX(row);
+            plant.setY(col);
+
+            // Also add the the ArrayList of plants to handle collision
+            synchronized (plants)
+            {
+                plants.add(plant);
+            }
+
             // Call the plants' subclass over-ridden appear function.
             plant.appear(root);
 
@@ -130,6 +148,12 @@ public class Yard extends Thread
 
         if (plantToRemove != null)
         {
+            synchronized (plants)
+            {
+                // Remove from the plants list
+                plants.remove(plantToRemove);
+            }
+
             grid[row][col].disappear(root); // Now disappear removes from the root directly! (Notice changes in "Plant" class)
             grid[row][col] = null; // Clear the grid cell
             plantSelectedAudio();
@@ -149,8 +173,6 @@ public class Yard extends Thread
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
         Random random = new Random();
-
-
 
         while (true)
         {
@@ -175,13 +197,11 @@ public class Yard extends Thread
                 zombie=new FootballZombie(x,y);
             }
 
-
-
            // Create a new zombie at the random position
             zombie.setAlive(true);
 
             // Added to be used with collision handling (with pea)
-            Yard.zombies.add(zombie);
+            zombies.add(zombie);
 
             if(zombie instanceof ConeZombie){
                 zombie.appear(root, x, y); // Place the zombie on the yard
@@ -193,22 +213,14 @@ public class Yard extends Thread
                 zombie.appear(root,x,y);
             }
 
+            // System.out.println("Zombie placed at x: " + x + ", y: " + y);
 
-
-            System.out.println("Zombie placed at x: " + x + ", y: " + y);
             new Thread(() -> {
                 while (zombie.isAlive())
                 {
                     zombie.move();
-
-                    try {
-                        Thread.sleep(100); // Control the speed of the zombie movement
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }).start();
-
         }
     }
 
@@ -217,7 +229,8 @@ public class Yard extends Thread
     {
         try {
             spawnZombie();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -245,9 +258,10 @@ public class Yard extends Thread
         return false;
     }
 
-    private void createLevelDurationBar(AnchorPane root) {
+    private void createLevelDurationBar(AnchorPane root)
+    {
         // Load the background image
-        Image backgroundImage = new Image("images/seifsImages/progressBar.png");
+        Image backgroundImage = new Image("images/yard-related/progressBar.png");
         ImageView backgroundImageView = new ImageView(backgroundImage);
         backgroundImageView.setFitWidth(180);  // Set the width of the background image
         backgroundImageView.setFitHeight(30); // Set the height of the background image
@@ -267,7 +281,8 @@ public class Yard extends Thread
 
 
     // Start the level timer and update the progress bar
-    public void startLevelTimer() {
+    public void startLevelTimer()
+    {
         // Create a Timeline to update progress every second
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (timeLeft > 0) {
@@ -345,9 +360,9 @@ public class Yard extends Thread
         generateYardImageView(root);
 
         //Create progress bar
-        if (levelProgressBar != null) {
+        if (levelProgressBar != null)
             root.getChildren().add(levelProgressBar);
-        }
+
         createLevelDurationBar(root);
 
         // Create Grid Pane
@@ -361,25 +376,25 @@ public class Yard extends Thread
         // Generate lawnmowers on root pane
         generateLawnMowers(root);
 
-        label.setLayoutX(50); // Positioning the label
+        // Generate the dynamic label which holds the sun counter for the play
+        label.setLayoutX(50); // Positioning the label for the sun counter
         label.setLayoutY(50);
         root.getChildren().add(label);
-
         generateSunCounter();
 
         readySetPlant();
 
         zombiesArrivalAudio();
 
-        startLevelTimer();
+        // startLevelTimer(); Comment out for now to test berahtna
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.setCursor(new ImageCursor(new Image("images/others/cursor.png")));
 
         Sun sun = new Sun();
-
         sun.appear(root);
+
         Main.primaryStage.setScene(scene);
         this.start();
     }
@@ -465,7 +480,7 @@ public class Yard extends Thread
 
     private void generateYardImageView(AnchorPane root)
     {
-        ImageView yardImageView = new ImageView(new Image("images/others/Yard.png"));
+        ImageView yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
         yardImageView.setFitWidth(WIDTH);
         yardImageView.setFitHeight(HEIGHT);
 
@@ -511,7 +526,7 @@ public class Yard extends Thread
     private void generateCards(int levelNumber, AnchorPane root, GridPane yardGrid)
     {
         // Create ImageView for the Wooden Box that holds the cards
-        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox(1).png"));
+        ImageView woodenBox = new ImageView(new Image("images/yard-related/woodenBox-photoshop.png"));
         // Specify its size
         woodenBox.setFitWidth(528);
         woodenBox.setFitHeight(320);
