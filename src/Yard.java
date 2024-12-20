@@ -179,7 +179,7 @@ public class Yard extends Thread
         {
             try
             {
-                Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
+                Thread.sleep(1 * 1000); // Wait before spawning a new zombie
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -223,20 +223,32 @@ public class Yard extends Thread
                     // Check if this specific lawnmower intersects with the zombie
                   //  zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop
                     for (int i = 0; i < ROWS; i++) {
-                        // Check for intersection with lawnmowers
-                        double lawnMowerLeft = lawnMowers[i].elementImage.getLayoutX() + 10; // Small margin
-                        double lawnMowerRight =  lawnMowers[i].elementImage.getLayoutX() +  lawnMowers[i].elementImage.getFitWidth() - 10; // Small margin
-                        double lawnMowerTop =  lawnMowers[i].elementImage.getLayoutY() + 10;
-                        double lawnMowerBottom =  lawnMowers[i].elementImage.getLayoutY() +  lawnMowers[i].elementImage.getFitHeight() - 40;
+                        if (lawnMowers[i] != null && !lawnMowers[i].isActive()) {
+                            // Get the bounds of the lawnmower
+                            double lawnMowerLeft = lawnMowers[i].elementImage.getLayoutX();
+                            double lawnMowerRight = lawnMowers[i].elementImage.getLayoutX() + lawnMowers[i].elementImage.getFitWidth();
+                            double lawnMowerTop = lawnMowers[i].elementImage.getLayoutY();
+                            double lawnMowerBottom = lawnMowers[i].elementImage.getLayoutY() + lawnMowers[i].elementImage.getFitHeight();
 
-                        if (lawnMowers[i] != null && !lawnMowers[i].isActive() &&
-                                zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop
-                                )) {
+                            // Get the bounds of the zombie
+                            double zombieCenterY = zombie.getElementImage().getLayoutY() + (zombie.getElementImage().getFitHeight() / 2);
 
-                            System.out.println("Zombie intersected with lawnmower at row: " + i);
-                            lawnMowers[i].activate(root); // Activate the lawnmower
+                            // Check if the zombie is within the bounds of this lawnmower's row
+                            if (zombieCenterY >= lawnMowerTop && zombieCenterY <= lawnMowerBottom &&
+                                    zombie.getElementImage().getBoundsInParent().intersects(
+                                            lawnMowerLeft,
+                                            lawnMowerTop,
+                                            lawnMowerRight - lawnMowerLeft,
+                                            lawnMowerBottom - lawnMowerTop
+                                    )) {
+                                System.out.println("Zombie intersected with lawnmower at row: " + i);
+                                lawnMowers[i].activate(root); // Activate the lawnmower
+                                break; // Exit the loop to ensure only one lawnmower is activated
+                            }
                         }
                     }
+
+
 
                     try {
                         Thread.sleep(20); // Control the speed of the zombie movement
@@ -677,15 +689,20 @@ public class Yard extends Thread
         {
             // Create instance
             lawnMowers[i] = new LawnMower(i);
-            lawnMowers[i].getElementImage().setLayoutX(155);
+            lawnMowers[i].getElementImage().setLayoutX(157);
         }
 
+//        lawnMowers[1].elementImage.setLayoutX(160);
+//        lawnMowers[2].elementImage.setLayoutX(140);
+//        lawnMowers[3].elementImage.setLayoutX(150);
+
+
         // Add lawnmowers to the root pane.
-        lawnMowers[0].getElementImage().setLayoutY(186);
-        lawnMowers[1].getElementImage().setLayoutY(268);
-        lawnMowers[2].getElementImage().setLayoutY(342);
-        lawnMowers[3].getElementImage().setLayoutY(419);
-        lawnMowers[4].getElementImage().setLayoutY(501);
+        lawnMowers[0].getElementImage().setLayoutY(167 );
+        lawnMowers[1].getElementImage().setLayoutY(251);
+        lawnMowers[2].getElementImage().setLayoutY(339);
+        lawnMowers[3].getElementImage().setLayoutY(425);
+        lawnMowers[4].getElementImage().setLayoutY(514);
 
         root.getChildren().addAll(lawnMowers[0].getElementImage(),lawnMowers[1].getElementImage(),lawnMowers[2].getElementImage(),lawnMowers[3].getElementImage(),lawnMowers[4].getElementImage());
     }

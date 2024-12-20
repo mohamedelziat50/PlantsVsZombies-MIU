@@ -7,10 +7,10 @@ public class FootballZombie extends Zombie {
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public FootballZombie()
     {
-        super(10, 0.5, 100);
-        elementImage=new ImageView(new Image("images/zombies/footballZombie.gif"));
-        elementImage.setFitWidth(121);
-        elementImage.setFitHeight(144);
+        super(10, 2, 100);
+        elementImage=new ImageView(new Image("images/zombies1/FootballZombie.gif"));
+        elementImage.setFitWidth(120);
+        elementImage.setFitHeight(125);
         elementImage.setPreserveRatio(true);
 
 
