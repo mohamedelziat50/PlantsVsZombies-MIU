@@ -1,6 +1,5 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -16,9 +15,23 @@ import javafx.scene.shape.Rectangle;
 
 public class MainGUI extends Application implements FileOperations {
     private HashMap<String, Player> users;
+    private final StackPane signInContainer = new StackPane();
+    private final StackPane signUpContainer = new StackPane();
+    private final Pane Menu1 = new Pane();
+    private final Pane levelMenu = new Pane();
+
 
     @Override
     public void start(Stage primaryStage) {
+        //Main container (ROOT) using Pane layout
+        Pane root = new Pane();
+        // Scene and stage
+        Scene scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
+        primaryStage.setTitle("Welcome to our plants vs zombies video Game!!");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
+        primaryStage.show();
+
         // Load user data from binary file into the hashmap
         try {
             users = loadPlayers();
@@ -26,9 +39,8 @@ public class MainGUI extends Application implements FileOperations {
             System.out.println("Error loading users: " + e.getMessage());
         }
 
-        Pane root = new Pane();
-
-        // Background Image
+//Contents of Menu1 container
+        // Background Image of menu 1
         ImageView background = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
         background.setFitWidth(800);
         background.setFitHeight(598);
@@ -51,7 +63,6 @@ public class MainGUI extends Application implements FileOperations {
         signUpButton.setOpacity(0);
         signUpButton.setOnAction(e -> handleSignUp(root)); //Linking the signUp button to the event handler
 
-
         //Exit Button creation and sizing
         Button exitButton = new Button();
         exitButton.setPrefSize(260, 55);
@@ -61,158 +72,365 @@ public class MainGUI extends Application implements FileOperations {
         exitButton.setOpacity(0);
         exitButton.setOnAction(e -> handleExit()); //Linking the Exit button to the event handler
 
-        root.getChildren().addAll(background, signInButton, signUpButton, exitButton); //Adding all components to teh root container
+        //Adding the contents of Menu1 to their corresponding container
+        Menu1.getChildren().addAll(background, signInButton, signUpButton, exitButton); //Adding all components to the Main menu 1 container
+        root.getChildren().addAll(Menu1); //Adding the Menu1 container to the root container
 
-        // Scene and stage
-        Scene scene = new Scene(root, 800, 598);
-        primaryStage.setTitle("Welcome to our plans vs zombies video Game!!");
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
-        primaryStage.show();
+        //level1 Button creation and sizing
+        Button level1 = new Button();
+        level1.setPrefSize(260, 55);
+        level1.setLayoutX(429);
+        level1.setLayoutY(207);
+        level1.setRotate(9);
+        level1.setOpacity(0);
+        level1.setOnAction(e -> handleLevel1(root)); //Linking the Exit button to the event handler
+
+
+        //level2 Button creation and sizing
+        Button level2 = new Button();
+        level2.setPrefSize(260, 55);
+        level2.setLayoutX(421);
+        level2.setLayoutY(283);
+        level2.setRotate(10);
+        level2.setOpacity(0);
+        level2.setOnAction(e -> handleLevel2(root)); //Linking the Exit button to the event handler
+
+
+        //level3 Button creation and sizing
+        Button level3 = new Button();
+        level3.setPrefSize(260, 55);
+        level3.setLayoutX(410);
+        level3.setLayoutY(358);
+        level3.setRotate(12);
+        level3.setOpacity(0);
+        level3.setOnAction(e -> handleLevel3(root)); //Linking the Exit button to the event handler
+
+
+
+
+
+
+        // SignIn Button hover effect
+        signInButton.setOnMouseEntered(e -> {
+            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/hover1.jpg"));
+        });
+        signInButton.setOnMouseExited(e -> {
+            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+        });
+
+        // signUpButton Button hover effect
+        signUpButton.setOnMouseEntered(e -> {
+            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/hover2.jpg"));
+        });
+        signUpButton.setOnMouseExited(e -> {
+            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+        });
+
+        // exitButton hover effect
+        exitButton.setOnMouseEntered(e -> {
+            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/hover3.jpg"));
+        });
+        exitButton.setOnMouseExited(e -> {
+            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+        });
+
+        // Show the level menu
+        ImageView levelMenuImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+        levelMenuImage.setFitWidth(800);
+        levelMenuImage.setFitHeight(598);
+
+        // level1 Button hover effect
+        level1.setOnMouseEntered(e -> {
+            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/lev1Hover.jpg"));
+        });
+        level1.setOnMouseExited(e -> {
+            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+        });
+
+        // level2 Button hover effect
+        level2.setOnMouseEntered(e -> {
+            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/lev2Hover.jpg"));
+        });
+        level2.setOnMouseExited(e -> {
+            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+        });
+
+        // level3 Button hover effect
+        level3.setOnMouseEntered(e -> {
+            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/lev3Hover.jpg"));
+        });
+        level3.setOnMouseExited(e -> {
+            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+        });
+
+        levelMenu.getChildren().addAll(levelMenuImage,level1,level2,level3); //Adding the signIn components to the SignIn container
+
     }
 
+    //Handling of the SignIn button
     private void handleSignIn(Pane root) {
-        // Step 1: Add the dark semi-transparent overlay
+        // Dark transparent overlay
         Rectangle overlay = new Rectangle(800, 598); // Same dimensions as the window
         overlay.setFill(javafx.scene.paint.Color.BLACK);
-        overlay.setOpacity(0.65); // Adjust this value (0.0 - 1.0) for transparency
+        overlay.setOpacity(0.65); // Transparency adjustment
 
-        // Step 2: Create the sign-in container
-        StackPane signInContainer = new StackPane();
+        //Sizing of the SignIn container
         signInContainer.setPrefWidth(457);
         signInContainer.setPrefHeight(318);
         signInContainer.setLayoutX(210);
         signInContainer.setLayoutY(152);
 
-        ImageView backgroundImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/Inscene2.jpeg"));
+        //Creating and sizing the background image that appears when sign in is pressed
+        ImageView backgroundImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/Inscene2.png"));
         backgroundImage.setFitWidth(395);
         backgroundImage.setFitHeight(275);
 
+        //Creating the textfield and dealing with the related sizing and dimensions
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
-        usernameField.setMaxWidth(205);
-        usernameField.setMaxHeight(30);
+        usernameField.setMaxWidth(160);
+        usernameField.setMaxHeight(20);
         usernameField.setTranslateY(-35);
+        usernameField.setTranslateX(10);
 
+        //Creating the passField and dealing with the related sizing and dimensions
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
-        passwordField.setMaxWidth(205);
-        passwordField.setMaxHeight(30);
-        passwordField.setTranslateY(15);
+        passwordField.setMaxWidth(160);
+        passwordField.setMaxHeight(20);
+        passwordField.setTranslateY(6);
+        passwordField.setTranslateX(11);
 
-        // Exit Button to close the sign-in menu and remove the overlay
-        Button exitButton = new Button("Back to Main Menu");
-        exitButton.setTranslateY(80);
-        exitButton.setOnAction(e -> {
-            root.getChildren().removeAll(overlay, signInContainer); // Remove both the overlay and menu
+        // Back Button to close the sign-in menu and remove the overlay
+        Button back = new Button();
+        back.setMaxWidth(155);
+        back.setTranslateY(51);
+        back.setTranslateX(13);
+        back.setOpacity(0);
+        signInContainer.getChildren().addAll(backgroundImage, usernameField, passwordField, back); //Adding the signIn components to the SignIn container
+        root.getChildren().addAll(overlay,signInContainer);//Adding the sign in container and the overlay to the root
+
+
+
+        //Back button handling
+        back.setOnAction(e -> {
+            root.getChildren().removeAll(overlay,signInContainer); // Removes the sign in container and the overlay in order to return to menu 1 when the back button is pressed
         });
 
-        signInContainer.getChildren().addAll(backgroundImage, usernameField, passwordField, exitButton);
 
-        // Step 3: Add the overlay and menu to the root
-        root.getChildren().addAll(overlay, signInContainer);
-
-        // Styling for fields (optional)
+        //Some text styling for the prompt text of the usernameField and PasswordField
         usernameField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: black; -fx-prompt-text-fill: gray;");
         passwordField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: black; -fx-prompt-text-fill: gray;");
 
-        // Step 4: Handle Sign-In logic when pressing Enter in the password field
+        //Handling the password field after enter is pressed
         passwordField.setOnAction(e -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
+            String username = usernameField.getText(); //Username is saved into a string
+            String password = passwordField.getText(); //Pass saved to a string
 
-            if (users.containsKey(username) && users.get(username).getPassword().equals(password)) {
-                showAlert("Success", "Sign-In Successful", "Welcome, " + username);
-                root.getChildren().removeAll(overlay, signInContainer); // Remove the menu and overlay
+            //If Else statements to check if the entered credentials are valid or not
+            if (users.containsKey(username) && users.get(username).getPassword().equals(password)) { //Checks if the hashMap contains a key identical to the username and if the password related to this key is identical to the entered password
+                root.getChildren().removeAll(overlay, signInContainer, Menu1);
 
-                // Show the level menu
-                ImageView levelMenuImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
-                levelMenuImage.setFitWidth(800);
-                levelMenuImage.setFitHeight(598);
 
+
+
+
+
+                //label that displays the user who is currently signed in
                 Label usernameLabel = new Label(username);
                 usernameLabel.setLayoutX(144);
                 usernameLabel.setLayoutY(86);
                 usernameLabel.setStyle("-fx-font-family: 'Lucida Console'; -fx-font-size: 12px; -fx-text-fill: white;");
-                Label Bestproject = new Label("\uD83C\uDF1F Best Project \uD83C\uDF1F");
-                Bestproject.setLayoutX(120);
-                Bestproject.setLayoutY(155);
+
+                //Creating the logout button and initializing the dimensions and the sizing of it
+                Button logOut=new Button();
+                logOut.setPrefWidth(76);
+                logOut.setPrefHeight(69);
+                logOut.setLayoutX(564);
+                logOut.setLayoutY(462);
+                logOut.setOpacity(0);
+
+                //Creating the logout button and initializing the dimensions and the sizing of it
+                Button exit=new Button();
+                exit.setPrefWidth(76);
+                exit.setPrefHeight(69);
+                exit.setLayoutX(704);
+                exit.setLayoutY(478);
+                exit.setOpacity(0);
+                exit.setOnAction(event -> handleExit()); //Linking the Exit button to the event handler
 
 
-                root.getChildren().addAll(levelMenuImage, usernameLabel,Bestproject);
+                levelMenu.getChildren().addAll(usernameLabel,logOut,exit); //Adding the components to Menu2 container
+                root.getChildren().addAll(levelMenu);
+                showAlert(root, "Sign-In Successful", "Welcome, " + username);
+
+                logOut.setOnAction(event -> {
+                    root.getChildren().removeAll(levelMenu); // Remove level menu components
+                    root.getChildren().addAll(Menu1);; // Redisplay the main menu
+                    showAlert(root, "Logging out", "Bye, "+username);
+                });
+
+            //Display alert if signIn failed
             } else {
-                showAlert("Error", "Sign-In Failed", "Invalid username or password.");
+                root.getChildren().removeAll(signInContainer,overlay);
+                showAlert(root, "Sign-In Failed", "Invalid username or password.");
             }
+
         });
+
     }
 
 
 
     //Handling of the SignUp Button
     private void handleSignUp(Pane root) {
-        StackPane signUpContainer = new StackPane();
+        // Dark transparent overlay
+        Rectangle overlay = new Rectangle(800, 598); // Same dimensions as the window
+        overlay.setFill(javafx.scene.paint.Color.BLACK);
+        overlay.setOpacity(0.65); // Adjust this value (0.0 - 1.0) for transparency
+
+        // Sign-Up container sizing and dimensions
         signUpContainer.setPrefWidth(457);
         signUpContainer.setPrefHeight(318);
         signUpContainer.setLayoutX(210);
         signUpContainer.setLayoutY(152);
 
-        ImageView backgroundImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/Inscene2.jpeg"));
+        //Image that appears when sign up is clicked
+        ImageView backgroundImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/Inscene2.png"));
         backgroundImage.setFitWidth(395);
         backgroundImage.setFitHeight(275);
 
+        // Username Field
         TextField usernameField = new TextField();
         usernameField.setPromptText("Enter new username");
-        usernameField.setMaxWidth(205);
-        usernameField.setMaxHeight(30);
+        usernameField.setMaxWidth(160);
+        usernameField.setMaxHeight(20);
         usernameField.setTranslateY(-35);
+        usernameField.setTranslateX(10);
 
+        // Password Field
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter new password");
-        passwordField.setMaxWidth(205);
-        passwordField.setMaxHeight(30);
-        passwordField.setTranslateY(15);
+        passwordField.setMaxWidth(160);
+        passwordField.setMaxHeight(20);
+        passwordField.setTranslateY(6);
+        passwordField.setTranslateX(11);
 
-        signUpContainer.getChildren().addAll(backgroundImage, usernameField, passwordField);
-        root.getChildren().add(signUpContainer);
+        // Back Button to close the sign-up menu and remove the overlay
+        Button back = new Button();
+        back.setMaxWidth(155);
+        back.setTranslateY(51);
+        back.setTranslateX(13);
+        back.setOpacity(0);
 
+        //Back button handling
+        back.setOnAction(e -> {
+            root.getChildren().removeAll(overlay, signUpContainer); // Remove both the overlay and menu
+        });
+
+        //Adding all elements to signUp container
+        signUpContainer.getChildren().addAll(backgroundImage, usernameField, passwordField, back);
+
+        // Add the overlay and SignupContainer to the root
+        root.getChildren().addAll(overlay, signUpContainer);
+
+        //Prompt text styling for the usernameField and passField
         usernameField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: black; -fx-prompt-text-fill: gray;");
         passwordField.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: black; -fx-prompt-text-fill: gray;");
 
+        //Handling the PassField
         passwordField.setOnAction(e -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
+            String username = usernameField.getText(); //Saving entered username to string
+            String password = passwordField.getText(); //Saving entered pass to string
 
+            //Check if the username already exists
             if (!users.containsKey(username)) {
-                Player newPlayer = new Player(username, password);
-                users.put(username, newPlayer);
+                Player newPlayer = new Player(username, password); //If username doesn't exist create a new player
+                users.put(username, newPlayer); //Add the player to the hashMap
 
+                //Try Catch Block to save the player into the file
                 try {
                     writePlayers(users);
-                    showAlert("Success", "Account Created", "Welcome, " + username);
-                    root.getChildren().remove(signUpContainer);
+                    showAlert(root, "Account Created", "Welcome, " + username);
+                    root.getChildren().removeAll(overlay, signUpContainer);
                 } catch (IOException ex) {
-                    showAlert("Error", "Save Failed", "Could not save user data.");
+                    showAlert(root, "Save Failed", "Could not save user data.");
                 }
-            } else {
-                showAlert("Error", "Username Taken", "Please choose a different username.");
+            }
+            //If username exists display alert
+            else {
+                root.getChildren().removeAll(signUpContainer,overlay);
+                showAlert(root ,"Username Taken", "Please choose a different username.");
             }
         });
     }
 
 
+
     //Handling of the Exit Button
     private void handleExit() {
-
         System.exit(0);
     }
 
-    private void showAlert(String title, String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+    private void handleLevel1 (Pane root){
+        System.out.println("DONE level1");
+    }
+    private void handleLevel2 (Pane root){
+        System.out.println("DONE level2");
 
+    }
+    private void handleLevel3 (Pane root){
+        System.out.println("DONE level3");
+
+    }
+
+
+    private void showAlert(Pane root, String header, String content) {
+        //Alert background
+        ImageView Alert = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/pvz.png"));
+        Alert.setFitWidth(422);
+        Alert.setFitHeight(319);
+        Alert.toFront();
+
+        // label that displays the alert message
+        Label messageLabel = new Label(content);
+        messageLabel.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 10px; -fx-text-fill: white;");
+        messageLabel.setTranslateY(10);
+        messageLabel.setTranslateX(0);
+        messageLabel.prefHeight(21);
+        messageLabel.prefWidth(192);
+
+        Label Alerttitle = new Label(header);
+        Alerttitle.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 10px; -fx-text-fill: red;");
+        Alerttitle.setTranslateY(-26);
+        Alerttitle.setTranslateX(0);
+        Alerttitle.prefHeight(21);
+        Alerttitle.prefWidth(192);
+        System.out.println("Alert triggered");
+
+        // OK button to exit the alert
+        Button okButton = new Button("OK");
+        okButton.setPrefHeight(25);
+        okButton.setPrefWidth(188);
+        okButton.setTranslateY(58);
+        okButton.setTranslateX(4);
+        okButton.setOpacity(0);
+
+
+        // Alert container
+        StackPane alertContainer = new StackPane();
+        alertContainer.getChildren().addAll(Alert,messageLabel, Alerttitle, okButton);
+        alertContainer.setPrefWidth(457);
+        alertContainer.setPrefHeight(318);
+        alertContainer.setLayoutX(210);
+        alertContainer.setLayoutY(152);
+        root.getChildren().addAll(alertContainer); //Adding the alert container to the root pane
+        alertContainer.toFront();
+
+        //Ok button handling
+        okButton.setOnAction(e -> {
+            root.getChildren().removeAll(alertContainer); //Removes the alert container to exit
+        });
     }
 
 
