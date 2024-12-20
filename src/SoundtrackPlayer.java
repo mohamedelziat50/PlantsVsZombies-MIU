@@ -17,7 +17,7 @@ public class SoundtrackPlayer
 
             // Set the background music to loop
             sound_track_player.setCycleCount(MediaPlayer.INDEFINITE);
-            sound_track_player.setVolume(0.2);  // Adjust volume if necessary
+            sound_track_player.setVolume(0.002);  // Adjust volume if necessary
 
             // Start playing the soundtrack
             sound_track_player.play();

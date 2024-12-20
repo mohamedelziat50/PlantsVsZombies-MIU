@@ -68,6 +68,10 @@ public abstract class Zombie extends Characters
                     // Update the zombie's position on the UI thread
                     elementImage.setLayoutX(elementImage.getLayoutX() - speed); // Move left by 1 unit
                 });
+                if(elementImage.getLayoutX()<0){
+                    System.out.println("game over");
+                   System.exit(0);//change to a reasonble function
+                }
 
                 // Simulate movement delay to avoid excessive CPU usage
                 try {

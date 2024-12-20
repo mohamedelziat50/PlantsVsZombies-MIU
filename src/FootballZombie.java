@@ -9,8 +9,8 @@ public class FootballZombie extends Zombie {
     {
         super(10, 10, 100);
         elementImage=new ImageView(new Image("images/zombies/footballZombie.gif"));
-        elementImage.setFitWidth(194);
-        elementImage.setFitHeight(150);
+        elementImage.setFitWidth(121);
+        elementImage.setFitHeight(144);
         elementImage.setPreserveRatio(true);
 
 

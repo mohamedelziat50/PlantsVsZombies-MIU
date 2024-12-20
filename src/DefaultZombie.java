@@ -12,9 +12,9 @@ public class DefaultZombie extends Zombie
     {
         super(10, 2, 100);
         elementImage=new ImageView(new Image("images/zombies/walking-plants-vs-zombies.gif"));
-        elementImage.setFitHeight(132);
+        elementImage.setFitHeight(140);
         elementImage.setFitWidth(187);
-        elementImage.setPreserveRatio(true);
+        //elementImage.setPreserveRatio(true);
 
     }
 
