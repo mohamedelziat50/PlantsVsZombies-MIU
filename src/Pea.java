@@ -41,6 +41,7 @@ public class Pea extends Characters implements Serializable, Runnable
                     Platform.runLater(() -> {
                         try
                         {
+                            changePeaToFirePea();
                             elementImage.setLayoutX(elementImage.getLayoutX() + 1); // Move the pea 1 pixel
                         }
                         catch (Exception ex)
@@ -79,6 +80,25 @@ public class Pea extends Characters implements Serializable, Runnable
         }
     }
 
+    private void changePeaToFirePea()
+    {
+        Platform.runLater(() -> {
+            for (TorchWood torchWood : TorchWood.activeTorchWoods)
+            {
+                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
+                {
+                    Image firePea = new Image("images/plants/firePea.gif");
+                    elementImage.setImage(firePea);
+                    elementImage.setPreserveRatio(false);
+                    elementImage.setFitWidth(23);  // Increase width       increase these two to a huge number and watch the difference.
+                    elementImage.setFitHeight(66);
+
+                    damage = 20;  // Adjust damage for FirePea
+                    break; // No need to check further
+                }
+            }
+        });
+    }
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
     private Zombie checkForZombieCollision()
     {
@@ -102,7 +122,7 @@ public class Pea extends Characters implements Serializable, Runnable
         String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
         Media media = new Media(path);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.7);
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
     } catch (Exception e) {
         System.out.println("Error playing pea hit sound: " + e.getMessage());
@@ -122,7 +142,7 @@ public class Pea extends Characters implements Serializable, Runnable
         if(zombie.getX()==this.x)
         {
             zombie.takeDamage(this.damage);
-            // disappear(); comented out for now
+            // disappear(); commented out for now
         }
     }
 

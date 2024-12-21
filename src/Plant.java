@@ -1,6 +1,8 @@
 import javafx.application.Platform;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
+// A plant is now a thread
 public abstract class Plant extends Characters implements Runnable
 {
     protected int cost;
@@ -21,7 +23,6 @@ public abstract class Plant extends Characters implements Runnable
     public void setCost(int cost) {
         this.cost = cost;
     }
-
     // Will be over-ridden by subclasses different actions
     public abstract void run();
 
@@ -75,7 +76,7 @@ public abstract class Plant extends Characters implements Runnable
             {
                 elementImage.setVisible(false);
                 root.getChildren().remove(elementImage);
-                System.out.println("Plant removed.");
+                System.out.println("Plant disappears.");
             }
         });
 
