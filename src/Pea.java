@@ -23,6 +23,7 @@ public class Pea extends Characters implements Serializable, Runnable
         elementImage.setPreserveRatio(true);
     }
 
+    // This function runs the pea object, inside it: moves the pea & handles collisions with zombies through the checkForZombieCollision() through out it's life time
     @Override
     public void run()
     {
@@ -31,43 +32,46 @@ public class Pea extends Characters implements Serializable, Runnable
             // New thread just delay in case any loading is required
             Thread.sleep(20);
 
-            while (parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
+            // Has to be synchronized in order to generate peas only while the plant is alive
+            synchronized (this)
             {
-                // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
-                Platform.runLater(() -> {
-
-                    try
-                    {
-                        changePeaToFirePea();
-                        elementImage.setLayoutX(elementImage.getLayoutX() + 2);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.out.println("Exception: " + ex);
-                    }
-                });
-
-                // Check for collision
-                Zombie target = checkForCollision();
-
-                if (target != null)
+                while (parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
                 {
-                    // Do damage
-                    target.takeDamage(damage);
-                    System.out.println("Pea touched a zombie");
+                    // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
+                    Platform.runLater(() -> {
+                        try
+                        {
+                            changePeaToFirePea();
+                            elementImage.setLayoutX(elementImage.getLayoutX() + 1); // Move the pea 1 pixel
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("Exception: " + ex);
+                        }
+                    });
 
-                    disappear(Yard.root); // Remove pea
-                    return; // Stop further movement
+                    // Check for collision with a zombie
+                    Zombie target = checkForZombieCollision();
+                    if (target != null)
+                    {
+                        // Do damage
+                        target.takeDamage(damage);
+                        System.out.println("Pea touched a zombie");
+
+                        // Remove pea
+                        disappear(Yard.root);
+
+                        // Stop further movement
+                        return;
+                    }
+
+                    // Slow down the while loop (PEA MOVEMENT SPEED), otherwise a lot of lag happens when the pea moves!
+                    Thread.sleep(3);
                 }
-
-                // Slow down the while loop (PEA MOVEMENT SPEED), otherwise a lot of lag happens when the pea moves!
-                Thread.sleep(5);
             }
 
             // If it reached out of bounds or plant died, make it disappear
-                Platform.runLater(() -> {
-                    disappear(Yard.root);
-                });
+            disappear(Yard.root);
 
         }
         catch (InterruptedException e) {
@@ -95,9 +99,8 @@ public class Pea extends Characters implements Serializable, Runnable
             }
         });
     }
-
-
-    private Zombie checkForCollision()
+    // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
+    private Zombie checkForZombieCollision()
     {
         synchronized (Yard.zombies)
         {
@@ -126,12 +129,10 @@ public class Pea extends Characters implements Serializable, Runnable
     }
 }
 
-    public int getDamage()
-    {
+    public int getDamage() {
         return damage;}
 
-    public void setDamage(int damage)
-    {
+    public void setDamage(int damage) {
         this.damage = damage;
     }
 
@@ -141,7 +142,7 @@ public class Pea extends Characters implements Serializable, Runnable
         if(zombie.getX()==this.x)
         {
             zombie.takeDamage(this.damage);
-            // disappear(); comented out for now
+            // disappear(); commented out for now
         }
     }
 
@@ -152,12 +153,18 @@ public class Pea extends Characters implements Serializable, Runnable
     }
 
     @Override
+    public void takeDamage(int damage)
+    {
+        // Leave empty. (Has to be over-ridden)
+    }
+
+    @Override
     public void appear(Pane root)
     {
         Platform.runLater(() -> {
             if (elementImage != null) {
                 root.getChildren().add(elementImage);
-//                System.out.println("Pea appears.");
+                // System.out.println("Pea appears.");
             }
         });
     }
@@ -169,7 +176,7 @@ public class Pea extends Characters implements Serializable, Runnable
         Platform.runLater(() -> {
             if (elementImage != null) {
                 root.getChildren().remove(elementImage);
-//                System.out.println("Pea disappears.");
+                // System.out.println("Pea disappears.");
             }
         });
     }

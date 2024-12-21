@@ -13,9 +13,7 @@ public class Level implements Serializable
     private int levelNumber;
     private int durationInSeconds;
 
-    // Represents the unlocked plants & zombies for each level object.
-    private ArrayList<Plant> unlockedPlants;
-    private ArrayList<Zombie> unlockedZombies;
+    // Removed unlockedPlants/Zombies ArrayLists since they're not used.
 
     private Yard currentYard;
 
@@ -23,14 +21,10 @@ public class Level implements Serializable
         CONSTRUCTORS
      */
     // Normal Constructor
-    public Level(int levelNumber, int durationInSeconds, ArrayList<Plant> unlockedPlants, ArrayList<Zombie> unlockedZombies)
+    public Level(int levelNumber, int durationInSeconds)
     {
         this.levelNumber = levelNumber;
         this.durationInSeconds = durationInSeconds;
-
-        // Correctly copy the object into a new object, not references.
-        this.unlockedPlants = new ArrayList<>(unlockedPlants);
-        this.unlockedZombies = new ArrayList<>(unlockedZombies);
     }
 
     /*
@@ -41,8 +35,9 @@ public class Level implements Serializable
     // Thus it should return a scene with the yard and everything on it! To be called in Main
     public void startLevel()
     {
-        currentYard = new Yard();
+        currentYard = new Yard(this);
         currentYard.displayYard();
+        MainGUI.primaryStage.setFullScreen(true);
     }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,
@@ -66,22 +61,6 @@ public class Level implements Serializable
 
     public void setDurationInSeconds(int durationInSeconds) {
         this.durationInSeconds = durationInSeconds;
-    }
-
-    public ArrayList<Plant> getUnlockedPlants() {
-        return unlockedPlants;
-    }
-
-    public void setUnlockedPlants(ArrayList<Plant> unlockedPlants) {
-        this.unlockedPlants = unlockedPlants;
-    }
-
-    public ArrayList<Zombie> getUnlockedZombies() {
-        return unlockedZombies;
-    }
-
-    public void setUnlockedZombies(ArrayList<Zombie> unlockedZombies) {
-        this.unlockedZombies = unlockedZombies;
     }
 
     public Yard getCurrentYard() {

@@ -6,7 +6,6 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,47 +17,65 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Yard extends Thread
 {
+    public Level parentLevel;
+
+    // YARD CONSTANT VARIABLES
     public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
-    private int zombieSpawnInterval;
-    public static volatile Characters[][] grid;
+
+    // IMPORTANT ARRAYS FOR GAMEPLAY TRACKING OF PLANTS & LAWNMOWERS
+    public static volatile Characters[][] grid; // Used Placement of plants
     private LawnMower[] lawnMowers;
+
+    // Used for collision handling between plants/peas & zombies
+    public static volatile ArrayList<Zombie> zombies = new ArrayList<>(); // Collision With peas
+    public static volatile ArrayList<Plant> plants = new ArrayList<>(); // Collision with plants (zombies side)
+
+    // Variables specific to each level!
+    private int zombieSpawnInterval;
+    private double levelDuration; // Total duration for the level (in seconds)
+    private double timeLeft;
+    public static int sunCounter;
+
+    // GUI-related variables
     public static AnchorPane root;
+    public static Label label; // Related for sun counter
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
-    private double levelDuration = 60.0;  // Total duration for the level (in seconds)
-    private double timeLeft = levelDuration;
-    public static int sunCounter = 500;
-    public static Label label = new Label("500");
-
-
-    // Used for collision handling
-    public static volatile ArrayList<Zombie> zombies = new ArrayList<>();
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
-    public Yard()
+    public Yard(Level parentLevel)
     {
+        // Parent level
+        this.parentLevel = parentLevel;
+
+        // Root pane that has everything on it
         root = new AnchorPane();
-        zombieSpawnInterval=5;
+
+        // Zombie Spawn Interval used in spawnZombie()
+        zombieSpawnInterval = 5 ;
+
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
-        /*
-        THIS CODE IS REDUNDANT, WE INTILAIZE LAWNS MOWERS IN THE generateLawnMowers FUNCTION
+        // Clear previous plants/zombies arraylists incase started multiple levels in the same run.
+        plants.clear();
+        zombies.clear();
 
-        // Initialize Lawn Mowers Object for each row.
-        lawnMowers = new LawnMower[ROWS];
+        // Level specific stuff
+        levelDuration = parentLevel.getDurationInSeconds();
+        timeLeft = levelDuration;
 
-        for (int i = 0; i < ROWS; i++)
-            lawnMowers[i] = new LawnMower();
+        // Suncounter for each yard
+        sunCounter = 1500;
 
-         */
+        // 50 doesn't matter, the sun counter replaces it
+        label = new Label("50");
     }
 
     /*
@@ -95,6 +112,16 @@ public class Yard extends Thread
         {
             // The grid is used to keep track whether the grid cell is taken up by a plant.
             grid[row][col] = plant;
+
+            // Add x and y to be used with collision handling
+            plant.setX(row);
+            plant.setY(col);
+
+            // Also add the ArrayList of plants to handle collision
+            synchronized (plants)
+            {
+                plants.add(plant);
+            }
 
             // Call the plants' subclass over-ridden appear function.
             plant.appear(root);
@@ -138,6 +165,12 @@ public class Yard extends Thread
 
         if (plantToRemove != null)
         {
+            synchronized (plants)
+            {
+                // Remove from the plants list
+                plants.remove(plantToRemove);
+            }
+
             grid[row][col].disappear(root); // Now disappear removes from the root directly! (Notice changes in "Plant" class)
             grid[row][col] = null; // Clear the grid cell
             plantSelectedAudio();
@@ -153,71 +186,93 @@ public class Yard extends Thread
      take to spawn another zombie */
     public  void spawnZombie() throws InterruptedException
     {
-        int[] specificNumbers = {158, 231, 308, 386, 468}; // Predefined Y positions for zombie spawn
+        int[] specificNumbers = {134, 207, 298, 376, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
-
-
         while (true)
         {
-            Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
+            try
+            {
+                Thread.sleep(1 * 1000); // Wait before spawning a new zombie
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             int randomIndex = random.nextInt(specificNumbers.length); // Generate a random index for Y position
             int y = specificNumbers[randomIndex];
             int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
 
-            int z=random.nextInt((4-1)+1)+1;
+            int z = random.nextInt((4 - 1) + 1) + 1;
             Zombie zombie;
-            if(z==1){
+
+            if (z == 1) {
                 zombie = new DefaultZombie(x, y);
+            } else if (z == 2) {
+                zombie = new HelmetZombie(x, y);
+            } else if (z == 3) {
+                zombie = new ConeZombie(x, y);
+            } else {
+                zombie = new FootballZombie(x, y);
             }
-
-            else if(z==2){
-            zombie=new HelmetZombie(x,y);
-            }
-            else if(z==3){
-                zombie=new ConeZombie(x,y-10);
-            }
-            else {
-                zombie=new FootballZombie(x,y);
-            }
-
-
 
            // Create a new zombie at the random position
             zombie.setAlive(true);
 
             // Added to be used with collision handling (with pea)
-            Yard.zombies.add(zombie);
+            zombies.add(zombie);
 
-            if(zombie instanceof ConeZombie){
-                zombie.appear(root, x, y); // Place the zombie on the yard
+            zombie.appear(root,x,y);
 
             zombieSpawnAudio();
 
-            }
-            else{
-                zombie.appear(root,x,y);
-            }
 
 
-
-//            System.out.println("Zombie placed at x: " + x + ", y: " + y);
-
+            System.out.println("Zombie placed at x: " + x + ", y: " + y);
             new Thread(() -> {
-                while (zombie.isAlive())
-                {
+                while (zombie.isAlive()) {
                     zombie.move();
 
+
+                    // Check if this specific lawnmower intersects with the zombie
+                  //  zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop
+                    for (int i = 0; i < ROWS; i++) {
+                        if (lawnMowers[i] != null && !lawnMowers[i].isActive()) {
+                            // Get the bounds of the lawnmower
+                            double lawnMowerLeft = lawnMowers[i].elementImage.getLayoutX();
+                            double lawnMowerRight = lawnMowers[i].elementImage.getLayoutX() + lawnMowers[i].elementImage.getFitWidth();
+                            double lawnMowerTop = lawnMowers[i].elementImage.getLayoutY();
+                            double lawnMowerBottom = lawnMowers[i].elementImage.getLayoutY() + lawnMowers[i].elementImage.getFitHeight();
+
+                            // Get the bounds of the zombie
+                            double zombieCenterY = zombie.getElementImage().getLayoutY() + (zombie.getElementImage().getFitHeight() / 2);
+
+                            // Check if the zombie is within the bounds of this lawnmower's row
+                            if (zombieCenterY >= lawnMowerTop && zombieCenterY <= lawnMowerBottom &&
+                                    zombie.getElementImage().getBoundsInParent().intersects(
+                                            lawnMowerLeft,
+                                            lawnMowerTop,
+                                            lawnMowerRight - lawnMowerLeft,
+                                            lawnMowerBottom - lawnMowerTop
+                                    )) {
+                                System.out.println("Zombie intersected with lawnmower at row: " + i);
+                                lawnMowers[i].activate(root); // Activate the lawnmower
+                                break; // Exit the loop to ensure only one lawnmower is activated
+                            }
+                        }
+                    }
+
+
+
                     try {
-                        Thread.sleep(100); // Control the speed of the zombie movement
+                        Thread.sleep(20); // Control the speed of the zombie movement
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }).start();
-
         }
     }
 
@@ -226,37 +281,16 @@ public class Yard extends Thread
     {
         try {
             spawnZombie();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void moveLawnMower() {
-        LawnMower lawnMower = new LawnMower();
-        int x = lawnMower.getX();
-        for (int col = 0; col < COLUMNS - 1; col++) {
-            if (grid[x][col + 1] instanceof Zombie) {
-                grid[x][col + 1] = null; // Remove zombie from the grid
-            }
-
-            lawnMower.setY(lawnMower.getY() + 1);
-        }
-
-        // lawnMower.disappear(); commented out for now
-    }
-
-    public boolean activateLawnMower(int row) {
-        if (row >= 0 && row < ROWS && lawnMowers[row] != null && grid[row][1] instanceof Zombie) {
-            moveLawnMower();
-            lawnMowers[row] = null;
-            return true;
-        }
-        return false;
-    }
-
-    private void createLevelDurationBar(AnchorPane root) {
+    private void createLevelDurationBar(AnchorPane root)
+    {
         // Load the background image
-        Image backgroundImage = new Image("images/seifsImages/progressBar.png");
+        Image backgroundImage = new Image("images/yard-related/progressBar.png");
         ImageView backgroundImageView = new ImageView(backgroundImage);
         backgroundImageView.setFitWidth(180);  // Set the width of the background image
         backgroundImageView.setFitHeight(30); // Set the height of the background image
@@ -276,7 +310,8 @@ public class Yard extends Thread
 
 
     // Start the level timer and update the progress bar
-    public void startLevelTimer() {
+    public void startLevelTimer()
+    {
         // Create a Timeline to update progress every second
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (timeLeft > 0) {
@@ -354,9 +389,9 @@ public class Yard extends Thread
         generateYardImageView(root);
 
         //Create progress bar
-        if (levelProgressBar != null) {
+        if (levelProgressBar != null)
             root.getChildren().add(levelProgressBar);
-        }
+
         createLevelDurationBar(root);
 
         // Create Grid Pane
@@ -365,12 +400,13 @@ public class Yard extends Thread
         // Later we should add conditions based on level 1, 2, 3: A function to load the specific cards whether unlocked or locked and use gray cards
 
         // Generate cards on root pane // LEVEL 1 IS HARDCODED FOR NOW
-        generateCards(3, root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+        generateCards(parentLevel.getLevelNumber(), root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
 
         // Generate lawnmowers on root pane
         generateLawnMowers(root);
 
-        label.setLayoutX(50); // Positioning the label
+        // Generate the dynamic label which holds the sun counter for the play
+        label.setLayoutX(50); // Positioning the label for the sun counter
         label.setLayoutY(50);
         root.getChildren().add(label);
 
@@ -385,9 +421,11 @@ public class Yard extends Thread
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.setCursor(new ImageCursor(new Image("images/others/cursor.png")));
+
         Sun sun = new Sun();
         sun.appear(root);
-        Main.primaryStage.setScene(scene);
+
+        MainGUI.primaryStage.setScene(scene);
         this.start();
     }
 
@@ -472,15 +510,33 @@ public class Yard extends Thread
 
     private void generateYardImageView(AnchorPane root)
     {
-        ImageView yardImageView = new ImageView(new Image("images/others/Yard.png"));
-        yardImageView.setFitWidth(WIDTH);
-        yardImageView.setFitHeight(HEIGHT);
+        ImageView yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
 
-        // No need to preserve ratio, to make yard larger
-        yardImageView.setPreserveRatio(false);
+        switch(parentLevel.getLevelNumber())
+        {
+            case 2:
+                yardImageView = new ImageView(new Image("images/yard-related/nightYard.png"));
+                break;
+            case 3:
+                yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
+        }
 
-        // Add yard image view to the root pane
-        root.getChildren().add(yardImageView);
+        if(yardImageView != null)
+        {
+            yardImageView.setFitWidth(WIDTH);
+            yardImageView.setFitHeight(HEIGHT);
+
+            // No need to preserve ratio, to make yard larger
+            yardImageView.setPreserveRatio(false);
+
+            // Add yard image view to the root pane
+            root.getChildren().add(yardImageView);
+        }
+        else
+        {
+            System.err.println("Yard Image View not loaded correctly.");
+            System.exit(1);
+        }
     }
 
     private GridPane generateGridPane(AnchorPane root)
@@ -518,7 +574,7 @@ public class Yard extends Thread
     private void generateCards(int levelNumber, AnchorPane root, GridPane yardGrid)
     {
         // Create ImageView for the Wooden Box that holds the cards
-        ImageView woodenBox = new ImageView(new Image("images/others/woodenBox(1).png"));
+        ImageView woodenBox = new ImageView(new Image("images/yard-related/woodenBox-photoshop.png"));
         // Specify its size
         woodenBox.setFitWidth(528);
         woodenBox.setFitHeight(320);
@@ -528,7 +584,6 @@ public class Yard extends Thread
         // Preserve Ratio, otherwise a corrupted image appears
         woodenBox.setPreserveRatio(true);
         root.getChildren().add(woodenBox);
-
 
         // SHOVEL CARD (Used card class as a workaround)
         Card SHOVELCARD=new Card(
@@ -592,13 +647,13 @@ public class Yard extends Thread
         // ICED PEA CARD
         Card ICEDPEACARD = new Card(
                 "images/cards/icedpeashooterCard.png",
-                "images/plants/icedpeashooter.png",
-                IcedPea.class,
-                150
+                "images/plants/icedpeashooter.gif",
+                IcedPeashooter.class,
+                175
         );
         ICEDPEACARD.cardImageViewSetProperties(520, 21, 47, 66, true, true);
-        ICEDPEACARD.draggingImageViewSetProperties(90, 70, true, false);
-        ICEDPEACARD.hoverImageViewSetProperties(90, 70, true, false);
+        ICEDPEACARD.draggingImageViewSetProperties(73, 78, true, false);
+        ICEDPEACARD.hoverImageViewSetProperties(73, 78, true, false);
 
 
         Card torchWood=new Card(
@@ -669,16 +724,21 @@ public class Yard extends Thread
         for (int i = 0; i < ROWS; i++)
         {
             // Create instance
-            lawnMowers[i] = new LawnMower();
-            lawnMowers[i].getElementImage().setLayoutX(155);
+            lawnMowers[i] = new LawnMower(i);
+            lawnMowers[i].getElementImage().setLayoutX(157);
         }
 
+//        lawnMowers[1].elementImage.setLayoutX(160);
+//        lawnMowers[2].elementImage.setLayoutX(140);
+//        lawnMowers[3].elementImage.setLayoutX(150);
+
+
         // Add lawnmowers to the root pane.
-        lawnMowers[0].getElementImage().setLayoutY(186);
-        lawnMowers[1].getElementImage().setLayoutY(268);
-        lawnMowers[2].getElementImage().setLayoutY(342);
-        lawnMowers[3].getElementImage().setLayoutY(419);
-        lawnMowers[4].getElementImage().setLayoutY(501);
+        lawnMowers[0].getElementImage().setLayoutY(167 );
+        lawnMowers[1].getElementImage().setLayoutY(251);
+        lawnMowers[2].getElementImage().setLayoutY(339);
+        lawnMowers[3].getElementImage().setLayoutY(425);
+        lawnMowers[4].getElementImage().setLayoutY(514);
 
         root.getChildren().addAll(lawnMowers[0].getElementImage(),lawnMowers[1].getElementImage(),lawnMowers[2].getElementImage(),lawnMowers[3].getElementImage(),lawnMowers[4].getElementImage());
     }

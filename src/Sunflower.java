@@ -39,7 +39,11 @@ public class Sunflower extends Plant
     @Override
     public void takeDamage(int damage)
     {
+        // Call the superclass implementation to apply damage
+        super.takeDamage(damage);
 
+        // Add any specific behavior for this subclass if needed
+        System.out.println("Sunflower takes damage: " + damage + " Current health: " + this.health);
     }
 
     @Override
