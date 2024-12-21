@@ -1,30 +1,100 @@
-public class LawnMower extends MainElements
-{
-    public LawnMower() {}
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
-    @Override
-    public void setY(int y) {
-        super.setY(y);
+public class LawnMower extends MainElements {
+    private boolean isActive;
+    private int row;
+
+    public LawnMower(int row) {
+        this.row = row;
+        this.isActive = false;
+
+        // Set the lawnmower image
+        this.elementImage = new ImageView(new Image("images/zombies1/LawnCleaner.png"));
+        this.elementImage.setFitWidth(76); // Adjust the size as needed
+        this.elementImage.setFitHeight(70);
+        elementImage.setPreserveRatio(true);
+    }
+
+    public ImageView getElementImage() {
+        return elementImage;
     }
 
     @Override
-    public int getY() {
-        return super.getY();
+    public void appear(Pane root) {
+
     }
 
     @Override
-    public void setX(int x) {
-        super.setX(x);
+    public void disappear(Pane root) {
+
     }
 
-    @Override
-    public int getX() {
-        return super.getX();
+    public void activate(AnchorPane root) {
+        if (!isActive) {
+            isActive = true;
+            // Start a new thread or animation to move the lawnmower
+            new Thread(() -> {
+                elementImage.setImage(new Image("images/zombies1/LawnCleaner1.png"));
+                this.elementImage.setFitWidth(76); // Adjust the size as needed
+                this.elementImage.setFitHeight(70);
+                moveLawnMower(root);
+            }).start();
+        }
     }
 
-    @Override
-    public void disappear()
-    {
-        System.out.println("The Lawn Mower Disappeared");
+    private void moveLawnMower(AnchorPane root) {
+        double[] layoutX = new double[2];
+        layoutX[0] = elementImage.getLayoutX();
+
+        // Move the lawnmower across the screen
+        while (layoutX[0] < 950) { // Move until off-screen (adjust as needed)
+            layoutX[0] += 10; // Speed of the lawnmower
+
+            // Update position on the UI thread
+            Platform.runLater(() -> {
+                elementImage.setLayoutX(layoutX[0]);
+            });
+
+            // Check for collision with zombies (only for the moving lawnmower)
+            for (Zombie zombie : Yard.zombies) {
+                if (zombie.isAlive()) {
+                    // Create a smaller bounding box for collision detection
+                    double lawnMowerLeft = elementImage.getLayoutX() ; // Adjust bounds by adding a margin
+                    double lawnMowerRight = elementImage.getLayoutX() + elementImage.getFitWidth() ; // Adjust bounds by subtracting a margin
+                    double lawnMowerTop = elementImage.getLayoutY()+10 ;
+                    double lawnMowerBottom = elementImage.getLayoutY() + elementImage.getFitHeight()-60 ;
+
+                    // Check if this specific lawnmower intersects with the zombie
+                    if (zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop)) {
+                        zombie.setAlive(false); // Kill the zombie
+                        Platform.runLater(() -> {
+                            zombie.disappear(root); // Remove zombie from screen
+                        });
+                        break; // Exit the loop to prevent multiple collisions with neighboring lawnmowers
+                    }
+                }
+            }
+
+            try {
+                Thread.sleep(50); // Adjust speed of movement
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Remove lawnmower from the yard once it is off-screen
+        Platform.runLater(() -> {
+            root.getChildren().remove(elementImage); // Remove lawnmower from the scene
+        });
+    }
+
+
+
+    public boolean isActive() {
+        return isActive;
     }
 }

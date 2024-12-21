@@ -1,95 +1,44 @@
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.util.Duration;
+
 public class ConeZombie extends Zombie
 {
-
-    public ConeZombie(int attackPower, int x, int y, int health, int speed) {
-        super(attackPower, x, y, health, speed);
-    }
-   
-    @Override
-    public double getAttackPower()
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public ConeZombie()
     {
-        return super.getAttackPower();
+        super(10, 0.5, 100);
+        elementImage=new ImageView(new Image("images/zombies1/ConeZombie.gif"));
+        //ImageView image = new ImageView(new Image("images/zombies/walking-plants-vs-zombies.gif"));
+        elementImage.setFitHeight(155);
+        elementImage.setFitWidth(134);
+        elementImage.setPreserveRatio(true);
+
+
     }
 
-    @Override
-    public void setAttackPower(int attackPower)
+    // Added to be used when spawning a zombie on the yard
+    public ConeZombie(int x, int y)
     {
-        super.setAttackPower(attackPower);
+        this();
+        super.x = x;
+        super.y = y;
     }
 
+
     @Override
-    public double getHealth()
+    public void action()
     {
-        return super.getHealth();
-    }
 
+    }
     @Override
-    public void setHealth(int health)
-    {
-        super.setHealth(health);
+    public void appear(Pane root) {
+
     }
 
-    @Override
-    public boolean isAlive() {
-        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void move() {
-        super.move(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setSpeed(int speed) {
-        super.setSpeed(speed); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getSpeed() {
-        return super.getSpeed(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setWaitingTime(double waitingTime) {
-        super.setWaitingTime(waitingTime); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public double getWaitingTime() {
-        return super.getWaitingTime(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setY(int y) {
-        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getY() {
-        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setX(int x) {
-        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getX() {
-        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-   
-
-    @Override
-    public void disappear()
-    {
-        //to be implemented
-    }
 }
+
 

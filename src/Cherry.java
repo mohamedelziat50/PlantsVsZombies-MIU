@@ -1,78 +1,119 @@
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+
 public class Cherry extends Plant
 {
-
-    public Cherry(int cost, double waitingTime, int x, int y, int health) {
-        super(cost, waitingTime, x, y, health);
-    }
-    
-
-    @Override
-    public int getCost()
+    public Cherry()
     {
-        return super.getCost();
+        super(150, 15, 50); // Dummy values for health, damage, and cost
     }
 
-    @Override
-    public void setCost(int cost)
+    public Cherry(int x, int y)
     {
-        super.setCost(cost);
+        this();
+        super.x = x;
+        super.y = y;
+
+        // Initialize the Cherry image with the "placing" animation
+        elementImage = new ImageView(new Image("images/plants/cherry-place.gif"));
+        elementImage.setFitWidth(80);
+        elementImage.setFitHeight(70);
+        elementImage.setPreserveRatio(true);
+
+        // Set the position for the image
+        elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) + 5);
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 25);
     }
 
     @Override
-    public double getWaitingTime()
+    public void run()
     {
-        return super.getWaitingTime();
+        // Step 1: Wait for 1 second (simulate "placing" animation)
+        PauseTransition waitToExplode = new PauseTransition(Duration.seconds(1));
+
+        waitToExplode.setOnFinished(event -> {
+            // Step 2: Switch to the explosion animation
+            Platform.runLater(() -> {
+                elementImage.setImage(new Image("images/plants/cherry-explode.gif"));
+                elementImage.setFitWidth(227);
+                elementImage.setFitHeight(250);
+
+                // GIF Isn't exact so need to minus it to get it centered like cherry
+                elementImage.setLayoutX(elementImage.getLayoutX() - 70);
+                elementImage.setLayoutY(elementImage.getLayoutY() - 55);
+            });
+
+            // Step 3: Trigger explosion effect
+            explode();
+
+            // Step 4: Remove the cherry from the grid after 1 second
+            PauseTransition removeCherry = new PauseTransition(Duration.seconds(3));
+            removeCherry.setOnFinished(e -> Platform.runLater(() -> disappear(Yard.root)));
+            removeCherry.play();
+        });
+        waitToExplode.play();
     }
 
-    @Override
-    public void setWaitingTime(double waitingTime)
+    private void explode()
     {
-        super.setWaitingTime(waitingTime);
+        // Create a list to store zombies that need to be killed
+        // You can't modify the synchronized list while it's being looped, otherwise a concurrency error arises.
+        ArrayList<Zombie> zombiesToKill = new ArrayList<>();
+
+        synchronized (Yard.zombies)
+        {
+            // Loop through all zombies and check proximity (1 cell distance around the cherry)
+            for (Zombie zombie : Yard.zombies)
+            {
+                double zombieX = zombie.elementImage.getLayoutX();
+                double zombieY = zombie.elementImage.getLayoutY();
+
+                double cherryX = elementImage.getLayoutX();
+                double cherryY = elementImage.getLayoutY();
+
+                // Check if the zombie is within one cell (120 px around it - random testing number)
+                if (Math.abs(zombieX - cherryX) <= 120 && Math.abs(zombieY - cherryY) <= 120)
+                    zombiesToKill.add(zombie); // Add to list of zombies to kill
+            }
+        }
+
+        // Now, outside the synchronized block, apply the changes to the zombies
+        for (Zombie zombie : zombiesToKill) {
+            zombie.takeDamage(Integer.MAX_VALUE); // Kill the zombie immediatly
+        }
+
+        // Remove cherry from the plants list and grid
+        removeFromListsAndGrid();
     }
 
-    @Override
-    public double getHealth()
+    // Helper method to remove the cherry from the plants list and grid
+    private void removeFromListsAndGrid()
     {
-        return super.getHealth();
+        synchronized (Yard.plants)
+        {
+            // Remove cherry from the plants list
+            Yard.plants.remove(this);
+        }
+
+        synchronized (Yard.grid)
+        {
+            // Remove cherry from the grid
+            Yard.grid[this.getX()][this.getY()] = null;
+        }
     }
 
     @Override
-    public void setHealth(int health)
-    {
-        super.setHealth(health);
+    public void takeDamage(int damage) {
+        // Cherry does not take damage
     }
 
     @Override
-    public void setY(int y) {
-        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getY() {
-        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setX(int x) {
-        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getX() {
-        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    
-
-    @Override
-    public void action()
-    {
-        //to be implemented
-    }
-
-    @Override
-    public void disappear()
-    {
-        //to be implemented
+    public void action() {
+        // Cherry has no action; it's an instant effect plant
     }
 }

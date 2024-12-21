@@ -1,79 +1,49 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
 public class Jalepeno extends Plant {
 
-    public Jalepeno(int cost, double waitingTime, int x, int y, int health) {
-        super(cost, waitingTime, x, y, health);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Jalepeno()
+    {
+        super(100, 15, 50);
+    }
+
+    // Added to be used when placing a plant on the yard
+    public Jalepeno(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
+
+        // Initialize the Peashooter image
+        elementImage = new ImageView(new Image("images/plants/jalapeno.png"));
+        elementImage.setFitWidth(41);
+        elementImage.setFitHeight(78);
+        elementImage.setPreserveRatio(true);
+
+
+        // Set the position for the image
+        elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) + 5);
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 25);
     }
 
     @Override
-    public void disappear() {
-        super.disappear(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    public void run()
+    {
+
     }
 
     @Override
-    public void setHealth(int health) {
-        super.setHealth(health); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    public void takeDamage(int damage)
+    {
+
     }
 
     @Override
-    public double getHealth() {
-        return super.getHealth(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
+    public void action()
+    {
 
-    @Override
-    public void setWaitingTime(double waitingTime) {
-        super.setWaitingTime(waitingTime); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
-
-    @Override
-    public double getWaitingTime() {
-        return super.getWaitingTime(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setCost(int cost) {
-        super.setCost(cost); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getCost() {
-        return super.getCost(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setY(int y) {
-        super.setY(y); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getY() {
-        return super.getY(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void setX(int x) {
-        super.setX(x); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public int getX() {
-        return super.getX(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        super.takeDamage(damage); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public boolean isAlive() {
-        return super.isAlive(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public void action() {
-        //to be implemented
-    }
-    
-    
-   
 }

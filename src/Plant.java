@@ -1,42 +1,18 @@
-public abstract class Plant extends Characters
+import javafx.application.Platform;
+import javafx.scene.layout.Pane;
+
+public abstract class Plant extends Characters implements Runnable
 {
     protected int cost;
 
     public Plant() {}
 
-    // Added temporarily to be able to use in the loading of files related to "level" class & in fileOperations interface
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Plant(int cost, double waitingTime, int health)
     {
+        super(health, waitingTime);
         this.cost = cost;
-        this.waitingTime = waitingTime;
-        this.health = health;
     }
-
-    public Plant(int cost, double waitingTime, int x, int y, int health) {
-        super(x, y, health);
-        this.cost = cost;
-        this.waitingTime = waitingTime;
-        
-    }
-@Override
-    public int getX() {
-        return x;
-    }
-@Override
-    public void setX(int x) {
-        this.x = x;
-    }
-@Override
-    public int getY() {
-        return y;
-    }
-@Override
-    public void setY(int y) {
-        this.y = y;
-    }
-   
-
-  
 
     public int getCost() {
         return cost;
@@ -45,39 +21,70 @@ public abstract class Plant extends Characters
     public void setCost(int cost) {
         this.cost = cost;
     }
-@Override
-    public double getWaitingTime() {
-        return waitingTime;
-    }
-@Override
-    public void setWaitingTime(double waitingTime) {
-        this.waitingTime = waitingTime;
-    }
 
-  
-    public abstract void action();//in sunflower we will consider that it shoots suns 
+    // Will be over-ridden by subclasses different actions
+    public abstract void run();
 
-    /**
-     * @return
-     */
     @Override
-    public double getHealth() {
-        return super.getHealth();
+    public abstract void action();
+
+    @Override
+    public void takeDamage(int damage)
+    {
+        health -= damage;
+
+        if (health <= 0)
+        {
+            disappear(Yard.root); // Remove Plant from the screen
+
+            synchronized (Yard.grid)
+            {
+                Yard.grid[this.x][this.y] = null;
+            }
+
+            synchronized (Yard.plants)
+            {
+                Yard.plants.remove(this); // Remove from list
+            }
+
+            System.out.println("Plant has died!");
+        }
     }
 
-    /**
-     * @param health
-     */
     @Override
-    public void setHealth(int health) {
-        super.setHealth(health);
+    public void appear(Pane root)
+    {
+        Platform.runLater(() -> {
+            if (elementImage != null) {
+                if (!root.getChildren().contains(elementImage)) // Check to avoid duplicates
+                    root.getChildren().add(elementImage);
+
+                System.out.println("Plant appears.");
+            }
+        });
+
+        // Alive-flag used with threads.
+        setAlive(true);
     }
 
- 
     @Override
-    public void disappear() {
-        
-        System.out.println("plant is dead");
-      
+    public void disappear(Pane root)
+    {
+        Platform.runLater(() -> {
+            if (elementImage != null)
+            {
+                elementImage.setVisible(false);
+                root.getChildren().remove(elementImage);
+                System.out.println("Plant removed.");
+            }
+        });
+
+        // Make the thread flag to be false to stop the plant!
+        setAlive(false);
+
+        // Since all plants are threads, once they die, we shall interrupt their threads.
+        Thread.currentThread().interrupt(); // Interrupt thread explicitly
     }
+
+
 }

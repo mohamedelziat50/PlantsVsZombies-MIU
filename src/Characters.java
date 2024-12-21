@@ -1,3 +1,5 @@
+import javafx.scene.layout.Pane;
+
 import java.io.Serializable;
 
 public abstract class Characters extends MainElements implements Serializable
@@ -5,29 +7,15 @@ public abstract class Characters extends MainElements implements Serializable
     protected int health;
     protected double waitingTime;
 
+    // Added Volatile in order to be read by other threads
+    private volatile boolean alive;
+
     public Characters() {}
 
-    public Characters(int x, int y,int health)
+    public Characters(int health, double waitingTime)
     {
-        super(x, y);
-        this.health=health;
-    }
-    
-    @Override
-    public int getX() {
-        return x;
-    }
-    @Override
-    public void setX(int x) {
-        this.x = x;
-    }
-    @Override
-    public int getY() {
-        return y;
-    }
-    @Override
-    public void setY(int y) {
-        this.y = y;
+        this.health = health;
+        this.waitingTime = waitingTime;
     }
 
     public double getWaitingTime() {
@@ -48,23 +36,29 @@ public abstract class Characters extends MainElements implements Serializable
         this.health = health;
     }
 
-    public boolean isAlive()
+    public void setAlive(boolean alive)
     {
-        return health>0;
+        this.alive = alive;
     }
 
-   public void takeDamage(int damage)
-   {
-       if(isAlive())
-           health-=damage;
-       else
-           disappear();
-   }
-   
-   
+    // To be used with threads
+    public boolean isAlive()
+    {
+        // Used with threads!
+        return alive;
+    }
+
+    // Add to be over-ridden by both Plant and Zombie classes
+    public abstract void takeDamage(int damage);
+
+    // Added this to be over-ridden by plants, pea, and zombies.
+    public abstract void action();
 
     @Override
-    public abstract void disappear();
+    public abstract void appear(Pane root);
+
+    @Override
+    public abstract void disappear(Pane root);
 }
 
 

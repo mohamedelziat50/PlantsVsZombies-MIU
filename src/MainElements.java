@@ -1,7 +1,13 @@
-abstract public class MainElements
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
+public abstract class MainElements
 {
     protected int x;
     protected int y;
+
+    // Now all elements inherit an imageview!
+    protected ImageView elementImage;
 
     public MainElements()
     {
@@ -30,8 +36,16 @@ abstract public class MainElements
         this.y = y;
     }
 
+    public ImageView getElementImage() {
+        return elementImage;
+    }
 
-    public abstract void disappear();      // when an object dies
+    public void setElementImage(ImageView elementImage) {
+        this.elementImage = elementImage;
+    }
+
+    public abstract void appear(Pane root);
+    public abstract void disappear(Pane root);      // when an object dies
 }
 
 

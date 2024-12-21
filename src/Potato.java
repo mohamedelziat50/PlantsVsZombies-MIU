@@ -1,86 +1,69 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
 public class Potato extends Plant
 {
-
-    
-    public Potato(int cost, double waitingTime, int x, int y, int health) {
-        super(50, 15, x, y, 250);
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Potato()
+    {
+        super(50, 15, 200);
     }
-   
 
+    // Added to be used when placing a plant on the yard
+    public Potato(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
+
+        // Initialize the Potato image
+        elementImage = new ImageView(new Image("images/plants/potato.gif"));
+        elementImage.setFitWidth(59);
+        elementImage.setFitHeight(66);
+        elementImage.setPreserveRatio(true);
+
+        // Set the position for the image
+        elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) );
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 10);
+    }
+
+
+    // Over-ride Potato to display different health-stages
     @Override
-    public int getCost() {
-        return super.getCost();
-    }
+    public void takeDamage(int damage)
+    {
+        // Call the superclass implementation to apply damage
+        super.takeDamage(damage);
 
-    @Override
-    public void setCost(int cost) {
-        super.setCost(cost);
-    }
+        // Calculate health percentage based on original health (this.health is the current health)
+        double healthPercentage = (double) this.health / 200;  // 200 is the original health value for Potato
 
-    /**
-     * @return
-     */
-    @Override
-    public double getWaitingTime() {
-        return super.getWaitingTime();
-    }
+        // Change image based on health percentage
+        if (healthPercentage <= 0.30)
+        {
+            // Change to "potato-cracked2.gif" if health is 30% or less
+            elementImage.setImage(new Image("images/plants/potato-cracked2.gif"));
+        } else if (healthPercentage <= 0.75)
+        {
+            // Change to "potato-cracked1.gif" if health is 75% or less
+            elementImage.setImage(new Image("images/plants/potato-cracked1.gif"));
+        }
 
-    /**
-     * @param waitingTime
-     */
-    
-    
-    @Override
-    public void setWaitingTime(double waitingTime) {
-        super.setWaitingTime(waitingTime);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public double getHealth() {
-        return super.getHealth();
-    }
-
-    
-    
-    @Override
-    public int getX() {
-        return x;
-    }
-@Override
-    public void setX(int x) {
-        this.x = x;
-    }
-@Override
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * @param health
-     */
-    public void setY(int y) {
-        this.y = y;
+        // Log the current health for debugging
+        System.out.println("Potato takes damage: " + damage + " Current health: " + this.health);
     }
 
     @Override
-    public void setHealth(int health) {
-        super.setHealth(health);
+    public void run()
+    {
+
     }
 
-   
     @Override
-    public void action() {
+    public void action()
+    {
         //to be implemented
     }
 
-    /**
-     *
-     */
-    @Override
-    public void disappear() {
-        super.disappear();
-    }
 }

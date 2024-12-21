@@ -45,7 +45,7 @@ public class MainMenu implements FileOperations
     /*
         METHODS
      */
-    // Function to display stars on terminal.
+    // Removed Function to display stars on terminal.
     public void displayStars()
     {
         // Number of stars to display.
@@ -190,86 +190,13 @@ public class MainMenu implements FileOperations
         }
     }
 
+    // Removed start game on terminal old code
     public void startGame()
     {
-        char[][] grid = new char[5][15];
-        int peaX = 0;
-        int peaY = 2;
-        int zombieX = 14;
-        int zombieY = 2;
-
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 15; j++)
-            {
-                grid[i][j] = ' ';
-            }
-        }
-
-
-        while (true)
-        {
-            grid[peaY][peaX] = ' ';
-            grid[zombieY][zombieX] = ' ';
-
-            grid[2][0] = 'P';
-
-            if (peaX < 14)
-            {
-                peaX++;
-            }
-
-            if (zombieX > 0 && peaX != zombieX)
-            {
-                zombieX--;
-            }
-
-            if (peaX == zombieX && peaY == zombieY)
-            {
-                displayGrid(grid);  // Show final state
-                System.out.println("pea touched the zombie, zombie died");
-                break;
-            }
-
-
-            //displaying nothing when they both touch, they both basically disappear
-            grid[peaY][peaX] = (peaX == zombieX) ? ' ' : 'o';
-            grid[zombieY][zombieX] = (peaX == zombieX) ? ' ' : 'Z';
-
-            displayGrid(grid);
-
-
-            // for transition, set a fixed waiting time for 1.5 seconds before the next state
-            try
-            {
-                Thread.sleep(1500);
-            } catch (Exception e)
-            {
-                System.out.println(e.getMessage());
-            }
-
-
-            // works like system("cls"), for clearing the screen before the next transition
-            for (int i = 0; i < 20; i++)
-            {
-                System.out.println();
-            }
-        }
 
     }
 
-    public void displayGrid(char[][] grid) {
-        System.out.println(" +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+ ");
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 15; j++) {
-                System.out.print("| " + grid[i][j] + " ");
-            }
-            System.out.println("|");
-            System.out.println(" +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+ ");
-        }
-    }
-
+    // Removed displayGrid game on terminal old code
 
     public boolean signIn(Scanner input)
     {

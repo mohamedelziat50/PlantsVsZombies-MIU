@@ -212,10 +212,8 @@ public interface FileOperations
             // ArrayList for unlocked plants & Zombies
             ArrayList<Plant> level1UnlockedPlants = new ArrayList<>();
             level1UnlockedPlants.add(new Peashooter());
-
             ArrayList<Zombie> level1UnlockedZombies = new ArrayList<>();
             level1UnlockedZombies.add(new DefaultZombie());
-
             // Create Levels manually.
             Level level1 = new Level (
                     1,              // Level Number
