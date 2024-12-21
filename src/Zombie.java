@@ -1,5 +1,9 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -118,26 +122,41 @@ public abstract class Zombie extends Characters
 
 
     @Override
-    public void takeDamage(int damage)
-    {
+    public void takeDamage(int damage) {
         health -= damage;
+
+        // Create a ColorAdjust to increase brightness
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.5); // Increase brightness
+        elementImage.setEffect(colorAdjust);
+
         System.out.println("Zombie takes damage: " + damage);
 
-        if (health <= 0)
-        {
-            // Set the volatile thread flag to be false / Mark As Dead
-            setAlive(false);
+        // Create a Timeline to reset the brightness after 0.5 seconds
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(200), // Duration of 0.5 seconds
+                        new KeyValue(colorAdjust.brightnessProperty(),0) // Reset effect to normal
+                )
+        );
+        timeline.setCycleCount(1); // Run the timeline only once
+        timeline.play(); // Start the timeline
+
+        // Check if the zombie is dead
+        if (health <= 0) {
+            setAlive(false); // Mark zombie as dead
+
+            synchronized (Yard.zombies) {
+                Yard.zombies.remove(this); // Remove from the list
+            }
 
             Platform.runLater(() -> {
                 disappear(Yard.root); // Remove zombie from the screen
             });
 
-            synchronized (Yard.zombies)
-            {
-                Yard.zombies.remove(this); // Remove from the list
-            }
+
         }
     }
+
 
     // This functions attacks a collided plant (Thread since it also accesses shared resources of itself, and Plant array list)
     private void attack(Plant targetPlant)
@@ -268,9 +287,15 @@ public abstract class Zombie extends Characters
             elementImage.setFitWidth(134);
             elementImage.setPreserveRatio(true);
         }
+        double gifDurationInSeconds;
 
+        if(this instanceof FootballZombie){
+        gifDurationInSeconds=0.8;
+        }
+        else{
+        gifDurationInSeconds=1.6;
+        }
 
-        double gifDurationInSeconds = 2; // Replace with the actual duration of the GIF
 
         // Create a PauseTransition to wait for the GIF to finish
         PauseTransition pause = new PauseTransition(Duration.seconds(gifDurationInSeconds));

@@ -72,7 +72,7 @@ public class Yard extends Thread
         timeLeft = levelDuration;
 
         // Suncounter for each yard
-        sunCounter = 1500;
+        sunCounter = 100;
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
@@ -188,7 +188,7 @@ public class Yard extends Thread
         {
             try
             {
-                Thread.sleep(1 * 1000); // Wait before spawning a new zombie
+                Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -418,7 +418,7 @@ public class Yard extends Thread
         Sun sun = new Sun();
         sun.appear(root);
 
-        MainGUI.primaryStage.setScene(scene);
+        Main.primaryStage.setScene(scene);
         this.start();
     }
 
