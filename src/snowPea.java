@@ -86,17 +86,12 @@ public class snowPea extends Characters implements Serializable, Runnable
     }
 
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
-    private Zombie checkForZombieCollision()
-    {
-        synchronized (Yard.zombies)
-        {
-            for (Zombie zombie : Yard.zombies)
-            {
-                if (zombie.isColliding(elementImage))
-                {
+    private Zombie checkForZombieCollision() {
+        synchronized (Yard.zombies) {
+            for (Zombie zombie : Yard.zombies) {
+                if (zombie.isAlive() && zombie.isColliding(elementImage)) {
                     peaHitsZombieAudio();
-                    // Return the first zombie it collides with
-                    return zombie;
+                    return zombie; // Return the first alive zombie it collides with
                 }
             }
         }
