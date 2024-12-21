@@ -39,7 +39,7 @@ public abstract class Plant extends Characters implements Runnable
         Platform.runLater(() -> {
             if (elementImage != null) {
                 root.getChildren().add(elementImage);
-                System.out.println("Plant appears.");
+//                System.out.println("Plant appears.");
             }
         });
 
@@ -55,7 +55,7 @@ public abstract class Plant extends Characters implements Runnable
             if (elementImage != null)
             {
                 root.getChildren().remove(elementImage);
-                System.out.println("Plant appears.");
+//                System.out.println("Plant disappearss.");
             }
         });
 

@@ -101,7 +101,7 @@ public class Card
                 System.out.println("Not enough sun to select this card.");
 
                 // Optionally change cursor to indicate that selection is not allowed
-                root.setStyle("-fx-cursor: not-allowed;"); // Change the cursor style
+//                root.setStyle("-fx-cursor: not-allowed;"); // Change the cursor style
 
                 return;
             }
@@ -272,13 +272,17 @@ public class Card
                                             // Create the plant instance
                                             Plant plant = plantType.getDeclaredConstructor(int.class, int.class).newInstance((int) centerX, (int) centerY);
 
+                                            if(yard.grid[GridPane.getRowIndex(button)][GridPane.getColumnIndex(button)] == null)
+                                            {
+                                                yard.sunCounter -= plant.getCost();
+                                                yard.label.setText(String.valueOf(yard.sunCounter));
+
+                                                startCooldown();
+                                            }
+
                                             // Place the plant in the yard and display it
                                             yard.placePlant(plant, root, GridPane.getRowIndex(button), GridPane.getColumnIndex(button));
 
-                                            yard.sunCounter -= plant.getCost();
-                                            yard.label.setText(String.valueOf(yard.sunCounter));
-
-                                            startCooldown();
 
 
                                         } catch (Exception e) {
@@ -376,7 +380,7 @@ public class Card
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.3);
+            mediaPlayer.setVolume(0.02);
 
             mediaPlayer.play();
         } catch (Exception e) {

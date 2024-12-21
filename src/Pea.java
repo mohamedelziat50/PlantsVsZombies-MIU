@@ -35,8 +35,10 @@ public class Pea extends Characters implements Serializable, Runnable
             {
                 // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
                 Platform.runLater(() -> {
+
                     try
                     {
+                        changePeaToFirePea();
                         elementImage.setLayoutX(elementImage.getLayoutX() + 2);
                     }
                     catch (Exception ex)
@@ -74,6 +76,27 @@ public class Pea extends Characters implements Serializable, Runnable
         }
     }
 
+    private void changePeaToFirePea()
+    {
+        Platform.runLater(() -> {
+            for (TorchWood torchWood : TorchWood.activeTorchWoods)
+            {
+                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
+                {
+                    Image firePea = new Image("images/plants/firePea.gif");
+                    elementImage.setImage(firePea);
+                    elementImage.setPreserveRatio(false);
+                    elementImage.setFitWidth(23);  // Increase width       increase these two to a huge number and watch the difference.
+                    elementImage.setFitHeight(66);
+
+                    damage = 20;  // Adjust damage for FirePea
+                    break; // No need to check further
+                }
+            }
+        });
+    }
+
+
     private Zombie checkForCollision()
     {
         synchronized (Yard.zombies)
@@ -96,17 +119,19 @@ public class Pea extends Characters implements Serializable, Runnable
         String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
         Media media = new Media(path);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.7);
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
     } catch (Exception e) {
         System.out.println("Error playing pea hit sound: " + e.getMessage());
     }
 }
 
-    public int getDamage() {
+    public int getDamage()
+    {
         return damage;}
 
-    public void setDamage(int damage) {
+    public void setDamage(int damage)
+    {
         this.damage = damage;
     }
 
@@ -132,7 +157,7 @@ public class Pea extends Characters implements Serializable, Runnable
         Platform.runLater(() -> {
             if (elementImage != null) {
                 root.getChildren().add(elementImage);
-                System.out.println("Pea appears.");
+//                System.out.println("Pea appears.");
             }
         });
     }
@@ -144,7 +169,7 @@ public class Pea extends Characters implements Serializable, Runnable
         Platform.runLater(() -> {
             if (elementImage != null) {
                 root.getChildren().remove(elementImage);
-                System.out.println("Pea disappears.");
+//                System.out.println("Pea disappears.");
             }
         });
     }

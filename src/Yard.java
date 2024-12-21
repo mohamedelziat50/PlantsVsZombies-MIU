@@ -27,14 +27,15 @@ public class Yard extends Thread
 {
     public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
     private int zombieSpawnInterval;
-    private Characters[][] grid;
+    public static volatile Characters[][] grid;
     private LawnMower[] lawnMowers;
     public static AnchorPane root;
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
     private double levelDuration = 60.0;  // Total duration for the level (in seconds)
     private double timeLeft = levelDuration;
-    public static int sunCounter = 50;
-    public static Label label = new Label("50");
+    public static int sunCounter = 500;
+    public static Label label = new Label("500");
+
 
     // Used for collision handling
     public static volatile ArrayList<Zombie> zombies = new ArrayList<>();
@@ -97,6 +98,13 @@ public class Yard extends Thread
 
             // Call the plants' subclass over-ridden appear function.
             plant.appear(root);
+
+            // If it's a Sunflower, start producing suns
+            if (plant instanceof Sunflower) {
+                Sunflower sunflower = (Sunflower) plant;  // Safe cast
+                sunflower.startSunProduction(root);  // Pass both parameters
+            }
+
 
             // Audio for placing a plant.
             plantPlacedAudio();
@@ -195,7 +203,8 @@ public class Yard extends Thread
 
 
 
-            System.out.println("Zombie placed at x: " + x + ", y: " + y);
+//            System.out.println("Zombie placed at x: " + x + ", y: " + y);
+
             new Thread(() -> {
                 while (zombie.isAlive())
                 {
@@ -388,7 +397,7 @@ public class Yard extends Thread
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.7);
+            mediaPlayer.setVolume(0.1);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing planting sound: " + e.getMessage());
@@ -400,7 +409,7 @@ public class Yard extends Thread
             String path = getClass().getResource("/music/plant selected.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.7);
+            mediaPlayer.setVolume(0.1);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing selecting sound: " + e.getMessage());
@@ -412,7 +421,7 @@ public class Yard extends Thread
             String path = getClass().getResource("/music/zombies arrive.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.7);
+            mediaPlayer.setVolume(0.1);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing zombie sound: " + e.getMessage());
@@ -440,7 +449,7 @@ public class Yard extends Thread
 
             // Create a new MediaPlayer for the selected audio
             zombieSpawnMediaPlayer = new MediaPlayer(media);
-            zombieSpawnMediaPlayer.setVolume(0.4); // Adjust volume as needed
+            zombieSpawnMediaPlayer.setVolume(0.1); // Adjust volume as needed
             zombieSpawnMediaPlayer.play(); // Play the selected audio
 
         } catch (Exception e) {
@@ -454,7 +463,7 @@ public class Yard extends Thread
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.9);
+            mediaPlayer.setVolume(0.2);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing zombie wave sound: " + e.getMessage());
@@ -519,6 +528,7 @@ public class Yard extends Thread
         // Preserve Ratio, otherwise a corrupted image appears
         woodenBox.setPreserveRatio(true);
         root.getChildren().add(woodenBox);
+
 
         // SHOVEL CARD (Used card class as a workaround)
         Card SHOVELCARD=new Card(
@@ -590,16 +600,18 @@ public class Yard extends Thread
         ICEDPEACARD.draggingImageViewSetProperties(90, 70, true, false);
         ICEDPEACARD.hoverImageViewSetProperties(90, 70, true, false);
 
-        // JALAPENO CARD
-        Card JALAPENOCARD = new Card(
-                "images/cards/jalapenoCard.png",
-                "images/plants/jalapeno.png",
-                Jalepeno.class,
-                125
-        );
-        JALAPENOCARD.cardImageViewSetProperties(573, 21, 47, 66, true, true);
-        JALAPENOCARD.draggingImageViewSetProperties(41, 78, true, false);
-        JALAPENOCARD.hoverImageViewSetProperties(41, 78, true, false);
+
+        Card torchWood=new Card(
+                "images/cards/torchwoodCard.png",
+                "images/plants/torchWood.gif",
+                TorchWood.class,
+                175
+        ); // NULL is used as a workaround to avoid creating a shovel class
+        torchWood.cardImageViewSetProperties(573,21,47,66,true,true);
+        torchWood.draggingImageViewSetProperties(41,78,true,false);
+        torchWood.hoverImageViewSetProperties(41,78,true,false);
+
+
 
         // REPEATER CARD
         Card REPEATERCARD = new Card(
@@ -644,7 +656,7 @@ public class Yard extends Thread
                 System.out.println("All cards are unlocked in " + levelNumber);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
-                JALAPENOCARD.addToYard(root, yardGrid, this);
+                torchWood.addToYard(root, yardGrid, this);
                 REPEATERCARD.addToYard(root, yardGrid, this);
                 break;
         }

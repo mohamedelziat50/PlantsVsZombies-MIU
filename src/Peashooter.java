@@ -77,7 +77,7 @@ public class Peashooter extends Plant
             String path = getClass().getResource("/music/peashooter shoots.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.9);
+            mediaPlayer.setVolume(0.1);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing peashooter sound: " + e.getMessage());
