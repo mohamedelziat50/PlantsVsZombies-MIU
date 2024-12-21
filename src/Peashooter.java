@@ -34,15 +34,19 @@ public class Peashooter extends Plant
    }
 
     @Override
-    public void run()
+    public synchronized void run()
     {
         // While the plant is alive, keep shooting.
-        while (isAlive()) // member variable inside characters (inherited)
+        while (isAlive() && !Thread.currentThread().isInterrupted()) // member variable inside characters (inherited)
         {
             try
             {
                 // Shoot a pea every 5 seconds
                 Thread.sleep(5000);
+
+                if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                    break; // Exit the loop immediately
+                }
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
                 Pea pea = new Pea(20, this);
@@ -51,16 +55,12 @@ public class Peashooter extends Plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
                 pea.elementImage.setLayoutY(elementImage.getLayoutY() + 31);
 
-                Platform.runLater(() -> {
-                    // Add to the root pane
-                    pea.appear(Yard.root);
-
-                    // Create a thread of the pea to run independently
-                    Thread peaThread = new Thread(pea);
-                    peaThread.setDaemon(true); // Ensure it stops with the app
-                    peaThread.start();
-                    peaShooterAudio();
-                });
+                pea.appear(Yard.root);
+                // Create a thread of the pea to run independently
+                Thread peaThread = new Thread(pea);
+                peaThread.setDaemon(true); // Ensure it stops with the app
+                peaThread.start();
+                peaShooterAudio();
             }
             catch (Exception e)
             {
@@ -87,7 +87,11 @@ public class Peashooter extends Plant
     @Override
     public void takeDamage(int damage)
     {
+        // Call the superclass implementation to apply damage
+        super.takeDamage(damage);
 
+        // Add any specific behavior for this subclass if needed
+        System.out.println("Peashooter takes damage: " + damage + " Current health: " + this.health);
     }
 
     @Override

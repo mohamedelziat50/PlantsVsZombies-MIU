@@ -10,10 +10,11 @@ public class DefaultZombie extends Zombie
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public DefaultZombie()
     {
-        super(10, 2, 100);
-        elementImage=new ImageView(new Image("images/zombies/walking-plants-vs-zombies.gif"));
-        elementImage.setFitHeight(132);
-        elementImage.setFitWidth(187);
+        // 0.02 instead of 2 to mantain the smoothness without delaying movement of zombies and lagging
+        super(10, 0.5, 100);
+        elementImage=new ImageView(new Image("images/zombies1/Zombie.gif"));
+        elementImage.setFitHeight(155);
+        elementImage.setFitWidth(134);
         elementImage.setPreserveRatio(true);
 
     }

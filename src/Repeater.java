@@ -9,7 +9,7 @@ public class Repeater extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Repeater()
     {
-        super(100, 15, 50);
+        super(200, 15, 50);
     }
 
     // Added to be used when placing a plant on the yard
@@ -72,7 +72,11 @@ public class Repeater extends Plant
     @Override
     public void takeDamage(int damage)
     {
+        // Call the superclass implementation to apply damage
+        super.takeDamage(damage);
 
+        // Add any specific behavior for this subclass if needed
+        System.out.println("Repeater takes damage: " + damage + " Current health: " + this.health);
     }
 
     @Override
