@@ -19,14 +19,15 @@ public class Main extends Application
         soundtrackplayer.playSoundtrack();
 
         // Only testing for logic, not actual Main Code
+        /*
         ArrayList<Plant> unlockedPlants = new ArrayList<>();
         unlockedPlants.add(new Peashooter());
 
         ArrayList<Zombie> unlockedZombies = new ArrayList<>();
         unlockedZombies.add(new DefaultZombie());
+        */
 
-
-        Level testLevel = new Level(1, 60, unlockedPlants, unlockedZombies);
+        Level testLevel = new Level(3, 60);
         testLevel.startLevel();
 
         primaryStage.show();

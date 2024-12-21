@@ -23,6 +23,8 @@ import java.util.Random;
 
 public class Yard extends Thread
 {
+    public Level parentLevel;
+
     // YARD CONSTANT VARIABLES
     public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
 
@@ -36,34 +38,44 @@ public class Yard extends Thread
 
     // Variables specific to each level!
     private int zombieSpawnInterval;
-    private double levelDuration = 60.0;  // Total duration for the level (in seconds)
-    private double timeLeft = levelDuration;
-    public static int sunCounter = 1500;
+    private double levelDuration; // Total duration for the level (in seconds)
+    private double timeLeft;
+    public static int sunCounter;
 
     // GUI-related variables
     public static AnchorPane root;
-    public static Label label = new Label("50");
+    public static Label label; // Related for sun counter
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
 
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
-    public Yard()
+    public Yard(Level parentLevel)
     {
+        // Parent level
+        this.parentLevel = parentLevel;
+
+        // Root pane that has everything on it
         root = new AnchorPane();
+
+        // Zombie Spawn Interval used in spawnZombie()
         zombieSpawnInterval = 5 ;
+
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
-        /*
-        THIS CODE IS REDUNDANT, WE INTILAIZE LAWNS MOWERS IN THE generateLawnMowers FUNCTION
+        // Clear previous plants/zombies arraylists incase started multiple levels in the same run.
+        plants.clear();
+        zombies.clear();
 
-        // Initialize Lawn Mowers Object for each row.
-        lawnMowers = new LawnMower[ROWS];
+        // Level specific stuff
+        levelDuration = parentLevel.getDurationInSeconds();
+        timeLeft = levelDuration;
 
-        for (int i = 0; i < ROWS; i++)
-            lawnMowers[i] = new LawnMower();
+        // Suncounter for each yard
+        sunCounter = 1500;
 
-         */
+        // 50 doesn't matter, the sun counter replaces it
+        label = new Label("50");
     }
 
     /*
@@ -381,7 +393,7 @@ public class Yard extends Thread
         // Later we should add conditions based on level 1, 2, 3: A function to load the specific cards whether unlocked or locked and use gray cards
 
         // Generate cards on root pane // LEVEL 1 IS HARDCODED FOR NOW
-        generateCards(3, root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
+        generateCards(parentLevel.getLevelNumber(), root, yardGrid); // Grid is passed as parameter because button are used in eventHandling
 
         // Generate lawnmowers on root pane
         generateLawnMowers(root);
@@ -406,7 +418,7 @@ public class Yard extends Thread
         Sun sun = new Sun();
         sun.appear(root);
 
-        Main.primaryStage.setScene(scene);
+        MainGUI.primaryStage.setScene(scene);
         this.start();
     }
 
@@ -492,14 +504,32 @@ public class Yard extends Thread
     private void generateYardImageView(AnchorPane root)
     {
         ImageView yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
-        yardImageView.setFitWidth(WIDTH);
-        yardImageView.setFitHeight(HEIGHT);
 
-        // No need to preserve ratio, to make yard larger
-        yardImageView.setPreserveRatio(false);
+        switch(parentLevel.getLevelNumber())
+        {
+            case 2:
+                yardImageView = new ImageView(new Image("images/yard-related/nightYard.png"));
+                break;
+            case 3:
+                yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
+        }
 
-        // Add yard image view to the root pane
-        root.getChildren().add(yardImageView);
+        if(yardImageView != null)
+        {
+            yardImageView.setFitWidth(WIDTH);
+            yardImageView.setFitHeight(HEIGHT);
+
+            // No need to preserve ratio, to make yard larger
+            yardImageView.setPreserveRatio(false);
+
+            // Add yard image view to the root pane
+            root.getChildren().add(yardImageView);
+        }
+        else
+        {
+            System.err.println("Yard Image View not loaded correctly.");
+            System.exit(1);
+        }
     }
 
     private GridPane generateGridPane(AnchorPane root)

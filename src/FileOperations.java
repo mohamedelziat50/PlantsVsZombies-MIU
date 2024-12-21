@@ -209,25 +209,19 @@ public interface FileOperations
                 FOR NOW PHASE-1 ONLY A SINGLE LEVEL WITH A PEASHOOTER AND A DEFAULT ZOMBIE WILL BE DISPLAYED.
              */
 
-            // ArrayList for unlocked plants & Zombies
-            ArrayList<Plant> level1UnlockedPlants = new ArrayList<>();
-            level1UnlockedPlants.add(new Peashooter());
-            ArrayList<Zombie> level1UnlockedZombies = new ArrayList<>();
-            level1UnlockedZombies.add(new DefaultZombie());
+            // Removed ArrayList for unlocked plants & Zombies
+
             // Create Levels manually.
             Level level1 = new Level (
                     1,              // Level Number
-                    60,                        // Duration in seconds
-                    level1UnlockedPlants,      // Unlocked plants
-                    level1UnlockedZombies     // Unlocked zombies
-                    // Yard configuration is null
+                    60                       // Duration in seconds
             );
 
             // Then create hashmap to store all levels for faster access!
             HashMap<Integer, Level> constantLevelsHashMap = new HashMap<>();
             constantLevelsHashMap.put(level1.getLevelNumber(), level1);
 
-            // Write the HashMap containing levels..
+            // Write the HashMap containing levels.
             output.writeObject(constantLevelsHashMap);
 
             // Display message for tracing
