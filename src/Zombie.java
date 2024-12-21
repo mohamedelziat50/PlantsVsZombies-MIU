@@ -5,11 +5,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
+import java.util.Map;
+
 public abstract class Zombie extends Characters
 {
     protected int attackPower;
     protected double speed;
     // ADD WAITING TIME FOR ATTACKING
+    public static volatile boolean gameRunning = true;
 
     private volatile boolean isAttacking = false;
     private volatile boolean slowed = false;
@@ -91,7 +94,7 @@ public abstract class Zombie extends Characters
     public synchronized void move()
     {
         // Skip movement if already attacking or dead
-        if (!isAlive() || isAttacking) return;
+        if (!isAlive() || isAttacking || !gameRunning) return;
 
         Plant targetPlant = checkForPlantCollision();
 
@@ -99,12 +102,12 @@ public abstract class Zombie extends Characters
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
+                elementImage.setLayoutX(elementImage.getLayoutX() - 3);
             });
 
             if (elementImage.getLayoutX() < 0) {
                 System.out.println("game over");
-                System.exit(0);//change to a reasonble function
+                Zombie.endGame();
             }
 
             try {
@@ -143,7 +146,7 @@ public abstract class Zombie extends Characters
     private void attack(Plant targetPlant)
     {
         // If zombie is current attacking, prevent many threads for attacking.
-        if (isAttacking)
+        if (isAttacking || !gameRunning)
             return;
 
         // Set is attacking to be true to create a new attacking thread
@@ -232,6 +235,37 @@ public abstract class Zombie extends Characters
         attackThread.start();
     }
 
+    public static void endGame() {
+        System.out.println("Ending the game...");
+
+        // Stop the game
+        gameRunning = false;
+
+        // Stop all non-JavaFX threads
+        killAllThreadsExceptJavaFX();
+
+        System.out.println("Cleared threads and shared resources...");
+
+        // Clear shared resources
+        synchronized (Yard.zombies) {
+            Yard.zombies.clear();
+        }
+        synchronized (Yard.plants) {
+            Yard.plants.clear();
+        }
+
+        // Transition back to the main menu
+        Platform.runLater(() -> {
+            System.out.println("Returning to Main Menu...");
+            try {
+                MainGUI.primaryStage.setScene(MainGUI.scene); // Ensure MainGUI.scene is not null
+            } catch (Exception e) {
+                System.err.println("Error transitioning to Main Menu: " + e.getMessage());
+            }
+        });
+    }
+
+
 
     @Override
     public abstract void action();
@@ -282,4 +316,24 @@ public abstract class Zombie extends Characters
         // Start the pause
         pause.play();
     }
+
+    public static void killAllThreadsExceptJavaFX() {
+        Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
+        for (Thread thread : allThreads.keySet()) {
+            String threadName = thread.getName();
+
+            if (!"JavaFX Application Thread".equals(threadName) && !thread.isDaemon()) {
+                try {
+                    if (gameRunning && thread.getState() != Thread.State.TERMINATED) {
+                        thread.interrupt(); // Signal to stop
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error interrupting thread: " + threadName);
+                }
+            }
+        }
+    }
+
+
+
 }

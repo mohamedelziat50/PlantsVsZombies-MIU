@@ -184,11 +184,11 @@ public class Yard extends Thread
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
-        while (true)
+        while (Zombie.gameRunning)
         {
             try
             {
-                Thread.sleep(1 * 1000); // Wait before spawning a new zombie
+                Thread.sleep(  1* 1000); // Wait before spawning a new zombie
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -262,11 +262,17 @@ public class Yard extends Thread
                     try {
                         Thread.sleep(20); // Control the speed of the zombie movement
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println("Zombie spawning interrupted. Exiting thread.");
+                        Thread.currentThread().interrupt(); // Preserve the interruption status
+                    }
+                    finally {
+                        System.out.println("Zombie spawning thread has exited.");
                     }
                 }
             }).start();
         }
+        Zombie.killAllThreadsExceptJavaFX();
+        MainGUI.primaryStage.setScene(MainGUI.scene);
     }
 
     @Override
@@ -409,7 +415,7 @@ public class Yard extends Thread
 
         zombiesArrivalAudio();
 
-        startLevelTimer();
+        // startLevelTimer();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -463,8 +469,6 @@ public class Yard extends Thread
 
     public void zombieSpawnAudio() {
         try {
-            // Check if a zombie spawn sound is already playing
-                zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
             // List of audio file paths for random selection
             String[] audioPaths = {
                     getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
