@@ -10,24 +10,40 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.shape.Rectangle;
 
-public class MainGUI extends Application implements FileOperations {
+public class MainGUI extends Application implements FileOperations
+{
     private HashMap<String, Player> users;
     private final StackPane signInContainer = new StackPane();
     private final StackPane signUpContainer = new StackPane();
     private final Pane Menu1 = new Pane();
     private final Pane levelMenu = new Pane();
 
+    // Added primary stage to set scene anywhere in code.
+    public static Stage primaryStage;
+
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage)
+    {
+        primaryStage = stage;
+
+        // Add ICON
+        primaryStage.setTitle("PVZ!");
+        primaryStage.getIcons().add(new Image("images/others/icon.png"));
+
+        // Sound track player
+        SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
+        soundtrackplayer.playSoundtrack();
+
         //Main container (ROOT) using Pane layout
         Pane root = new Pane();
         // Scene and stage
         Scene scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
-        primaryStage.setTitle("Welcome to our plants vs zombies video Game!!");
+        primaryStage.setTitle("PVZ - Main Menu!");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
         primaryStage.show();
@@ -371,14 +387,26 @@ public class MainGUI extends Application implements FileOperations {
     }
 
     //Handling of level1
-    private void handleLevel1 (Pane root){
+    private void handleLevel1 (Pane root)
+    {
+        Level testLevel = new Level(1, 60);
+        testLevel.startLevel();
         System.out.println("DONE level1");
     }
-    //Handling of level2
-    private void handleLevel2 (Pane root){System.out.println("DONE level2");}
-    //Handling of level3
-    private void handleLevel3 (Pane root){System.out.println("DONE level3");}
 
+    //Handling of level2
+    private void handleLevel2 (Pane root){
+        Level testLevel = new Level(2, 60);
+        testLevel.startLevel();
+        System.out.println("DONE level2");
+    }
+
+    //Handling of level3
+    private void handleLevel3 (Pane root) {
+        Level testLevel = new Level(3, 60);
+        testLevel.startLevel();
+        System.out.println("DONE level3");
+    }
 
     //Function to display alert when needed
     private void showAlert(Pane root, String header, String content) {

@@ -49,7 +49,7 @@ public class Sun extends MainElements
             {
                 try
                 {
-                    Thread.sleep(15000); // spawn kol 3 seconds
+                    Thread.sleep(3000); // spawn kol 3 seconds
 
                     javafx.application.Platform.runLater(() ->
                     {
