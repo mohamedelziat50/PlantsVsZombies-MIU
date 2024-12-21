@@ -39,9 +39,10 @@ public class MainGUI extends Application implements FileOperations {
             System.out.println("Error loading users: " + e.getMessage());
         }
 
+
 //Contents of Menu1 container
         // Background Image of menu 1
-        ImageView background = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+        ImageView background = new ImageView(new Image("images/menuImages/SIGNIN.jpg"));
         background.setFitWidth(800);
         background.setFitHeight(598);
 
@@ -76,6 +77,9 @@ public class MainGUI extends Application implements FileOperations {
         Menu1.getChildren().addAll(background, signInButton, signUpButton, exitButton); //Adding all components to the Main menu 1 container
         root.getChildren().addAll(Menu1); //Adding the Menu1 container to the root container
 
+
+//Contents of levelMenu container
+
         //level1 Button creation and sizing
         Button level1 = new Button();
         level1.setPrefSize(260, 55);
@@ -83,8 +87,7 @@ public class MainGUI extends Application implements FileOperations {
         level1.setLayoutY(207);
         level1.setRotate(9);
         level1.setOpacity(0);
-        level1.setOnAction(e -> handleLevel1(root)); //Linking the Exit button to the event handler
-
+        level1.setOnAction(e -> handleLevel1(root)); //Linking the Level1 button to the event handler
 
         //level2 Button creation and sizing
         Button level2 = new Button();
@@ -93,8 +96,7 @@ public class MainGUI extends Application implements FileOperations {
         level2.setLayoutY(283);
         level2.setRotate(10);
         level2.setOpacity(0);
-        level2.setOnAction(e -> handleLevel2(root)); //Linking the Exit button to the event handler
-
+        level2.setOnAction(e -> handleLevel2(root)); //Linking the level2 button to the event handler
 
         //level3 Button creation and sizing
         Button level3 = new Button();
@@ -103,67 +105,65 @@ public class MainGUI extends Application implements FileOperations {
         level3.setLayoutY(358);
         level3.setRotate(12);
         level3.setOpacity(0);
-        level3.setOnAction(e -> handleLevel3(root)); //Linking the Exit button to the event handler
+        level3.setOnAction(e -> handleLevel3(root)); //Linking the level3 button to the event handler
 
-
-
-
+        //Level background
+        ImageView levelMenuImage = new ImageView(new Image("images/menuImages/levelMenu.jpg"));
+        levelMenuImage.setFitWidth(800);
+        levelMenuImage.setFitHeight(598);
+        levelMenu.getChildren().addAll(levelMenuImage,level1,level2,level3); //Adding the LevelMenu components to the SignIn container
 
 
         // SignIn Button hover effect
         signInButton.setOnMouseEntered(e -> {
-            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/hover1.jpg"));
+            background.setImage(new Image("images/menuImages/hover1.jpg"));
         });
         signInButton.setOnMouseExited(e -> {
-            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+            background.setImage(new Image("images/menuImages/SIGNIN.jpg"));
         });
 
         // signUpButton Button hover effect
         signUpButton.setOnMouseEntered(e -> {
-            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/hover2.jpg"));
+            background.setImage(new Image("images/menuImages/hover2.jpg"));
         });
         signUpButton.setOnMouseExited(e -> {
-            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+            background.setImage(new Image("images/menuImages/SIGNIN.jpg"));
         });
 
         // exitButton hover effect
         exitButton.setOnMouseEntered(e -> {
-            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/hover3.jpg"));
+            background.setImage(new Image("images/menuImages/hover3.jpg"));
         });
         exitButton.setOnMouseExited(e -> {
-            background.setImage(new Image("file:/C:/Users/Lenovo/Desktop/SIGNIN.jpg"));
+            background.setImage(new Image("images/menuImages/SIGNIN.jpg"));
         });
 
-        // Show the level menu
-        ImageView levelMenuImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
-        levelMenuImage.setFitWidth(800);
-        levelMenuImage.setFitHeight(598);
+
 
         // level1 Button hover effect
         level1.setOnMouseEntered(e -> {
-            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/lev1Hover.jpg"));
+            levelMenuImage.setImage(new Image("images/menuImages/lev1Hover.jpg"));
         });
         level1.setOnMouseExited(e -> {
-            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+            levelMenuImage.setImage(new Image("images/menuImages/levelMenu.jpg"));
         });
 
         // level2 Button hover effect
         level2.setOnMouseEntered(e -> {
-            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/lev2Hover.jpg"));
+            levelMenuImage.setImage(new Image("images/menuImages/lev2Hover.jpg"));
         });
         level2.setOnMouseExited(e -> {
-            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+            levelMenuImage.setImage(new Image("images/menuImages/levelMenu.jpg"));
         });
 
         // level3 Button hover effect
         level3.setOnMouseEntered(e -> {
-            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/lev3Hover.jpg"));
+            levelMenuImage.setImage(new Image("images/menuImages/lev3Hover.jpg"));
         });
         level3.setOnMouseExited(e -> {
-            levelMenuImage.setImage(new Image("file:/C:/Users/Lenovo/Desktop/levelMenu.jpg"));
+            levelMenuImage.setImage(new Image("images/menuImages/levelMenu.jpg"));
         });
 
-        levelMenu.getChildren().addAll(levelMenuImage,level1,level2,level3); //Adding the signIn components to the SignIn container
 
     }
 
@@ -181,7 +181,7 @@ public class MainGUI extends Application implements FileOperations {
         signInContainer.setLayoutY(152);
 
         //Creating and sizing the background image that appears when sign in is pressed
-        ImageView backgroundImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/Inscene2.png"));
+        ImageView backgroundImage = new ImageView(new Image("images/menuImages/Inscene2.png"));
         backgroundImage.setFitWidth(395);
         backgroundImage.setFitHeight(275);
 
@@ -207,9 +207,9 @@ public class MainGUI extends Application implements FileOperations {
         back.setTranslateY(51);
         back.setTranslateX(13);
         back.setOpacity(0);
+//Adding the signin window components to their container
         signInContainer.getChildren().addAll(backgroundImage, usernameField, passwordField, back); //Adding the signIn components to the SignIn container
         root.getChildren().addAll(overlay,signInContainer);//Adding the sign in container and the overlay to the root
-
 
 
         //Back button handling
@@ -230,10 +230,6 @@ public class MainGUI extends Application implements FileOperations {
             //If Else statements to check if the entered credentials are valid or not
             if (users.containsKey(username) && users.get(username).getPassword().equals(password)) { //Checks if the hashMap contains a key identical to the username and if the password related to this key is identical to the entered password
                 root.getChildren().removeAll(overlay, signInContainer, Menu1);
-
-
-
-
 
 
                 //label that displays the user who is currently signed in
@@ -265,6 +261,7 @@ public class MainGUI extends Application implements FileOperations {
                 showAlert(root, "Sign-In Successful", "Welcome, " + username);
 
                 logOut.setOnAction(event -> {
+                    levelMenu.getChildren().removeAll(usernameLabel,logOut,exit);
                     root.getChildren().removeAll(levelMenu); // Remove level menu components
                     root.getChildren().addAll(Menu1);; // Redisplay the main menu
                     showAlert(root, "Logging out", "Bye, "+username);
@@ -275,6 +272,7 @@ public class MainGUI extends Application implements FileOperations {
                 root.getChildren().removeAll(signInContainer,overlay);
                 showAlert(root, "Sign-In Failed", "Invalid username or password.");
             }
+
 
         });
 
@@ -296,7 +294,7 @@ public class MainGUI extends Application implements FileOperations {
         signUpContainer.setLayoutY(152);
 
         //Image that appears when sign up is clicked
-        ImageView backgroundImage = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/Inscene2.png"));
+        ImageView backgroundImage = new ImageView(new Image("images/menuImages/Inscene2.png"));
         backgroundImage.setFitWidth(395);
         backgroundImage.setFitHeight(275);
 
@@ -372,22 +370,20 @@ public class MainGUI extends Application implements FileOperations {
         System.exit(0);
     }
 
+    //Handling of level1
     private void handleLevel1 (Pane root){
         System.out.println("DONE level1");
     }
-    private void handleLevel2 (Pane root){
-        System.out.println("DONE level2");
-
-    }
-    private void handleLevel3 (Pane root){
-        System.out.println("DONE level3");
-
-    }
+    //Handling of level2
+    private void handleLevel2 (Pane root){System.out.println("DONE level2");}
+    //Handling of level3
+    private void handleLevel3 (Pane root){System.out.println("DONE level3");}
 
 
+    //Function to display alert when needed
     private void showAlert(Pane root, String header, String content) {
         //Alert background
-        ImageView Alert = new ImageView(new Image("file:/C:/Users/Lenovo/Desktop/pvz.png"));
+        ImageView Alert = new ImageView(new Image("images/menuImages/pvz.png"));
         Alert.setFitWidth(422);
         Alert.setFitHeight(319);
         Alert.toFront();
