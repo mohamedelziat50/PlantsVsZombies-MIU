@@ -1,6 +1,7 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
@@ -72,7 +73,7 @@ public class Yard extends Thread
         timeLeft = levelDuration;
 
         // Suncounter for each yard
-        sunCounter = 10000;
+        sunCounter = 50;
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
@@ -184,20 +185,16 @@ public class Yard extends Thread
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public  void spawnZombie() throws InterruptedException
-    {
+    public void spawnZombie() throws InterruptedException {
         int[] specificNumbers = {134, 207, 298, 376, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
@@ -205,39 +202,67 @@ public class Yard extends Thread
             int y = specificNumbers[randomIndex];
             int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
 
-            int z = random.nextInt((4 - 1) + 1) + 1;
-            Zombie zombie;
-
-            if (z == 1) {
-                zombie = new DefaultZombie(x, y);
-            } else if (z == 2) {
-                zombie = new HelmetZombie(x, y);
-            } else if (z == 3) {
-                zombie = new ConeZombie(x, y);
-            } else {
-                zombie = new FootballZombie(x, y);
+            Zombie zombie = null;
+            // Check the level and set the zombie type based on the level number
+            if (this.parentLevel.getLevelNumber() == 1) {
+                // Level 1: Choose between DefaultZombie or HelmetZombie
+                int z = random.nextInt(2) + 1; // Random number between 1 and 2
+                if (z == 1) {
+                    zombie = new DefaultZombie(x, y);
+                } else {
+                    zombie = new HelmetZombie(x, y);
+                }
+            } else if (this.parentLevel.getLevelNumber() == 2) {
+                // Level 2: Choose between DefaultZombie, HelmetZombie, or ConeZombie
+                int z = random.nextInt(3) + 1; // Random number between 1 and 3
+                if (z == 1) {
+                    zombie = new DefaultZombie(x, y);
+                } else if (z == 2) {
+                    zombie = new HelmetZombie(x, y);
+                } else {
+                    zombie = new ConeZombie(x, y);
+                }
+            } else if (this.parentLevel.getLevelNumber() == 3) {
+                // Level 3: Choose between DefaultZombie, HelmetZombie, ConeZombie, or FootballZombie
+                int z = random.nextInt(4) + 1; // Random number between 1 and 4
+                if (z == 1) {
+                    zombie = new DefaultZombie(x, y);
+                } else if (z == 2) {
+                    zombie = new HelmetZombie(x, y);
+                } else if (z == 3) {
+                    zombie = new ConeZombie(x, y);
+                } else {
+                    zombie = new FootballZombie(x, y);
+                }
             }
 
-           // Create a new zombie at the random position
+            // If zombie is still null (though it shouldn't happen with above conditions), assign a default zombie
+            if (zombie == null) {
+                zombie = new DefaultZombie(x, y);
+            }
+
+            // Create a new zombie at the random position
             zombie.setAlive(true);
 
             // Added to be used with collision handling (with pea)
             zombies.add(zombie);
 
-            zombie.appear(root,x,y);
-
-            zombieSpawnAudio();
-
-
+            // Run the zombie appearance and audio in the UI thread
+            Zombie finalZombie = zombie;
+            Platform.runLater(() -> {
+                finalZombie.appear(root, x, y);
+                zombieSpawnAudio();
+            });
 
             System.out.println("Zombie placed at x: " + x + ", y: " + y);
-            new Thread(() -> {
-                while (zombie.isAlive()) {
-                    zombie.move();
 
+            // Create a new thread for the zombie movement
+            Zombie finalZombie1 = zombie;
+            new Thread(() -> {
+                while (finalZombie1.isAlive()) {
+                    finalZombie1.move();
 
                     // Check if this specific lawnmower intersects with the zombie
-                  //  zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop
                     for (int i = 0; i < ROWS; i++) {
                         if (lawnMowers[i] != null && !lawnMowers[i].isActive()) {
                             // Get the bounds of the lawnmower
@@ -247,11 +272,11 @@ public class Yard extends Thread
                             double lawnMowerBottom = lawnMowers[i].elementImage.getLayoutY() + lawnMowers[i].elementImage.getFitHeight();
 
                             // Get the bounds of the zombie
-                            double zombieCenterY = zombie.getElementImage().getLayoutY() + (zombie.getElementImage().getFitHeight() / 2);
+                            double zombieCenterY = finalZombie1.getElementImage().getLayoutY() + (finalZombie1.getElementImage().getFitHeight() / 2);
 
                             // Check if the zombie is within the bounds of this lawnmower's row
                             if (zombieCenterY >= lawnMowerTop && zombieCenterY <= lawnMowerBottom &&
-                                    zombie.getElementImage().getBoundsInParent().intersects(
+                                    finalZombie1.getElementImage().getBoundsInParent().intersects(
                                             lawnMowerLeft,
                                             lawnMowerTop,
                                             lawnMowerRight - lawnMowerLeft,
@@ -264,8 +289,6 @@ public class Yard extends Thread
                         }
                     }
 
-
-
                     try {
                         Thread.sleep(20); // Control the speed of the zombie movement
                     } catch (InterruptedException e) {
@@ -275,6 +298,7 @@ public class Yard extends Thread
             }).start();
         }
     }
+
 
     @Override
     public void run()
@@ -425,7 +449,9 @@ public class Yard extends Thread
         Sun sun = new Sun();
         sun.appear(root);
 
-        Main.primaryStage.setScene(scene);
+        MainGUI.primaryStage.setScene(scene);
+        // Added this to center on screen once switched
+        MainGUI.primaryStage.centerOnScreen();
         this.start();
     }
 

@@ -216,26 +216,26 @@ public abstract class Zombie extends Characters
             } finally {
                 isAttacking = false;
                 Platform.runLater(()->{
-                    if(this instanceof FootballZombie){
+                    if(this instanceof FootballZombie && this.isAlive()){
                         elementImage.setImage(new Image("images/zombies1/FootballZombie.gif"));
                         elementImage.setFitWidth(120);
                         elementImage.setFitHeight(125);
                         elementImage.setPreserveRatio(true);
                     }
-                    else if(this instanceof DefaultZombie){
+                    else if(this instanceof DefaultZombie && this.isAlive()){
                           elementImage.setImage(new Image("images/zombies1/Zombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
 
                     }
-                    else if(this instanceof ConeZombie){
+                    else if(this instanceof ConeZombie && this.isAlive()){
                         elementImage.setImage(new Image("images/zombies1/ConeZombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
                     }
-                    else if(this instanceof HelmetZombie){
+                    else if(this instanceof HelmetZombie && this.isAlive()){
                        elementImage.setImage(new Image("images/zombies1/BucketheadZombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
