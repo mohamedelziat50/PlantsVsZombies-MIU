@@ -112,13 +112,13 @@ public class Pea extends Characters implements Serializable, Runnable
                 if (zombie.isColliding(elementImage))
                 {
                     peaHitsZombieAudio();
-                    // Return the first zombie it collides with
-                    return zombie;
+                    return zombie; // Return the first zombie it collides with
                 }
             }
         }
         return null; // No collision
     }
+
 
     public void peaHitsZombieAudio() {
     try {
