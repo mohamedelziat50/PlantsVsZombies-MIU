@@ -100,7 +100,7 @@ public class Pea extends Characters implements Serializable, Runnable
         });
     }
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
-    private Zombie checkForZombieCollision() {
+    private synchronized Zombie checkForZombieCollision() {
         synchronized (Yard.zombies) {
             for (Zombie zombie : Yard.zombies) {
                 if (!zombie.isAlive()) continue; // Skip dead zombies

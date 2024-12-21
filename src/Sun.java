@@ -15,10 +15,13 @@ import java.util.Random;
 
 public class Sun extends MainElements
 {
+
+
+
     public Sun()
     {
         // Initialize the Peashooter image
-        elementImage = new ImageView(new Image("images/others/sun.png"));
+        elementImage = new ImageView(new Image("images/others/sun.png   "));
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
@@ -98,10 +101,19 @@ public class Sun extends MainElements
         sunThread.start();
     }
 
-    public void setCollectible(Pane root)
-    {
-        elementImage.setOnMouseClicked(event ->
-        {
+    public void setCollectible(Pane root) {
+        // Add a flag to check if the sun has already been collected
+        final boolean[] isCollected = {false}; // Use an array to allow modification inside the lambda
+
+        elementImage.setOnMouseClicked(event -> {
+            // Check if the sun has already been collected
+            if (isCollected[0]) {
+                return; // Exit if already collected
+            }
+
+            // Mark the sun as collected
+            isCollected[0] = true;
+
             // Play the sun collection sound
             sunCollectedAudio();
 

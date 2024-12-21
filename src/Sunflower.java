@@ -71,6 +71,7 @@ public class Sunflower extends Plant
 
     private void produceSun(AnchorPane root)
     {
+        if(this.isAlive()){
         // Prevent the sun from being produced multiple times
         if (isSunProduced) return; // If sun is already produced, return early
 
@@ -134,6 +135,7 @@ public class Sunflower extends Plant
 
         // Start the path transition (sun coming out animation)
         pathTransition.play();
+        }
     }
 
 

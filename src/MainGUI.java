@@ -46,6 +46,8 @@ public class MainGUI extends Application implements FileOperations
         primaryStage.setTitle("PVZ - Main Menu!");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
+        // Added this to center on screen once switched
+        MainGUI.primaryStage.centerOnScreen();
         primaryStage.show();
 
         // Load user data from binary file into the hashmap
