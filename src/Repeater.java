@@ -34,7 +34,9 @@ public class Repeater extends Plant
     @Override
     public void run()
     {
+        // MAGETSH GAMBO LAZEM AZABTO ZAY EL PEA SHOOTER WEL ICED PEA SHOOTER
         // While the plant is alive, keep shooting.
+
         while (isAlive()) // member variable inside characters (inherited)
         {
             try

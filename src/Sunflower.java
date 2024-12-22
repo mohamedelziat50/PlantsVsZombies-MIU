@@ -72,7 +72,11 @@ public class Sunflower extends Plant
 
     private void produceSun(AnchorPane root)
     {
-        if(this.isAlive()){
+        if(Yard.gameOver)
+            return;
+
+        if(this.isAlive())
+        {
         // Prevent the sun from being produced multiple times
         if (isSunProduced) return; // If sun is already produced, return early
 

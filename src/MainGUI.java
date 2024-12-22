@@ -26,6 +26,7 @@ public class MainGUI extends Application implements FileOperations
     public static Stage primaryStage;
     public static Scene scene;
 
+
     @Override
     public void start(Stage stage)
     {
