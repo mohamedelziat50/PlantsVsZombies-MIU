@@ -487,9 +487,9 @@ public class Yard extends Thread
         Sun sun = new Sun();
         sun.appear(root);
 
-        Main.primaryStage.setScene(scene);
+        MainGUI.primaryStage.setScene(scene);
         // Added this to center on screen once switched
-        Main.primaryStage.centerOnScreen();
+        MainGUI.primaryStage.centerOnScreen();
         this.start();
     }
 
