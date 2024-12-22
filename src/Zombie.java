@@ -108,10 +108,10 @@ public abstract class Zombie extends Characters
                 elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
 
-//            if (elementImage.getLayoutX() < 0 && this.isAlive()) {
-//                System.out.println("game over");
-//                System.exit(1);
-//            }
+           if (elementImage.getLayoutX() < 0 && this.isAlive()) {
+                System.out.println("game over");
+                System.exit(1);
+            }
 
             try {
                 Thread.sleep(1); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
