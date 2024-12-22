@@ -1,6 +1,7 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,10 +11,11 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+import java.io.Serializable;
 import java.util.Random;
 
 
-public class Sun extends MainElements
+public class Sun extends Characters implements Runnable
 {
     public Sun()
     {
@@ -25,11 +27,15 @@ public class Sun extends MainElements
 
     }
 
+    @Override
+    public void takeDamage(int damage)
+    {
+    }
+
     public Sun(int x,int y)
     {
         super(x, y);
 
-        // Initialize the Peashooter image
         elementImage = new ImageView(new Image("images/others/sun.png"));
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
@@ -40,63 +46,77 @@ public class Sun extends MainElements
     @Override
     public void appear(Pane root)
     {
-        Random random = new Random();
-
-        // sun spawning thread
-        Thread sunThread = new Thread(() ->
-        {
-            while (true)
-            {
-                try
-                {
-                    Thread.sleep(3000); // spawn kol 3 seconds
-
-                    javafx.application.Platform.runLater(() ->
-                    {
-                        Sun sun = new Sun();
-
-                        // Set random position
-                        double x = 227 + random.nextDouble() * 680; // horizontal range
-                        double startY = -50; // slightly above the screen
-                        double stopY = 400 + random.nextDouble() * 100; // stop in lower part of the screen
-
-                        sun.getElementImage().setLayoutX(x);
-                        sun.getElementImage().setLayoutY(startY);
-
-                        root.getChildren().add(sun.getElementImage());
-
-                        // falling animation
-                        Timeline dropAnimation = new Timeline(
-                                new KeyFrame(Duration.ZERO, new KeyValue(sun.getElementImage().layoutYProperty(), startY)),
-                                new KeyFrame(Duration.seconds(7), new KeyValue(sun.getElementImage().layoutYProperty(), stopY)) // Stop in lower part
-                        );
-
-                        sun.setCollectible(root);
-
-                        dropAnimation.setOnFinished(e ->
-                        {
-                            Timeline stayTimeline = new Timeline(
-                                    new KeyFrame(Duration.seconds(3), event -> root.getChildren().remove(sun.getElementImage())) // disappear after three seconds if not collected at end position
-                            );
-                            stayTimeline.play();
-                        });
-
-                        dropAnimation.play();
-
-                    });
-
-                }
-                catch (InterruptedException e)
-                {
-                    System.out.println("Sun spawning thread interrupted.");
-                    return;
-                }
+        Platform.runLater(() -> {
+            if (elementImage != null) {
+                root.getChildren().add(elementImage);
+                // System.out.println("sun appears.");
             }
         });
-
-        sunThread.setDaemon(true); // Thread stops when application closes
-        sunThread.start();
     }
+
+    @Override
+    public void run() {
+        Random random = new Random();
+
+        try
+        {
+            // New thread, slight delay in case of initialization requirements
+            Thread.sleep(20);
+
+            // Has to be synchronized to manage the sun spawning and GUI updates
+            synchronized (this)
+            {
+                while (true)
+                {
+                    // Delay for sun spawning
+//                    Thread.sleep(3000);
+
+                    // Platform.runLater for UI changes
+                    Platform.runLater(() -> {
+                        try {
+                            // Set random position for the sun
+                            double x = 227 + random.nextDouble() * 680; // Horizontal range
+                            double startY = -50; // Start above the screen
+                            double stopY = 400 + random.nextDouble() * 100; // Stop in lower part
+
+                            // Position the sun
+                            getElementImage().setLayoutX(x);
+                            getElementImage().setLayoutY(startY);
+
+                            // Add the sun to the root pane
+                            Yard.root.getChildren().add(getElementImage());
+
+                            // Create the falling animation
+                            Timeline dropAnimation = new Timeline(
+                                    new KeyFrame(Duration.ZERO, new KeyValue(getElementImage().layoutYProperty(), startY)),
+                                    new KeyFrame(Duration.seconds(7), new KeyValue(getElementImage().layoutYProperty(), stopY))
+                            );
+
+                            // Set the sun to be collectible
+                            setCollectible(Yard.root);
+
+                            // On animation finish, schedule removal if not collected
+                            dropAnimation.setOnFinished(e -> {
+                                Timeline stayTimeline = new Timeline(
+                                        new KeyFrame(Duration.seconds(3), event -> Yard.root.getChildren().remove(getElementImage()))
+                                );
+                                stayTimeline.play();
+                            });
+
+                            dropAnimation.play();
+                        } catch (Exception ex) {
+                            System.out.println("Exception during sun animation: " + ex.getMessage());
+                        }
+                    });
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Sun thread interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt(); // Restore interrupted status
+        }
+    }
+
+
 
     public void setCollectible(Pane root)
     {
@@ -142,4 +162,8 @@ public class Sun extends MainElements
 
     }
 
+    @Override
+    public void action() {
+
+    }
 }

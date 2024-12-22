@@ -126,11 +126,8 @@ public class Yard extends Thread
             // Call the plants' subclass over-ridden appear function.
             plant.appear(root);
 
-            // If it's a Sunflower, start producing suns
-            if (plant instanceof Sunflower) {
-                Sunflower sunflower = (Sunflower) plant;  // Safe cast
-                sunflower.startSunProduction(root);  // Pass both parameters
-            }
+
+
 
 
             // Audio for placing a plant.
@@ -279,7 +276,8 @@ public class Yard extends Thread
     @Override
     public void run()
     {
-        try {
+        try
+        {
             spawnZombie();
         }
         catch (InterruptedException e) {
@@ -414,6 +412,8 @@ public class Yard extends Thread
 
         readySetPlant();
 
+        generateSuns();
+
         zombiesArrivalAudio();
 
         startLevelTimer();
@@ -422,11 +422,20 @@ public class Yard extends Thread
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.setCursor(new ImageCursor(new Image("images/others/cursor.png")));
 
-        Sun sun = new Sun();
-        sun.appear(root);
-
         MainGUI.primaryStage.setScene(scene);
         this.start();
+    }
+
+    private void generateSuns()
+    {
+
+            Sun sun = new Sun();
+            Thread sunThread = new Thread(sun);
+            sunThread.setDaemon(true);
+            sunThread.start();
+
+
+
     }
 
     public void plantPlacedAudio() {

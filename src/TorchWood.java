@@ -36,7 +36,11 @@ public class TorchWood extends Plant {
     @Override
     public void takeDamage(int damage)
     {
-        // Implement take damage logic if necessary
+        // Call the superclass implementation to apply damage
+        super.takeDamage(damage);
+
+        // Add any specific behavior for this subclass if needed
+        System.out.println("torchwood takes damage: " + damage + " Current health: " + this.health);
     }
 
     @Override

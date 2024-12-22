@@ -1,4 +1,5 @@
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -10,6 +11,7 @@ import javafx.util.Duration;
 
 public class Sunflower extends Plant
 {
+
     private boolean isSunProduced = false;
 
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
@@ -47,9 +49,39 @@ public class Sunflower extends Plant
     }
 
     @Override
-    public void run()
-    {
+    public synchronized void run() {
+
+        while (isAlive() && !Thread.currentThread().isInterrupted())
+        {
+            try
+            {
+                // Produce sun every 10 seconds
+                Thread.sleep(5000);
+
+                if (!isAlive() || Thread.currentThread().isInterrupted())
+                {
+                    break; // Exit the loop if the plant is not alive or interrupted
+                }
+
+                Sun sunSpawner = new Sun();
+
+//                sunSpawner.appear(Yard.root);
+
+                Thread sunThread = new Thread(sunSpawner);
+                sunThread.setDaemon(true); // Optional: allows thread to stop when the application exits
+                sunThread.start();
+                // Produce a sun
+                Platform.runLater(() -> produceSun(Yard.root));
+            }
+         catch(InterruptedException e)
+         {
+             System.out.println("Sunflower thread interrupted: " + e.getMessage());
+             Thread.currentThread().interrupt(); // Restore interrupted status
+         }
+        System.out.println("Sunflower thread ended.");
     }
+    }
+
 
     @Override
     public void action()
@@ -87,9 +119,9 @@ public class Sunflower extends Plant
         Path path = new Path();
 
         // Start point: Sunflower's position
-        MoveTo moveTo = new MoveTo(elementImage.getLayoutX() + 40, elementImage.getLayoutY());  // Slight offset for the sun
+        MoveTo moveTo = new MoveTo(elementImage.getLayoutX() + 40, elementImage.getLayoutY()); // Slight offset for the sun
 
-        // Curve endpoint: Slightly upward and to the right (adjust to your liking)
+        // Curve endpoint: Slightly upward and to the right
         ArcTo arcTo = new ArcTo();
         arcTo.setX(elementImage.getLayoutX() + 70); // Slightly to the right
         arcTo.setY(elementImage.getLayoutY() + 60); // Slightly upward
@@ -106,9 +138,8 @@ public class Sunflower extends Plant
         pathTransition.setNode(newSun.getElementImage());
         pathTransition.setCycleCount(1);
 
-        // When the animation finishes, do NOT remove the sun, but make it clickable
+        // When the animation finishes, make the sun clickable
         pathTransition.setOnFinished(event -> {
-            // Allow clicking immediately after animation
             newSun.getElementImage().setOnMouseClicked(clickEvent -> {
                 newSun.sunCollectedAudio(); // Play collection sound
 
@@ -116,14 +147,14 @@ public class Sunflower extends Plant
                 Yard.sunCounter += 25;
                 Yard.label.setText(String.valueOf(Yard.sunCounter));
 
-                // Remove the sun immediately when clicked (no collection animation)
+                // Remove the sun immediately when clicked
                 root.getChildren().remove(newSun.getElementImage());
 
                 // Reset flag after sun is collected
                 isSunProduced = false;
             });
 
-            // Optional: If the sun isn't clicked, remove it after a certain amount of time (e.g., 8 seconds)
+            // Remove the sun after 8 seconds if not clicked
             PauseTransition removeSunDelay = new PauseTransition(Duration.seconds(8));
             removeSunDelay.setOnFinished(e -> {
                 root.getChildren().remove(newSun.getElementImage());
@@ -132,9 +163,10 @@ public class Sunflower extends Plant
             removeSunDelay.play();
         });
 
-        // Start the path transition (sun coming out animation)
+        // Start the path transition (sun animation)
         pathTransition.play();
     }
+
 
 
 
