@@ -48,7 +48,7 @@ public class Sun extends MainElements
         // sun spawning thread
         Thread sunThread = new Thread(() ->
         {
-            while (true)
+            while (!Yard.checkGameOver())
             {
                 try
                 {

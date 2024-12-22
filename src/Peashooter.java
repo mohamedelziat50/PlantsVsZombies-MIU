@@ -37,14 +37,15 @@ public class Peashooter extends Plant
     public synchronized void run()
     {
         // While the plant is alive, keep shooting.
-        while (isAlive() && !Thread.currentThread().isInterrupted()) // member variable inside characters (inherited)
+        while (isAlive() && !Yard.checkGameOver() && !Thread.currentThread().isInterrupted()) // member variable inside characters (inherited)
         {
             try
             {
                 // Shoot a pea every 5 seconds
                 Thread.sleep(4000);
 
-                if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                    if (!isAlive() || Thread.currentThread().isInterrupted() || Yard.checkGameOver()) {
+                        this.disappear(Yard.root);
                     break; // Exit the loop immediately
                 }
 
@@ -69,6 +70,8 @@ public class Peashooter extends Plant
                 break;
             }
         }
+
+        disappear(Yard.root);
         System.out.println("Peashooter thread ended.");
     }
 
