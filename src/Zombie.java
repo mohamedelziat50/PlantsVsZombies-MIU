@@ -97,7 +97,10 @@ public abstract class Zombie extends Characters
     public synchronized void move()
     {
         // Skip movement if already attacking or dead
-        if (!isAlive() || isAttacking) return;
+        if (!isAlive() || isAttacking|| Yard.checkGameOver()){
+            this.disappear(Yard.root);
+            return;
+        }
 
         Plant targetPlant = checkForPlantCollision();
 
@@ -105,12 +108,16 @@ public abstract class Zombie extends Characters
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
+                elementImage.setLayoutX(elementImage.getLayoutX() - 3);
             });
 
-           if (elementImage.getLayoutX() < 0 && this.isAlive()) {
+            if (!Yard.checkGameOver() && elementImage.getLayoutX() < 0 )
+            {
+
                 System.out.println("game over");
-                System.exit(1);
+                disappear(Yard.root);
+                //System.exit(0);//change to a reasonble function
+                Yard.gameOver = true;
             }
 
             try {

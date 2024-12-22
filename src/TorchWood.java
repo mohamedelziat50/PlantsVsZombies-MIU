@@ -11,7 +11,8 @@ public class TorchWood extends Plant {
     // Static list to keep track of active TorchWood instances
     public static final List<TorchWood> activeTorchWoods = new ArrayList<>();
 
-    public TorchWood() {
+    public TorchWood()
+    {
         super(175, 15, 50);
         // Add this instance to the activeTorchWoods list
         activeTorchWoods.add(this);
@@ -24,19 +25,23 @@ public class TorchWood extends Plant {
 
         // Initialize the TorchWood image
         elementImage = new ImageView(new Image("images/plants/torchWood.gif"));
-        elementImage.setFitWidth(90);
-        elementImage.setFitHeight(85);
-        elementImage.setPreserveRatio(true);
+        elementImage.setFitWidth(60);
+        elementImage.setFitHeight(83);
+        elementImage.setPreserveRatio(false);
 
         // Set the position for the TorchWood plant
         elementImage.setLayoutX(x - elementImage.getFitWidth() / 2);
-        elementImage.setLayoutY(y - elementImage.getFitHeight() / 2);
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2 ) + - 15 );
     }
 
     @Override
     public void takeDamage(int damage)
     {
-        // Implement take damage logic if necessary
+        // Call the superclass implementation to apply damage
+        super.takeDamage(damage);
+
+        // Add any specific behavior for this subclass if needed
+//        System.out.println("torchwood takes damage: " + damage + " Current health: " + this.health);
     }
 
     @Override
