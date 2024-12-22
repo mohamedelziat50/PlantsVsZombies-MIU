@@ -108,7 +108,7 @@ public abstract class Zombie extends Characters
 
             if (elementImage.getLayoutX() < 0) {
                 System.out.println("game over");
-                System.exit(0);//change to a reasonble function
+//                System.exit(0);//change to a reasonble function
             }
 
             try {
