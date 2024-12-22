@@ -12,7 +12,8 @@ public class Pea extends Characters implements Serializable, Runnable
     // Reference to check whether it's alive or not
     private Plant parent;
     protected int damage;
-    
+    private final Image firePeaImage = new Image("images/projectiles/firePea.gif");
+
     public Pea(int damage, Plant parent)
     {
         this.damage = damage;
@@ -87,13 +88,12 @@ public class Pea extends Characters implements Serializable, Runnable
             {
                 if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
                 {
-                    Image firePea = new Image("images/plants/firePea.gif");
-                    elementImage.setImage(firePea);
+                    elementImage.setImage(firePeaImage);
                     elementImage.setPreserveRatio(false);
-                    elementImage.setFitWidth(23);  // Increase width       increase these two to a huge number and watch the difference.
-                    elementImage.setFitHeight(66);
+                    elementImage.setFitWidth(50);
+                    elementImage.setFitHeight(37);
 
-                    damage = 20;  // Adjust damage for FirePea
+                    damage = 40;  // Adjust damage for FirePea
                     break; // No need to check further
                 }
             }
