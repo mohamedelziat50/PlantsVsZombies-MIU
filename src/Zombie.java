@@ -125,14 +125,16 @@ public abstract class Zombie extends Characters
     public void takeDamage(int damage) {
         health -= damage;
 
-        // Create a ColorAdjust to increase brightness
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(0.5); // Increase brightness
-        elementImage.setEffect(colorAdjust);
+
+
 
         System.out.println("Zombie takes damage: " + damage);
 
         // Create a Timeline to reset the brightness after 0.5 seconds
+        // Create a ColorAdjust to increase brightness
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.5); // Increase brightness
+        elementImage.setEffect(colorAdjust);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.millis(200), // Duration of 0.5 seconds
                         new KeyValue(colorAdjust.brightnessProperty(),0) // Reset effect to normal

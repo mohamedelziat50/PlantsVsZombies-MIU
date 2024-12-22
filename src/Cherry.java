@@ -10,7 +10,7 @@ public class Cherry extends Plant
 {
     public Cherry()
     {
-        super(150, 15, 50); // Dummy values for health, damage, and cost
+        super(150, 15, 300); // Dummy values for health, damage, and cost
     }
 
     public Cherry(int x, int y)
