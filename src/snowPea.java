@@ -14,7 +14,7 @@ public class snowPea extends Characters implements Serializable, Runnable
     protected int damage;
 
     private final double SLOW_DURATION = 5.0; // Duration in seconds
-    private final double SLOW_FACTOR = 0.5;   // Factor to reduce the zombie's speed
+    private final double SLOW_FACTOR = 0.25;   // Factor to reduce the zombie's speed
 
     public snowPea(int damage, Plant parent)
     {
@@ -114,6 +114,7 @@ public class snowPea extends Characters implements Serializable, Runnable
 
                 // GUI for slowed zombie
                 markZombieAsSlowed(target);
+
 
                 try {
                     Thread.sleep((long) (SLOW_DURATION * 1000)); // Wait for the slow duration

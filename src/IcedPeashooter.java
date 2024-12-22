@@ -11,7 +11,7 @@ public class IcedPeashooter extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public IcedPeashooter()
     {
-        super(175, 15, 50);
+        super(175, 15, 100);
     }
 
     // Added to be used when placing a plant on the yard
@@ -49,7 +49,7 @@ public class IcedPeashooter extends Plant
                 }
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                snowPea pea = new snowPea(20, this);
+                snowPea pea = new snowPea(30, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);

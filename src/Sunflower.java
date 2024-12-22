@@ -1,4 +1,5 @@
 import javafx.animation.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -15,7 +16,7 @@ public class Sunflower extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Sunflower()
     {
-        super(50, 15, 30);
+        super(50, 15, 60);
     }
 
     // Added to be used when placing a plant on the yard
@@ -77,6 +78,18 @@ public class Sunflower extends Plant
 
         // Set flag to true, preventing further sun production until reset
         isSunProduced = true;
+            // Create a Timeline to reset the brightness after 0.5 seconds
+            // Create a ColorAdjust to increase brightness
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setBrightness(0.5); // Increase brightness
+            elementImage.setEffect(colorAdjust);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.millis(800), // Duration of 0.5 seconds
+                            new KeyValue(colorAdjust.brightnessProperty(),0) // Reset effect to normal
+                    )
+            );
+            timeline.setCycleCount(1); // Run the timeline only once
+            timeline.play(); // Start the timeline
 
         // Create a new Sun instance at the Sunflower's location
         Sun newSun = new Sun((int) elementImage.getLayoutX(), (int) elementImage.getLayoutY());
@@ -137,14 +150,6 @@ public class Sunflower extends Plant
         pathTransition.play();
         }
     }
-
-
-
-
-
-
-
-
 
 }
 
