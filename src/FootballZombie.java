@@ -8,7 +8,7 @@ public class FootballZombie extends Zombie {
     public FootballZombie()
     {
 
-        super(10, 0.8, 100);
+        super(20, 0.9, 120);
         elementImage=new ImageView(new Image("images/zombies1/FootballZombie.gif"));
         elementImage.setFitWidth(120);
         elementImage.setFitHeight(125);

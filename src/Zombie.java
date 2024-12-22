@@ -108,9 +108,10 @@ public abstract class Zombie extends Characters
                 elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
 
-            if (elementImage.getLayoutX() < 0) {
-                System.out.println("game over");
-            }
+//            if (elementImage.getLayoutX() < 0 && this.isAlive()) {
+//                System.out.println("game over");
+//                System.exit(1);
+//            }
 
             try {
                 Thread.sleep(1); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
@@ -126,14 +127,16 @@ public abstract class Zombie extends Characters
     public void takeDamage(int damage) {
         health -= damage;
 
-        // Create a ColorAdjust to increase brightness
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(0.5); // Increase brightness
-        elementImage.setEffect(colorAdjust);
+
+
 
         System.out.println("Zombie takes damage: " + damage);
 
         // Create a Timeline to reset the brightness after 0.5 seconds
+        // Create a ColorAdjust to increase brightness
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.5); // Increase brightness
+        elementImage.setEffect(colorAdjust);
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.millis(200), // Duration of 0.5 seconds
                         new KeyValue(colorAdjust.brightnessProperty(),0) // Reset effect to normal

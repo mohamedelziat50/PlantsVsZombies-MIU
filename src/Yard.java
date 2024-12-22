@@ -69,8 +69,22 @@ public class Yard extends Thread
         levelDuration = parentLevel.getDurationInSeconds();
         timeLeft = levelDuration;
 
-        // Suncounter for each yard
-        sunCounter = 500;
+//        // Deciding the starting sun counter and the zombie spawn time interval for each level
+//        if(this.parentLevel.getLevelNumber()==1){
+//            sunCounter=150;
+//
+//        }
+//        else if(this.parentLevel.getLevelNumber()==2){
+//            sunCounter=200;
+//
+//        }
+//        else if (this.parentLevel.getLevelNumber()==3){
+//            sunCounter=50;
+//
+//        }
+
+        sunCounter= 1500;
+
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
@@ -187,7 +201,15 @@ public class Yard extends Thread
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
+        int minSpawnInterval = 2; // Minimum spawn interval in seconds
+        int spawnIntervalDecreaseRate = 1; // Amount to decrease spawn interval per minute
+        long startTime = System.currentTimeMillis();
+
         while (true) {
+            // Decrease the spawn interval dynamically over time
+            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 5000; // Calculate elapsed minutes
+            zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
+
             try {
                 Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
             } catch (InterruptedException e) {
@@ -206,7 +228,7 @@ public class Yard extends Thread
                 if (z == 1) {
                     zombie = new DefaultZombie(x, y);
                 } else {
-                    zombie = new HelmetZombie(x, y);
+                    zombie = new ConeZombie(x, y);
                 }
             } else if (this.parentLevel.getLevelNumber() == 2) {
                 // Level 2: Choose between DefaultZombie, HelmetZombie, or ConeZombie
@@ -342,6 +364,7 @@ public class Yard extends Thread
                 // Level is over, handle level completion logic here
                 System.out.println("Level Completed!");
                 zombieWaveAudio();
+                hugeWaveText();
             }
         }));
         // Set the timeline to repeat indefinitely (so it updates every second)

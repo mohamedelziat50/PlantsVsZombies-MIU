@@ -11,7 +11,7 @@ public class Peashooter extends Plant
    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
    public Peashooter()
    {
-       super(100, 15, 50);
+       super(100, 15, 100);
    }
 
    // Added to be used when placing a plant on the yard
@@ -42,14 +42,14 @@ public class Peashooter extends Plant
             try
             {
                 // Shoot a pea every 5 seconds
-                Thread.sleep(5000);
+                Thread.sleep(4000);
 
                 if (!isAlive() || Thread.currentThread().isInterrupted()) {
                     break; // Exit the loop immediately
                 }
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                Pea pea = new Pea(20, this);
+                Pea pea = new Pea(30, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
