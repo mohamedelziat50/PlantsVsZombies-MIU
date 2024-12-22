@@ -127,6 +127,7 @@ public abstract class Zombie extends Characters
         }
     }
 
+
     @Override
     public void takeDamage(int damage) {
         health -= damage;

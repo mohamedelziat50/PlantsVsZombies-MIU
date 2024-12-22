@@ -68,29 +68,32 @@ public class Yard extends Thread
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
-        // Clear previous plants/zombies arraylists incase started multiple levels in the same run.
+        // Clear previous plants/zombies arraylists in case started multiple levels in the same run.
         plants.clear();
         zombies.clear();
 
         // Level specific stuff
         levelDuration = parentLevel.getDurationInSeconds();
         timeLeft = levelDuration;
+        sunCounter=1500;
 
-//        // Deciding the starting sun counter and the zombie spawn time interval for each level
-//        if(this.parentLevel.getLevelNumber()==1){
+        // Deciding the starting sun counter and the zombie spawn time interval for each level
+//        if(this.parentLevel.getLevelNumber()==1)
+//        {
 //            sunCounter=150;
 //
 //        }
-//        else if(this.parentLevel.getLevelNumber()==2){
+//        else if(this.parentLevel.getLevelNumber()==2)
+//        {
 //            sunCounter=200;
 //
 //        }
-//        else if (this.parentLevel.getLevelNumber()==3){
+//        else if (this.parentLevel.getLevelNumber()==3)
+//        {
 //            sunCounter=50;
 //
 //        }
 
-        sunCounter=0;
 
         gameOver = false;
 
@@ -484,9 +487,9 @@ public class Yard extends Thread
         Sun sun = new Sun();
         sun.appear(root);
 
-        MainGUI.primaryStage.setScene(scene);
+        Main.primaryStage.setScene(scene);
         // Added this to center on screen once switched
-        MainGUI.primaryStage.centerOnScreen();
+        Main.primaryStage.centerOnScreen();
         this.start();
     }
 
@@ -719,13 +722,13 @@ public class Yard extends Thread
 
         Card torchWood=new Card(
                 "images/cards/torchwoodCard.png",
-                "images/plants/torchWood.gif",
+                "images/plants/torchWood.png",
                 TorchWood.class,
                 175
         ); // NULL is used as a workaround to avoid creating a shovel class
         torchWood.cardImageViewSetProperties(573,21,47,66,true,true);
-        torchWood.draggingImageViewSetProperties(41,78,true,false);
-        torchWood.hoverImageViewSetProperties(41,78,true,false);
+        torchWood.draggingImageViewSetProperties(73,78,true,false);
+        torchWood.hoverImageViewSetProperties(64,78,true,false);
 
 
 
