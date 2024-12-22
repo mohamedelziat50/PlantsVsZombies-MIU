@@ -35,7 +35,7 @@ public class Pea extends Characters implements Serializable, Runnable
             // Has to be synchronized in order to generate peas only while the plant is alive
             synchronized (this)
             {
-                while (parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
+                while (parent.isAlive() && !Yard.checkGameOver() && elementImage.getLayoutX() < Yard.WIDTH)
                 {
                     // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
                     Platform.runLater(() -> {

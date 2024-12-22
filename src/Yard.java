@@ -48,6 +48,9 @@ public class Yard extends Thread
     public static Label label; // Related for sun counter
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
 
+    // To be used when gameover/win to return to main menu succesfully.
+    protected static volatile boolean gameOver;
+
     /* constructor, to initialize the 2d array of type Characters, in which plants and zombies inherit from.
     also is used to make instance of the lawn mowers at the beginning of each row.*/
     public Yard(Level parentLevel)
@@ -60,7 +63,7 @@ public class Yard extends Thread
 
         // Zombie Spawn Interval used in spawnZombie()
        // zombieSpawnInterval = 4 ;
-        zombieSpawnInterval=20;
+        zombieSpawnInterval=1;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
@@ -88,6 +91,8 @@ public class Yard extends Thread
 //        }
 
         sunCounter=0;
+
+        gameOver = false;
 
 
         // 50 doesn't matter, the sun counter replaces it
@@ -210,7 +215,8 @@ public class Yard extends Thread
         int spawnIntervalDecreaseRate = 1; // Amount to decrease spawn interval per minute
         long startTime = System.currentTimeMillis();
 
-        while (true) {
+        while (!checkGameOver()) {
+
             // Decrease the spawn interval dynamically over time
             long elapsedMinutes = (System.currentTimeMillis() - startTime) / 5000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
@@ -282,7 +288,7 @@ public class Yard extends Thread
             // Create a new thread for the zombie movement
             Zombie finalZombie1 = zombie;
             new Thread(() -> {
-                while (finalZombie1.isAlive()) {
+                while (finalZombie1.isAlive() && !checkGameOver()) {
                     finalZombie1.move();
 
                     // Check if this specific lawnmower intersects with the zombie
@@ -320,6 +326,7 @@ public class Yard extends Thread
                 }
             }).start();
         }
+
     }
 
 
@@ -331,6 +338,11 @@ public class Yard extends Thread
         }
         catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+        if(checkGameOver()){
+            System.out.println("All threads should be dead now.");
+            gameOver = false;
+            Platform.runLater(() -> {MainGUI.primaryStage.setScene(MainGUI.scene);});
         }
     }
 
@@ -520,7 +532,7 @@ public class Yard extends Thread
     public void zombieSpawnAudio() {
         try {
             // Check if a zombie spawn sound is already playing
-                zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
+               // zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
             // List of audio file paths for random selection
             String[] audioPaths = {
                     getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
@@ -809,4 +821,9 @@ public class Yard extends Thread
         }
     }
 
+
+    //Function to check if the game is over or not
+    public static boolean checkGameOver(){
+      return gameOver;
+    }
 }
