@@ -21,6 +21,7 @@ public class Level implements Serializable
         CONSTRUCTORS
      */
     // Normal Constructor
+
     public Level(int levelNumber, int durationInSeconds)
     {
         this.levelNumber = levelNumber;

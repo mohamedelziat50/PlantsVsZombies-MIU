@@ -97,18 +97,24 @@ public abstract class Zombie extends Characters
         // Skip movement if already attacking or dead
         if (!isAlive() || isAttacking) return;
 
+        if (!Yard.gameOn) {
+            System.out.println("Zombie thread stopping as game is over.");
+            return; // Exit the method to stop movement
+        }
+
         Plant targetPlant = checkForPlantCollision();
 
         if (targetPlant != null && targetPlant.isAlive()) {
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
+                elementImage.setLayoutX(elementImage.getLayoutX() - 3);
             });
 
             if (elementImage.getLayoutX() < 0) {
                 System.out.println("game over");
-//                System.exit(0);//change to a reasonble function
+                Yard.gameOver();
+//                System.exit(0);//change to a reasonable function
             }
 
             try {
