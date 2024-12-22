@@ -7,6 +7,8 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 public abstract class Zombie extends Characters
@@ -167,6 +169,7 @@ public abstract class Zombie extends Characters
 
         // Set is attacking to be true to create a new attacking thread
         isAttacking = true;
+        zombieEatingAudio();
 
         // Store original speed to use later
         double originalSpeed = this.getSpeed();
@@ -306,5 +309,18 @@ public abstract class Zombie extends Characters
 
         // Start the pause
         pause.play();
+    }
+    public void zombieEatingAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/zombie eating.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
+
+        } catch (Exception e) {
+            System.out.println("Error playing zombie eating sound: " + e.getMessage());
+        }
     }
 }

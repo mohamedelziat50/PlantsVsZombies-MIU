@@ -3,6 +3,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class LawnMower extends MainElements {
     private boolean isActive;
@@ -36,6 +38,7 @@ public class LawnMower extends MainElements {
     public void activate(AnchorPane root) {
         if (!isActive) {
             isActive = true;
+            lawnmMowerAudio();
             // Start a new thread or animation to move the lawnmower
             new Thread(() -> {
                 elementImage.setImage(new Image("images/zombies1/LawnCleaner1.png"));
@@ -98,6 +101,20 @@ public class LawnMower extends MainElements {
         Platform.runLater(() -> {
             root.getChildren().remove(elementImage); // Remove lawnmower from the scene
         });
+    }
+
+    public void lawnmMowerAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/lawnmower.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.4);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
+
+        } catch (Exception e) {
+            System.out.println("Error playing lawnMower sound: " + e.getMessage());
+        }
     }
 
 

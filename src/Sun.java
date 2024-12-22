@@ -15,9 +15,6 @@ import java.util.Random;
 
 public class Sun extends MainElements
 {
-
-
-
     public Sun()
     {
         // Initialize the Peashooter image
@@ -135,16 +132,17 @@ public class Sun extends MainElements
     }
 
     public void sunCollectedAudio() {
-    try {
-        String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
-        Media media = new Media(path);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.5);
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.4);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
 
-        mediaPlayer.play();
-    } catch (Exception e) {
-        System.out.println("Error playing sun collecting sound: " + e.getMessage());
-    }
+        } catch (Exception e) {
+            System.out.println("Error playing sun pickup sound: " + e.getMessage());
+        }
 }
 
 

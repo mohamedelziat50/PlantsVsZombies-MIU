@@ -2,8 +2,6 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-
 public class Main extends Application
 {
     public static Stage primaryStage;
@@ -15,8 +13,8 @@ public class Main extends Application
         primaryStage.setTitle("PVZ!");
         primaryStage.getIcons().add(new Image("images/others/icon.png"));
 
-        SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
-        soundtrackplayer.playSoundtrack();
+//        SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
+//        soundtrackplayer.playInGametrack();
 
         // Only testing for logic, not actual Main Code
         /*

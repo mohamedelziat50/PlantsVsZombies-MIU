@@ -3,6 +3,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Repeater extends Plant
 {
@@ -39,6 +41,7 @@ public class Repeater extends Plant
         {
             try
             {
+                repeaterAudio();
                 // Shoot a pea every 2.5 seconds since it is faster (repeater plant)
                 Thread.sleep(2000);
 
@@ -77,6 +80,18 @@ public class Repeater extends Plant
 
         // Add any specific behavior for this subclass if needed
         System.out.println("Repeater takes damage: " + damage + " Current health: " + this.health);
+    }
+
+    public void repeaterAudio() {
+        try {
+            String path = getClass().getResource("/music/peashooter shoots.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.4);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing repeater sound: " + e.getMessage());
+        }
     }
 
     @Override

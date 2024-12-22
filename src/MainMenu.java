@@ -1,3 +1,6 @@
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +63,7 @@ public class MainMenu implements FileOperations
     // Function to display MainMenu, takes in Scanner as input for re-usability.
     public void displayMenu(Scanner input)
     {
+        SoundtrackPlayer.playMainMenutrack();
         // // Initialize user choice for the loop.
         int userChoice = 0;
 
@@ -178,6 +182,7 @@ public class MainMenu implements FileOperations
                     // Exit Program
                     case 3:
                         System.out.println("Sign out selected.");
+
                         signOut();
                         break;
                     default:
@@ -188,6 +193,7 @@ public class MainMenu implements FileOperations
 
             // To be continued
         }
+        SoundtrackPlayer.stopTrack();
     }
 
     // Removed start game on terminal old code
@@ -365,4 +371,18 @@ public class MainMenu implements FileOperations
 
         startGame();
     }
+
+//    public void buttonClickAudio() {
+//        try {
+//            // Path to the sun collected sound
+//            String path = getClass().getResource("/music/button click.mp3").toExternalForm();
+//            Media media = new Media(path);
+//            MediaPlayer mediaPlayer = new MediaPlayer(media);
+//            mediaPlayer.setVolume(0.7);
+//            javafx.application.Platform.runLater(() -> mediaPlayer.play());
+//
+//        } catch (Exception e) {
+//            System.out.println("Error playing button click sound: " + e.getMessage());
+//        }
+//    }
 }
