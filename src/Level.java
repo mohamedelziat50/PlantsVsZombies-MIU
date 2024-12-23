@@ -21,6 +21,7 @@ public class Level implements Serializable
         CONSTRUCTORS
      */
     // Normal Constructor
+
     public Level(int levelNumber, int durationInSeconds)
     {
         this.levelNumber = levelNumber;
@@ -37,7 +38,7 @@ public class Level implements Serializable
     {
         currentYard = new Yard(this);
         currentYard.displayYard();
-       // Main.primaryStage.setFullScreen(true);
+        // Main.primaryStage.setFullScreen(true);
     }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,

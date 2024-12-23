@@ -71,7 +71,14 @@ public abstract class Plant extends Characters implements Runnable
     @Override
     public void disappear(Pane root)
     {
-        Platform.runLater(() -> {
+        // Make the thread flag to be false to stop the plant!
+        setAlive(false);
+
+        // Since all plants are threads, once they die, we shall interrupt their threads.
+        Thread.currentThread().interrupt(); // Interrupt thread explicitly
+
+        Platform.runLater(() ->
+        {
             if (elementImage != null)
             {
                 elementImage.setVisible(false);
@@ -80,11 +87,7 @@ public abstract class Plant extends Characters implements Runnable
             }
         });
 
-        // Make the thread flag to be false to stop the plant!
-        setAlive(false);
 
-        // Since all plants are threads, once they die, we shall interrupt their threads.
-        Thread.currentThread().interrupt(); // Interrupt thread explicitly
     }
 
 

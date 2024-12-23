@@ -135,17 +135,17 @@ public class Sun extends MainElements
     }
 
     public void sunCollectedAudio() {
-    try {
-        String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
-        Media media = new Media(path);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.5);
+        try {
+            String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.5);
 
-        mediaPlayer.play();
-    } catch (Exception e) {
-        System.out.println("Error playing sun collecting sound: " + e.getMessage());
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing sun collecting sound: " + e.getMessage());
+        }
     }
-}
 
 
     @Override

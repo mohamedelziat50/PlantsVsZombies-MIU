@@ -12,7 +12,8 @@ public class Pea extends Characters implements Serializable, Runnable
     // Reference to check whether it's alive or not
     private Plant parent;
     protected int damage;
-    
+    private final Image firePeaImage = new Image("images/projectiles/firePea.gif");
+
     public Pea(int damage, Plant parent)
     {
         this.damage = damage;
@@ -35,7 +36,7 @@ public class Pea extends Characters implements Serializable, Runnable
             // Has to be synchronized in order to generate peas only while the plant is alive
             synchronized (this)
             {
-                while (parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
+                while (Yard.gameOn && parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
                 {
                     // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
                     Platform.runLater(() -> {
@@ -61,6 +62,7 @@ public class Pea extends Characters implements Serializable, Runnable
                         // Remove pea
                         disappear(Yard.root);
 
+                        Yard.peas.remove(this);
                         // Stop further movement
                         return;
                     }
@@ -70,6 +72,7 @@ public class Pea extends Characters implements Serializable, Runnable
                 }
             }
 
+            Yard.peas.remove(this);
             // If it reached out of bounds or plant died, make it disappear
             disappear(Yard.root);
 
@@ -87,13 +90,12 @@ public class Pea extends Characters implements Serializable, Runnable
             {
                 if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
                 {
-                    Image firePea = new Image("images/plants/firePea.gif");
-                    elementImage.setImage(firePea);
+                    elementImage.setImage(firePeaImage);
                     elementImage.setPreserveRatio(false);
-                    elementImage.setFitWidth(23);  // Increase width       increase these two to a huge number and watch the difference.
-                    elementImage.setFitHeight(66);
+                    elementImage.setFitWidth(50);
+                    elementImage.setFitHeight(37);
 
-                    damage = 20;  // Adjust damage for FirePea
+                    damage = 40;  // Adjust damage for FirePea
                     break; // No need to check further
                 }
             }
@@ -115,16 +117,16 @@ public class Pea extends Characters implements Serializable, Runnable
 
 
     public void peaHitsZombieAudio() {
-    try {
-        String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
-        Media media = new Media(path);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.1);
-        mediaPlayer.play();
-    } catch (Exception e) {
-        System.out.println("Error playing pea hit sound: " + e.getMessage());
+        try {
+            String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.1);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing pea hit sound: " + e.getMessage());
+        }
     }
-}
 
     public int getDamage() {
         return damage;}

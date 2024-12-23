@@ -97,18 +97,25 @@ public abstract class Zombie extends Characters
         // Skip movement if already attacking or dead
         if (!isAlive() || isAttacking) return;
 
+        if (!Yard.gameOn) {
+            System.out.println("Zombie thread stopping as game is over.");
+            return; // Exit the method to stop movement
+        }
+
         Plant targetPlant = checkForPlantCollision();
 
         if (targetPlant != null && targetPlant.isAlive()) {
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
+                elementImage.setLayoutX(elementImage.getLayoutX() - 3);
             });
 
-            if (elementImage.getLayoutX() < 0) {
+            if (elementImage.getLayoutX() <= -elementImage.getFitWidth()) { // Ensure zombie fully exits screen
                 System.out.println("game over");
-                System.exit(0);//change to a reasonble function
+                Yard.gameOver();
+                //                System.exit(0);//change to a reasonable function
+
             }
 
             try {
@@ -182,19 +189,19 @@ public abstract class Zombie extends Characters
             elementImage.setPreserveRatio(true);
 
         }
-       else if(this instanceof ConeZombie){
+        else if(this instanceof ConeZombie){
             elementImage.setImage(new Image("images/zombies1/ConeheadZombieAttack.gif"));
             elementImage.setFitHeight(155);
             elementImage.setFitWidth(134);
             elementImage.setPreserveRatio(true);
         }
-       else if(this instanceof DefaultZombie){
+        else if(this instanceof DefaultZombie){
             elementImage.setImage(new Image("images/zombies1/ZombieAttack.gif"));
             elementImage.setFitHeight(155);
             elementImage.setFitWidth(134);
             elementImage.setPreserveRatio(true);
         }
-       else if(this instanceof HelmetZombie){
+        else if(this instanceof HelmetZombie){
             elementImage.setImage(new Image("images/zombies1/BucketheadZombieAttack.gif"));
             elementImage.setFitHeight(155);
             elementImage.setFitWidth(134);
@@ -225,7 +232,7 @@ public abstract class Zombie extends Characters
                         elementImage.setPreserveRatio(true);
                     }
                     else if(this instanceof DefaultZombie && this.isAlive()){
-                          elementImage.setImage(new Image("images/zombies1/Zombie.gif"));
+                        elementImage.setImage(new Image("images/zombies1/Zombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
@@ -238,7 +245,7 @@ public abstract class Zombie extends Characters
                         elementImage.setPreserveRatio(true);
                     }
                     else if(this instanceof HelmetZombie && this.isAlive()){
-                       elementImage.setImage(new Image("images/zombies1/BucketheadZombie.gif"));
+                        elementImage.setImage(new Image("images/zombies1/BucketheadZombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
@@ -292,10 +299,10 @@ public abstract class Zombie extends Characters
         double gifDurationInSeconds;
 
         if(this instanceof FootballZombie){
-        gifDurationInSeconds=0.8;
+            gifDurationInSeconds=0.8;
         }
         else{
-        gifDurationInSeconds=1.6;
+            gifDurationInSeconds=1.6;
         }
 
 

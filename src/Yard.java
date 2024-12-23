@@ -1,6 +1,4 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.ImageCursor;
@@ -24,7 +22,7 @@ import java.util.Random;
 
 public class Yard extends Thread
 {
-    public Level parentLevel;
+    public static Level parentLevel;
 
     // YARD CONSTANT VARIABLES
     public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
@@ -36,8 +34,10 @@ public class Yard extends Thread
     // Used for collision handling between plants/peas & zombies
     public static volatile ArrayList<Zombie> zombies = new ArrayList<>(); // Collision With peas
     public static volatile ArrayList<Plant> plants = new ArrayList<>(); // Collision with plants (zombies side)
+    public static volatile ArrayList<Pea> peas = new ArrayList<>(); // Collision with plants (zombies side)
 
     // Variables specific to each level!
+    public static volatile boolean gameOn = true;
     private int zombieSpawnInterval;
     private double levelDuration; // Total duration for the level (in seconds)
     private double timeLeft;
@@ -59,35 +59,38 @@ public class Yard extends Thread
         root = new AnchorPane();
 
         // Zombie Spawn Interval used in spawnZombie()
-       // zombieSpawnInterval = 4 ;
+        // zombieSpawnInterval = 4 ;
         zombieSpawnInterval=20;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
-        // Clear previous plants/zombies arraylists incase started multiple levels in the same run.
+        // Clear previous plants/zombies arraylists in case started multiple levels in the same run.
         plants.clear();
         zombies.clear();
 
         // Level specific stuff
         levelDuration = parentLevel.getDurationInSeconds();
         timeLeft = levelDuration;
+        sunCounter=15000;
 
-//        // Deciding the starting sun counter and the zombie spawn time interval for each level
-//        if(this.parentLevel.getLevelNumber()==1){
+        // Deciding the starting sun counter and the zombie spawn time interval for each level
+//        if(this.parentLevel.getLevelNumber()==1)
+//        {
 //            sunCounter=150;
 //
 //        }
-//        else if(this.parentLevel.getLevelNumber()==2){
+//        else if(this.parentLevel.getLevelNumber()==2)
+//        {
 //            sunCounter=200;
 //
 //        }
-//        else if (this.parentLevel.getLevelNumber()==3){
+//        else if (this.parentLevel.getLevelNumber()==3)
+//        {
 //            sunCounter=50;
 //
 //        }
 
-        sunCounter=0;
 
 
         // 50 doesn't matter, the sun counter replaces it
@@ -210,15 +213,20 @@ public class Yard extends Thread
         int spawnIntervalDecreaseRate = 1; // Amount to decrease spawn interval per minute
         long startTime = System.currentTimeMillis();
 
-        while (true) {
+        while (gameOn) {
             // Decrease the spawn interval dynamically over time
             long elapsedMinutes = (System.currentTimeMillis() - startTime) / 5000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
-                Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
+                Thread.sleep(300); // Wait before spawning a new zombie
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+
+            if(!gameOn)
+            {
+                break;
             }
 
             int randomIndex = random.nextInt(specificNumbers.length); // Generate a random index for Y position
@@ -273,8 +281,11 @@ public class Yard extends Thread
             // Run the zombie appearance and audio in the UI thread
             Zombie finalZombie = zombie;
             Platform.runLater(() -> {
-                finalZombie.appear(root, x, y);
-                zombieSpawnAudio();
+                if(gameOn)
+                {
+                    finalZombie.appear(root, x, y);
+                    zombieSpawnAudio();
+                }
             });
 
             System.out.println("Zombie placed at x: " + x + ", y: " + y);
@@ -282,7 +293,7 @@ public class Yard extends Thread
             // Create a new thread for the zombie movement
             Zombie finalZombie1 = zombie;
             new Thread(() -> {
-                while (finalZombie1.isAlive()) {
+                while (gameOn && finalZombie1.isAlive()) {
                     finalZombie1.move();
 
                     // Check if this specific lawnmower intersects with the zombie
@@ -321,6 +332,61 @@ public class Yard extends Thread
             }).start();
         }
     }
+
+    public static void resetGame() {
+        // Reset game state variables
+        gameOn = true;
+
+        Platform.runLater(() -> {
+            // Clear all plants and set them inactive
+            plants.forEach(plant -> {
+                plant.disappear(root);
+            });
+            plants.clear();
+
+            Platform.runLater(() -> {
+                peas.forEach(pea -> {
+                    pea.disappear(root);
+                });
+                peas.clear(); // Clear all peas
+            });
+
+            // Clear all zombies and set them inactive
+            zombies.forEach(zombie -> {
+                zombie.disappear(root);
+            });
+            zombies.clear();
+        });
+
+
+        // Reset other game-related elements
+        root.getChildren().clear(); // Remove all nodes from the yard
+        root = new AnchorPane();    // Reinitialize root
+    }
+
+
+    public static void gameOver()
+    {
+        gameOn = false;
+
+        Platform.runLater(() -> {
+//            resetGame(); // Reset the game state
+            MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
+        });
+
+        System.out.println("Game has ended, all zombie spawns and threads should stop");
+    }
+
+    public static void startNewGame()
+    {
+        resetGame(); // Clear the game state first
+
+        // Initialize root if not already done
+        root = new AnchorPane();
+        Yard.root = root; // Make root globally accessible if necessary
+
+    }
+
 
 
     @Override
@@ -426,9 +492,41 @@ public class Yard extends Thread
         readyPause.play();
     }
 
+//    private void zoomAndReveal() {
+//        // Initial freeze for 2 seconds
+//        PauseTransition initialFreeze = new PauseTransition(Duration.seconds(2));
+//
+//        // Animation to zoom to the right side
+//        TranslateTransition zoomToRight = new TranslateTransition(Duration.seconds(2), root);
+//        zoomToRight.setByX(-WIDTH / 2); // Move half the screen width to the right
+//
+//        // Freeze on the right side for 4 seconds
+//        PauseTransition freezeOnRight = new PauseTransition(Duration.seconds(4));
+//
+//        // Animation to zoom back to the original position
+//        TranslateTransition zoomBack = new TranslateTransition(Duration.seconds(2), root);
+//        zoomBack.setByX(WIDTH / 2); // Move back to the left
+//
+//        // Sequence the animations
+//        SequentialTransition sequence = new SequentialTransition(
+//                initialFreeze,
+//                zoomToRight,
+//                freezeOnRight,
+//                zoomBack
+//        );
+//
+//        // Start the sequence
+//        sequence.play();
+//        readySetPlant();
+//    }
+
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
+        startNewGame();
+
+//        zoomAndReveal();
+
         // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
 
@@ -459,11 +557,9 @@ public class Yard extends Thread
 
         generateSunCounter();
 
-        readySetPlant();
-
         zombiesArrivalAudio();
 
-       // startLevelTimer();
+        // startLevelTimer();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -475,6 +571,8 @@ public class Yard extends Thread
         MainGUI.primaryStage.setScene(scene);
         // Added this to center on screen once switched
         MainGUI.primaryStage.centerOnScreen();
+
+
         this.start();
     }
 
@@ -520,7 +618,7 @@ public class Yard extends Thread
     public void zombieSpawnAudio() {
         try {
             // Check if a zombie spawn sound is already playing
-                zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
+            zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
             // List of audio file paths for random selection
             String[] audioPaths = {
                     getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
@@ -707,13 +805,13 @@ public class Yard extends Thread
 
         Card torchWood=new Card(
                 "images/cards/torchwoodCard.png",
-                "images/plants/torchWood.gif",
+                "images/plants/torchWood.png",
                 TorchWood.class,
                 175
         ); // NULL is used as a workaround to avoid creating a shovel class
         torchWood.cardImageViewSetProperties(573,21,47,66,true,true);
-        torchWood.draggingImageViewSetProperties(41,78,true,false);
-        torchWood.hoverImageViewSetProperties(41,78,true,false);
+        torchWood.draggingImageViewSetProperties(73,78,true,false);
+        torchWood.hoverImageViewSetProperties(64,78,true,false);
 
 
 
@@ -796,10 +894,10 @@ public class Yard extends Thread
     {
         // Make sure sunCounterLabel is initialized and positioned properly
         // Only set the initial label if it's not set yet
-            Yard.label.setText(String.valueOf(sunCounter)); // Initial value of sun counter
-            Yard.label.setStyle("-fx-font-size: 20px; -fx-text-fill: black; -fx-font-weight: bold;"); // Style the label
-            Yard.label.setLayoutX(248); // Position on the X-axis
-            Yard.label.setLayoutY(65); // Position on the Y-axis
+        Yard.label.setText(String.valueOf(sunCounter)); // Initial value of sun counter
+        Yard.label.setStyle("-fx-font-size: 20px; -fx-text-fill: black; -fx-font-weight: bold;"); // Style the label
+        Yard.label.setLayoutX(248); // Position on the X-axis
+        Yard.label.setLayoutY(65); // Position on the Y-axis
 
 
         // Add the label to the root pane to ensure it's visible on the screen

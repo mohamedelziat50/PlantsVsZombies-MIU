@@ -41,4 +41,3 @@ public class ConeZombie extends Zombie
 
 }
 
-

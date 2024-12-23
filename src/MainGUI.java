@@ -24,7 +24,7 @@ public class MainGUI extends Application implements FileOperations
 
     // Added primary stage to set scene anywhere in code.
     public static Stage primaryStage;
-
+    public static Scene scene;
 
     @Override
     public void start(Stage stage)
@@ -42,7 +42,7 @@ public class MainGUI extends Application implements FileOperations
         //Main container (ROOT) using Pane layout
         Pane root = new Pane();
         // Scene and stage
-        Scene scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
+        scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
         primaryStage.setTitle("PVZ - Main Menu!");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
@@ -285,7 +285,7 @@ public class MainGUI extends Application implements FileOperations
                     showAlert(root, "Logging out", "Bye, "+username);
                 });
 
-            //Display alert if signIn failed
+                //Display alert if signIn failed
             } else {
                 root.getChildren().removeAll(signInContainer,overlay);
                 showAlert(root, "Sign-In Failed", "Invalid username or password.");

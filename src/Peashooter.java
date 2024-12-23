@@ -8,30 +8,30 @@ import javafx.scene.media.MediaPlayer;
 
 public class Peashooter extends Plant
 {
-   // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
-   public Peashooter()
-   {
-       super(100, 15, 100);
-   }
+    // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
+    public Peashooter()
+    {
+        super(100, 15, 100);
+    }
 
-   // Added to be used when placing a plant on the yard
-   public Peashooter(int x, int y)
-   {
-       this();
-       super.x = x;
-       super.y = y;
+    // Added to be used when placing a plant on the yard
+    public Peashooter(int x, int y)
+    {
+        this();
+        super.x = x;
+        super.y = y;
 
-       // Initialize the Peashooter image
-       elementImage = new ImageView(new Image("images/plants/peashooter.gif"));
-       elementImage.setFitWidth(90);
-       elementImage.setFitHeight(85);
-       elementImage.setPreserveRatio(true);
+        // Initialize the Peashooter image
+        elementImage = new ImageView(new Image("images/plants/peashooter.gif"));
+        elementImage.setFitWidth(90);
+        elementImage.setFitHeight(85);
+        elementImage.setPreserveRatio(true);
 
 
-       // Set the position for the image
-       elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) + 5);
-       elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 25);
-   }
+        // Set the position for the image
+        elementImage.setLayoutX((x - elementImage.getFitWidth() / 2) + 5);
+        elementImage.setLayoutY((y - elementImage.getFitHeight() / 2) - 25);
+    }
 
     @Override
     public synchronized void run()
@@ -44,7 +44,8 @@ public class Peashooter extends Plant
                 // Shoot a pea every 5 seconds
                 Thread.sleep(4000);
 
-                if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                    if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                        this.disappear(Yard.root);
                     break; // Exit the loop immediately
                 }
 
@@ -56,6 +57,8 @@ public class Peashooter extends Plant
                 pea.elementImage.setLayoutY(elementImage.getLayoutY() + 31);
 
                 pea.appear(Yard.root);
+
+                Yard.peas.add(pea);
                 // Create a thread of the pea to run independently
                 Thread peaThread = new Thread(pea);
                 peaThread.setDaemon(true); // Ensure it stops with the app
@@ -69,6 +72,8 @@ public class Peashooter extends Plant
                 break;
             }
         }
+
+        disappear(Yard.root);
         System.out.println("Peashooter thread ended.");
     }
 
