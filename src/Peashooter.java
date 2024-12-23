@@ -44,7 +44,8 @@ public class Peashooter extends Plant
                 // Shoot a pea every 5 seconds
                 Thread.sleep(4000);
 
-                if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                    if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                        this.disappear(Yard.root);
                     break; // Exit the loop immediately
                 }
 
@@ -71,6 +72,8 @@ public class Peashooter extends Plant
                 break;
             }
         }
+
+        disappear(Yard.root);
         System.out.println("Peashooter thread ended.");
     }
 

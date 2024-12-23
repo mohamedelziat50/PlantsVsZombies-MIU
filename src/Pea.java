@@ -65,7 +65,6 @@ public class Pea extends Characters implements Serializable, Runnable
                         Yard.peas.remove(this);
                         // Stop further movement
                         return;
-
                     }
 
                     // Slow down the while loop (PEA MOVEMENT SPEED), otherwise a lot of lag happens when the pea moves!

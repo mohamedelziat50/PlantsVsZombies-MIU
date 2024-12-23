@@ -118,7 +118,6 @@ public abstract class Zombie extends Characters
 
             }
 
-
             try {
                 Thread.sleep(1); // Mantain speed smoothness, GREATER = MORE ZOMBIE LAG
             } catch (InterruptedException e) {
