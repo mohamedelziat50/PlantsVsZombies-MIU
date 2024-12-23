@@ -101,7 +101,7 @@ public class Card
                 System.out.println("Not enough sun to select this card.");
 
                 // Optionally change cursor to indicate that selection is not allowed
-               // root.setStyle("-fx-cursor: not-allowed;"); // Change the cursor style
+                // root.setStyle("-fx-cursor: not-allowed;"); // Change the cursor style
 
                 return;
             }

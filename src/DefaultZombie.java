@@ -40,4 +40,3 @@ public class DefaultZombie extends Zombie
 
 }
 
-

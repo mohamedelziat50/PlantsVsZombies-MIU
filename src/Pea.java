@@ -36,12 +36,8 @@ public class Pea extends Characters implements Serializable, Runnable
             // Has to be synchronized in order to generate peas only while the plant is alive
             synchronized (this)
             {
-
-                while (parent.isAlive() && !Yard.checkGameOver() && elementImage.getLayoutX() < Yard.WIDTH)
+                while (Yard.gameOn && parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
                 {
-                    if(Yard.gameOver){
-                        disappear(Yard.root);
-                    }
                     // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
                     Platform.runLater(() -> {
                         try
@@ -66,8 +62,10 @@ public class Pea extends Characters implements Serializable, Runnable
                         // Remove pea
                         disappear(Yard.root);
 
+                        Yard.peas.remove(this);
                         // Stop further movement
                         return;
+
                     }
 
                     // Slow down the while loop (PEA MOVEMENT SPEED), otherwise a lot of lag happens when the pea moves!
@@ -75,6 +73,7 @@ public class Pea extends Characters implements Serializable, Runnable
                 }
             }
 
+            Yard.peas.remove(this);
             // If it reached out of bounds or plant died, make it disappear
             disappear(Yard.root);
 
@@ -119,16 +118,16 @@ public class Pea extends Characters implements Serializable, Runnable
 
 
     public void peaHitsZombieAudio() {
-    try {
-        String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
-        Media media = new Media(path);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.1);
-        mediaPlayer.play();
-    } catch (Exception e) {
-        System.out.println("Error playing pea hit sound: " + e.getMessage());
+        try {
+            String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.1);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing pea hit sound: " + e.getMessage());
+        }
     }
-}
 
     public int getDamage() {
         return damage;}
