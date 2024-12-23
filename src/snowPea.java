@@ -12,6 +12,8 @@ public class snowPea extends Characters implements Serializable, Runnable
     // Reference to check whether it's alive or not
     private Plant parent;
     protected int damage;
+    private final Image firePeaImage = new Image("images/projectiles/firePea.gif");
+
 
     private final double SLOW_DURATION = 5.0; // Duration in seconds
     private final double SLOW_FACTOR = 0.25;   // Factor to reduce the zombie's speed
@@ -32,19 +34,25 @@ public class snowPea extends Characters implements Serializable, Runnable
     {
         try
         {
+            if(!Yard.gameOn){
+                parent.setAlive(false);
+                disappear(Yard.root);
+                return;
+            }
             // New thread just delay in case any loading is required
             Thread.sleep(20);
 
             // Has to be synchronized in order to generate peas only while the plant is alive
             synchronized (this)
             {
-                while (parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
+                while (Yard.gameOn && parent.isAlive() && elementImage.getLayoutX() < Yard.WIDTH)
                 {
                     // Increment the pea's position has to be in the Platform.runlater since it changes the GUI (root pane)
                     Platform.runLater(() -> {
                         try
                         {
-                            elementImage.setLayoutX(elementImage.getLayoutX() + 0.75); // Move the pea 0.75 pixel to be slower than normal pea
+                            changePeaToFirePea();
+                            elementImage.setLayoutX(elementImage.getLayoutX() + 1); // Move the pea 1 pixel
                         }
                         catch (Exception ex)
                         {
@@ -58,14 +66,13 @@ public class snowPea extends Characters implements Serializable, Runnable
                     {
                         // Do damage
                         target.takeDamage(damage);
-
-                        // And slow down the zombie
-                        // Slow down the zombie
+                        System.out.println("Pea touched a zombie");
                         slowDownZombie(target);
 
                         // Remove pea
                         disappear(Yard.root);
 
+                        Yard.peas.remove(this);
                         // Stop further movement
                         return;
                     }
@@ -75,14 +82,34 @@ public class snowPea extends Characters implements Serializable, Runnable
                 }
             }
 
+            Yard.peas.remove(this);
             // If it reached out of bounds or plant died, make it disappear
             disappear(Yard.root);
 
         }
         catch (InterruptedException e) {
-            System.out.println("Snow Pea thread interrupted: " + e.getMessage());
+            System.out.println("Pea thread interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
         }
+    }
+
+    private void changePeaToFirePea()
+    {
+        Platform.runLater(() -> {
+            for (TorchWood torchWood : TorchWood.activeTorchWoods)
+            {
+                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
+                {
+                    elementImage.setImage(firePeaImage);
+                    elementImage.setPreserveRatio(false);
+                    elementImage.setFitWidth(50);
+                    elementImage.setFitHeight(37);
+
+                    damage = 40;  // Adjust damage for FirePea
+                    break; // No need to check further
+                }
+            }
+        });
     }
 
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
@@ -193,7 +220,8 @@ public class snowPea extends Characters implements Serializable, Runnable
     public void appear(Pane root)
     {
         Platform.runLater(() -> {
-            if (elementImage != null) {
+            if (elementImage != null && parent.isAlive() ) {
+
                 root.getChildren().add(elementImage);
                 // System.out.println("Pea appears.");
             }

@@ -358,6 +358,17 @@ public class Yard extends Thread
             zombies.clear();
         });
 
+        //Making sure that all the indexes in the grid pane is empty now
+        for(int i=0;i<ROWS;i++){
+            for(int j=0;j<COLUMNS;j++){
+                if(grid[i][j]!=null){
+                    System.out.println("game reset");
+                    grid[i][j].disappear(root);
+                    grid[i][j]=null;
+                }
+
+            }
+        }
 
         // Reset other game-related elements
         root.getChildren().clear(); // Remove all nodes from the yard
@@ -371,6 +382,15 @@ public class Yard extends Thread
 
         Platform.runLater(() -> {
 //            resetGame(); // Reset the game state
+            for(int i=0;i<ROWS;i++){
+                for(int j=0;j<COLUMNS;j++){
+                    if(grid[i][j]!=null){
+                        System.out.println("game reset");
+                        grid[i][j].disappear(root);
+                        grid[i][j]=null;
+                    }
+                }
+            }
             MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
         });
 
