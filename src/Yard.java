@@ -38,7 +38,7 @@ public class Yard extends Thread
 
     // Variables specific to each level!
     public static volatile boolean gameOn = true;
-    private int zombieSpawnInterval;
+    private static int zombieSpawnInterval;
     private double levelDuration; // Total duration for the level (in seconds)
     private double timeLeft;
     public static int sunCounter;
@@ -219,13 +219,14 @@ public class Yard extends Thread
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
-                Thread.sleep(300); // Wait before spawning a new zombie
+                Thread.sleep(zombieSpawnInterval*1000); // Wait before spawning a new zombie
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             if(!gameOn)
             {
+                zombieSpawnInterval=20;
                 break;
             }
 
@@ -336,6 +337,8 @@ public class Yard extends Thread
     public static void resetGame() {
         // Reset game state variables
         gameOn = true;
+        zombieSpawnInterval=20;
+        sunCounter=15000;
 
         Platform.runLater(() -> {
             // Clear all plants and set them inactive
@@ -381,16 +384,16 @@ public class Yard extends Thread
         gameOn = false;
 
         Platform.runLater(() -> {
-//            resetGame(); // Reset the game state
-            for(int i=0;i<ROWS;i++){
-                for(int j=0;j<COLUMNS;j++){
-                    if(grid[i][j]!=null){
-                        System.out.println("game reset");
-                        grid[i][j].disappear(root);
-                        grid[i][j]=null;
-                    }
-                }
-            }
+               resetGame(); // Reset the game state
+//            for(int i=0;i<ROWS;i++){
+//                for(int j=0;j<COLUMNS;j++){
+//                    if(grid[i][j]!=null){
+//                        System.out.println("game reset");
+//                        grid[i][j].disappear(root);
+//                        grid[i][j]=null;
+//                    }
+//                }
+//            }
             MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
         });
 
