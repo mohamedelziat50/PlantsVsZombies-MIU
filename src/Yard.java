@@ -384,16 +384,16 @@ public class Yard extends Thread
         gameOn = false;
 
         Platform.runLater(() -> {
-               resetGame(); // Reset the game state
-//            for(int i=0;i<ROWS;i++){
-//                for(int j=0;j<COLUMNS;j++){
-//                    if(grid[i][j]!=null){
-//                        System.out.println("game reset");
-//                        grid[i][j].disappear(root);
-//                        grid[i][j]=null;
-//                    }
-//                }
-//            }
+            //  resetGame(); // Reset the game state
+            for(int i=0;i<ROWS;i++){
+                for(int j=0;j<COLUMNS;j++){
+                    if(grid[i][j]!=null){
+                        System.out.println("game reset");
+                        grid[i][j].disappear(root);
+                        grid[i][j]=null;
+                    }
+                }
+            }
             MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
         });
 

@@ -51,7 +51,7 @@ public class snowPea extends Characters implements Serializable, Runnable
                     Platform.runLater(() -> {
                         try
                         {
-                            changePeaToFirePea();
+                           // changePeaToFirePea();
                             elementImage.setLayoutX(elementImage.getLayoutX() + 1); // Move the pea 1 pixel
                         }
                         catch (Exception ex)
@@ -93,24 +93,24 @@ public class snowPea extends Characters implements Serializable, Runnable
         }
     }
 
-    private void changePeaToFirePea()
-    {
-        Platform.runLater(() -> {
-            for (TorchWood torchWood : TorchWood.activeTorchWoods)
-            {
-                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
-                {
-                    elementImage.setImage(firePeaImage);
-                    elementImage.setPreserveRatio(false);
-                    elementImage.setFitWidth(50);
-                    elementImage.setFitHeight(37);
-
-                    damage = 40;  // Adjust damage for FirePea
-                    break; // No need to check further
-                }
-            }
-        });
-    }
+//    private void changePeaToFirePea()
+//    {
+//        Platform.runLater(() -> {
+//            for (TorchWood torchWood : TorchWood.activeTorchWoods)
+//            {
+//                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
+//                {
+//                    elementImage.setImage(firePeaImage);
+//                    elementImage.setPreserveRatio(false);
+//                    elementImage.setFitWidth(50);
+//                    elementImage.setFitHeight(37);
+//
+//                    damage = 40;  // Adjust damage for FirePea
+//                    break; // No need to check further
+//                }
+//            }
+//        });
+//    }
 
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
     private Zombie checkForZombieCollision() {
