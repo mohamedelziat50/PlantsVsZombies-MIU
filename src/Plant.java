@@ -55,8 +55,9 @@ public abstract class Plant extends Characters implements Runnable
     @Override
     public void appear(Pane root)
     {
+
         Platform.runLater(() -> {
-            if (elementImage != null) {
+            if (elementImage != null && isAlive()) {
                 if (!root.getChildren().contains(elementImage)) // Check to avoid duplicates
                     root.getChildren().add(elementImage);
 
