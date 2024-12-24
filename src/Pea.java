@@ -30,7 +30,7 @@ public class Pea extends Characters implements Serializable, Runnable
     {
         try
         {
-            if(!Yard.gameOn){
+            if(!Yard.gameOn||Yard.timeLeft<=0){
                 parent.setAlive(false);
 
                 disappear(Yard.root);
