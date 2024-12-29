@@ -30,6 +30,12 @@ public class Pea extends Characters implements Serializable, Runnable
     {
         try
         {
+            if(!Yard.gameOn||Yard.timeLeft<=0){
+                parent.setAlive(false);
+
+                disappear(Yard.root);
+                return;
+            }
             // New thread just delay in case any loading is required
             Thread.sleep(20);
 
@@ -88,7 +94,7 @@ public class Pea extends Characters implements Serializable, Runnable
         Platform.runLater(() -> {
             for (TorchWood torchWood : TorchWood.activeTorchWoods)
             {
-                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()))
+                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()) && torchWood.isAlive())
                 {
                     elementImage.setImage(firePeaImage);
                     elementImage.setPreserveRatio(false);
@@ -161,7 +167,8 @@ public class Pea extends Characters implements Serializable, Runnable
     public void appear(Pane root)
     {
         Platform.runLater(() -> {
-            if (elementImage != null) {
+            if (elementImage != null && parent.isAlive() ) {
+
                 root.getChildren().add(elementImage);
                 // System.out.println("Pea appears.");
             }

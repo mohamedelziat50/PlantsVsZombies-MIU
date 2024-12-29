@@ -38,9 +38,9 @@ public class Yard extends Thread
 
     // Variables specific to each level!
     public static volatile boolean gameOn = true;
-    private int zombieSpawnInterval;
+    private static int zombieSpawnInterval;
     private double levelDuration; // Total duration for the level (in seconds)
-    private double timeLeft;
+    public static double timeLeft;
     public static int sunCounter;
 
     // GUI-related variables
@@ -70,9 +70,9 @@ public class Yard extends Thread
         zombies.clear();
 
         // Level specific stuff
-        levelDuration = parentLevel.getDurationInSeconds();
-        timeLeft = levelDuration;
-        sunCounter=15000;
+       // levelDuration = parentLevel.getDurationInSeconds();
+        timeLeft = 4*60;// the game is 4 minutes (4sec*60=4min) for those who don't know
+        sunCounter=50;
 
         // Deciding the starting sun counter and the zombie spawn time interval for each level
 //        if(this.parentLevel.getLevelNumber()==1)
@@ -213,19 +213,20 @@ public class Yard extends Thread
         int spawnIntervalDecreaseRate = 1; // Amount to decrease spawn interval per minute
         long startTime = System.currentTimeMillis();
 
-        while (gameOn) {
+        while (gameOn&&timeLeft>0) {
             // Decrease the spawn interval dynamically over time
             long elapsedMinutes = (System.currentTimeMillis() - startTime) / 5000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
-                Thread.sleep(300); // Wait before spawning a new zombie
+                Thread.sleep(zombieSpawnInterval*1000); // Wait before spawning a new zombie
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            if(!gameOn)
+            if(!gameOn||timeLeft<0)
             {
+                zombieSpawnInterval=20;
                 break;
             }
 
@@ -336,28 +337,52 @@ public class Yard extends Thread
     public static void resetGame() {
         // Reset game state variables
         gameOn = true;
+        zombieSpawnInterval=20;
+        sunCounter=50;
+        timeLeft=4*60;
 
         Platform.runLater(() -> {
             // Clear all plants and set them inactive
             plants.forEach(plant -> {
-                plant.disappear(root);
+                if(plants!=null){
+                    plant.disappear(root);
+
+                }
             });
             plants.clear();
 
             Platform.runLater(() -> {
                 peas.forEach(pea -> {
-                    pea.disappear(root);
+                    if(pea!=null){
+                        pea.disappear(root);
+
+                    }
                 });
                 peas.clear(); // Clear all peas
             });
 
             // Clear all zombies and set them inactive
             zombies.forEach(zombie -> {
-                zombie.disappear(root);
+                if(zombie!=null)
+                {
+                    zombie.disappear(root);
+                }
+
             });
             zombies.clear();
         });
 
+        //Making sure that all the indexes in the grid pane is empty now
+        for(int i=0;i<ROWS;i++){
+            for(int j=0;j<COLUMNS;j++){
+                if(grid[i][j]!=null){
+                    System.out.println("game reset");
+                    grid[i][j].disappear(root);
+                    grid[i][j]=null;
+                }
+
+            }
+        }
 
         // Reset other game-related elements
         root.getChildren().clear(); // Remove all nodes from the yard
@@ -367,10 +392,20 @@ public class Yard extends Thread
 
     public static void gameOver()
     {
+        
         gameOn = false;
 
         Platform.runLater(() -> {
-//            resetGame(); // Reset the game state
+            //  resetGame(); // Reset the game state
+            for(int i=0;i<ROWS;i++){
+                for(int j=0;j<COLUMNS;j++){
+                    if(grid[i][j]!=null){
+                        System.out.println("game reset");
+                        grid[i][j].disappear(root);
+                        grid[i][j]=null;
+                    }
+                }
+            }
             MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
         });
 
@@ -425,6 +460,7 @@ public class Yard extends Thread
     // Start the level timer and update the progress bar
     public void startLevelTimer()
     {
+
         // Create a Timeline to update progress every second
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (timeLeft > 0) {
@@ -434,7 +470,8 @@ public class Yard extends Thread
             } else {
                 // Level is over, handle level completion logic here
                 System.out.println("Level Completed!");
-                zombieWaveAudio();
+
+               // zombieWaveAudio();
             }
         }));
         // Set the timeline to repeat indefinitely (so it updates every second)
@@ -559,7 +596,7 @@ public class Yard extends Thread
 
         zombiesArrivalAudio();
 
-        // startLevelTimer();
+         startLevelTimer();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);

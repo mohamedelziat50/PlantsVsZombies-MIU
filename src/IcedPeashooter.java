@@ -37,7 +37,7 @@ public class IcedPeashooter extends Plant
     public synchronized void run()
     {
         // While the plant is alive, keep shooting.
-        while (isAlive()  && !Thread.currentThread().isInterrupted()) // member variable inside characters (inherited)
+        while (isAlive()  && !Thread.currentThread().isInterrupted() && Yard.gameOn&&Yard.timeLeft>0) // member variable inside characters (inherited)
         {
             try
             {

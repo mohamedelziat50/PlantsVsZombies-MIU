@@ -108,11 +108,11 @@ public abstract class Zombie extends Characters
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - 3);
+                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
 
-            if (elementImage.getLayoutX() <= -elementImage.getFitWidth()) { // Ensure zombie fully exits screen
-                System.out.println("game over");
+            if (elementImage.getLayoutX() <= -elementImage.getFitWidth()||Yard.timeLeft<=0) { // Ensure zombie fully exits screen
+                //System.out.println("game over");
                 Yard.gameOver();
                 //                System.exit(0);//change to a reasonable function
 
