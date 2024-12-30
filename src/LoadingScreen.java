@@ -20,9 +20,7 @@ public class LoadingScreen
 
     private static final int LOADING_SCREEN_TIME = 7;
 
-    private static final String[] LOADING_SCREEN_PATHS = {
-            "/images/loadingScreens/feastivus_loadingscreen.png",
-    };
+    private static final String[] LOADING_SCREEN_PATHS = {"/images/loadingScreens/feastivus_loadingscreen.png",};
 
     private static String getRandomLoadingScreen()
     {
