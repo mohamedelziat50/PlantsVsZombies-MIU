@@ -678,7 +678,7 @@ public class Yard extends Thread
     private void zoomAndReveal()
     {
         // Initial freeze for 2 seconds
-        PauseTransition initialFreeze = new PauseTransition(Duration.seconds(3));
+        PauseTransition initialFreeze = new PauseTransition(Duration.seconds(2));
 
         // Animation to zoom into the left side
         Timeline zoomToRight = new Timeline(

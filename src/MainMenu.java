@@ -344,11 +344,9 @@ public class MainMenu implements FileOperations
         return true;
     }
 
-    public void displayLevels() throws InputMismatchException
-    {
+    public void displayLevels() throws InputMismatchException {
         // Exit if the LevelGameData is empty, then something wrong happened.
-        if(LevelGameData.isEmpty())
-        {
+        if (LevelGameData.isEmpty()) {
             System.out.println("No Level Data to display. Logical Error Occurred. Exiting Program");
             System.exit(1);
         }
@@ -363,38 +361,15 @@ public class MainMenu implements FileOperations
         // Display Levels
         displayStars();
         System.out.println("Levels: ");
-        for(int i = 1; i <= LEVEL_COUNT; i++)
+        for (int i = 1; i <= LEVEL_COUNT; i++)
             System.out.println(i + ". Level " + i);
         displayStars();
 
-        int userChoice=0;
+        int userChoice = 0;
         Scanner input = new Scanner(System.in);
         userChoice = input.nextInt();
 
         startGame();
-    }
-
-    public static void loadingScreen(AnchorPane root)
-    {
-        // Add loading screen
-        Platform.runLater(() -> {
-            ImageView loadingScreenImage = new ImageView(new Image("images/others/loadingScreen.png"));
-            loadingScreenImage.setFitWidth(810);
-            loadingScreenImage.setFitHeight(598);
-            loadingScreenImage.setPreserveRatio(false);
-
-            root.getChildren().add(loadingScreenImage);
-
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.seconds(5), event -> {
-                        root.getChildren().remove(loadingScreenImage);
-                        System.out.println("Loading screen removed, proceeding...");
-                    })
-            );
-
-            timeline.setCycleCount(1);
-            timeline.play();
-        });
     }
 
 }
