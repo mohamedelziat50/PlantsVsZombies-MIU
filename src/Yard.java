@@ -325,7 +325,7 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 2;
+        zombieSpawnInterval= 17;
         sunCounter= 10000;
         timeLeft= 4*60;
 
