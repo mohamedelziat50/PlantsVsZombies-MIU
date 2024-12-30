@@ -7,7 +7,7 @@ public class Potato extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Potato()
     {
-        super(50, 22, 300);
+        super(50, 20, 300);
     }
 
     // Added to be used when placing a plant on the yard

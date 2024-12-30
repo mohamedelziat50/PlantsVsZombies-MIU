@@ -344,7 +344,8 @@ public class MainMenu implements FileOperations
         return true;
     }
 
-    public void displayLevels() throws InputMismatchException {
+    public void displayLevels() throws InputMismatchException
+    {
         // Exit if the LevelGameData is empty, then something wrong happened.
         if (LevelGameData.isEmpty()) {
             System.out.println("No Level Data to display. Logical Error Occurred. Exiting Program");

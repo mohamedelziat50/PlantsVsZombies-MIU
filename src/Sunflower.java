@@ -16,7 +16,7 @@ public class Sunflower extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Sunflower()
     {
-        super(50, 15, 60);
+        super(50, 15, 50);
     }
 
     // Added to be used when placing a plant on the yard
