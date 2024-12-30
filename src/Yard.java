@@ -35,14 +35,16 @@ public class Yard extends Thread
     public static volatile ArrayList<Zombie> zombies = new ArrayList<>(); // Collision With peas
     public static volatile ArrayList<Plant> plants = new ArrayList<>(); // Collision with plants (zombies side)
     public static volatile ArrayList<Pea> peas = new ArrayList<>(); // Collision with plants (zombies side)
+    private ArrayList<ImageView> staticZombies = new ArrayList<>();
 
     // Variables specific to each level!
     public static volatile boolean gameOn = true;
-    public Timeline timeline;
     private static int zombieSpawnInterval;
     private double levelDuration; // Total duration for the level (in seconds)
     public static double timeLeft;
     public static int sunCounter;
+    private Timeline timeline; // Declare timeline as a class-level variable
+
 
     // GUI-related variables
     public static AnchorPane root;
@@ -61,7 +63,7 @@ public class Yard extends Thread
 
         // Zombie Spawn Interval used in spawnZombie()
         // zombieSpawnInterval = 4 ;
-        zombieSpawnInterval=20;
+        zombieSpawnInterval= 15;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
@@ -321,40 +323,46 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 3;
+        zombieSpawnInterval= 15;
         sunCounter= 10000;
         timeLeft= 60;
 
-        Platform.runLater(() -> {
+
             // Clear all plants and set them inactive
             plants.forEach(plant -> {
                 if(plants!=null){
+                    Platform.runLater(() -> {
                     plant.disappear(root);
-
+                    });
                 }
             });
             plants.clear();
 
-            Platform.runLater(() -> {
+
                 peas.forEach(pea -> {
                     if(pea!=null){
+                        Platform.runLater(() -> {
                         pea.disappear(root);
+                        });
 
                     }
                 });
-                peas.clear(); // Clear all peas
-            });
+
+                peas.clear();
+                // Clear all peas
+
 
             // Clear all zombies and set them inactive
             zombies.forEach(zombie -> {
                 if(zombie!=null)
                 {
-                    zombie.disappear(root);
+                    Platform.runLater(() -> {
+                        zombie.disappear(root);
+                    });
                 }
 
             });
             zombies.clear();
-        });
 
         //Making sure that all the indexes in the grid pane is empty now
         for(int i=0;i<ROWS;i++){
@@ -401,6 +409,7 @@ public class Yard extends Thread
         gameOn = false;
 
         Platform.runLater(() -> {
+            //  resetGame(); // Reset the game state
             for(int i=0;i<ROWS;i++){
                 for(int j=0;j<COLUMNS;j++){
                     if(grid[i][j]!=null){
@@ -569,40 +578,144 @@ public class Yard extends Thread
         wavePause.play();
     }
 
-//    private void zoomAndReveal() {
-//        // Initial freeze for 2 seconds
-//        PauseTransition initialFreeze = new PauseTransition(Duration.seconds(2));
-//
-//        // Animation to zoom to the right side
-//        TranslateTransition zoomToRight = new TranslateTransition(Duration.seconds(2), root);
-//        zoomToRight.setByX(-WIDTH / 2); // Move half the screen width to the right
-//
-//        // Freeze on the right side for 4 seconds
-//        PauseTransition freezeOnRight = new PauseTransition(Duration.seconds(4));
-//
-//        // Animation to zoom back to the original position
-//        TranslateTransition zoomBack = new TranslateTransition(Duration.seconds(2), root);
-//        zoomBack.setByX(WIDTH / 2); // Move back to the left
-//
-//        // Sequence the animations
-//        SequentialTransition sequence = new SequentialTransition(
-//                initialFreeze,
-//                zoomToRight,
-//                freezeOnRight,
-//                zoomBack
-//        );
-//
-//        // Start the sequence
-//        sequence.play();
-//        readySetPlant();
-//    }
+    public static void preloadZombies()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            ImageView zombie = new ImageView("images/yardStaticZombies/" + i + ".gif");
+            // You can cache these images here if needed, like storing them in an ArrayList or a Map
+        }
+    }
+
+    // Method to show static zombie images
+    public void showStaticZombies()
+    {
+        Platform.runLater(() -> {
+            // Clear any existing zombie images to prevent duplicates
+            staticZombies.forEach(zombie -> root.getChildren().remove(zombie));
+            staticZombies.clear();
+
+            // Add static zombie images
+            for (int i = 0; i < 8; i++)
+            {
+                ImageView zombie = new ImageView(new Image("images/yardStaticZombies/" + i  + ".gif")); // Replace with actual paths
+                zombie.setFitWidth(127); // Adjust dimensions
+                zombie.setFitHeight(164);
+                zombie.setPreserveRatio(true);
+                int offsetY = 163;
+
+                if(i==0)
+                    zombie.setLayoutY(130); // Staggered layout for better visuals
+                else if(i==1)
+                    zombie.setLayoutY(170); // Staggered layout for better visuals
+                else if(i==2)
+                    zombie.setLayoutY(210); // Staggered layout for better visuals
+                else if(i==3)
+                    zombie.setLayoutY(250); // Staggered layout for better visuals
+                else if(i==4)
+                    zombie.setLayoutY(290); // Staggered layout for better visuals
+                else if(i==5)
+                    zombie.setLayoutY(330); // Staggered layout for better visuals
+                else if(i==6)
+                    zombie.setLayoutY(370); // Staggered layout for better visuals
+                else if(i==7)
+                    zombie.setLayoutY(410); // Staggered layout for better visuals
+
+
+                if(i%2==0)
+                {
+                    zombie.setLayoutX(950);
+                }
+                else
+                {
+                    zombie.setLayoutX(1060);
+                }
+
+                staticZombies.add(zombie);
+                root.getChildren().add(zombie);
+            }
+        });
+    }
+
+    // Method to remove static zombies
+    private void removeStaticZombies() {
+        Platform.runLater(() -> {
+            staticZombies.forEach(zombie -> root.getChildren().remove(zombie));
+            staticZombies.clear();
+        });
+    }
+
+
+    private void zoomAndReveal()
+    {
+        // Initial freeze for 2 seconds
+        PauseTransition initialFreeze = new PauseTransition(Duration.seconds(3));
+
+        // Animation to zoom into the left side
+        Timeline zoomToRight = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(root.scaleXProperty(), 1),
+                        new KeyValue(root.scaleYProperty(), 1),
+                        new KeyValue(root.layoutXProperty(), 0)
+                ),
+                new KeyFrame(Duration.seconds(1),
+                        new KeyValue(root.scaleXProperty(), 1.5), // Zoom in
+                        new KeyValue(root.scaleYProperty(), 1.5),
+                        new KeyValue(root.layoutXProperty(), -WIDTH * 0.25) // Focus on the left
+                )
+        );
+
+        // Animation to pan to the right while staying zoomed
+        Timeline zoomToLeft = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(root.layoutXProperty(), -WIDTH * 0.25)
+                ),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(root.layoutXProperty(), WIDTH * 0.25) // Pan to the right
+                )
+        );
+
+        // Freeze on the zoomed-in right position for 4 seconds
+        PauseTransition freezeOnRight = new PauseTransition(Duration.seconds(6));
+        zoomToLeft.setOnFinished(event -> removeStaticZombies()); // Remove zombies during this pause
+
+        // Animation to zoom out and show the whole scene
+        Timeline zoomOut = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(root.scaleXProperty(), 1.5),
+                        new KeyValue(root.scaleYProperty(), 1.5),
+                        new KeyValue(root.layoutXProperty(), WIDTH * 0.25)
+                ),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(root.scaleXProperty(), 1), // Zoom out
+                        new KeyValue(root.scaleYProperty(), 1),
+                        new KeyValue(root.layoutXProperty(), 0) // Reset layout to the original
+                )
+        );
+
+
+        // Sequence the animations
+        SequentialTransition sequence = new SequentialTransition(
+                initialFreeze,
+                zoomToRight,
+                freezeOnRight,
+                zoomToLeft,
+                zoomOut
+        );
+
+        // On completion, call the readySetPlant method
+        sequence.setOnFinished(event -> readySetPlant());
+
+        // Start the sequence
+        sequence.play();
+    }
 
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
+        showStaticZombies();
         startNewGame();
-
-        //  zoomAndReveal();
+        zoomAndReveal();
 
         // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
@@ -634,8 +747,6 @@ public class Yard extends Thread
 
         generateSunCounter();
 
-        readySetPlant();
-
         zombiesArrivalAudio();
 
         startLevelTimer();
@@ -643,9 +754,6 @@ public class Yard extends Thread
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.setCursor(new ImageCursor(new Image("images/others/cursor.png")));
-
-        Sun sun = new Sun();
-        sun.appear(root);
 
         MainGUI.primaryStage.setScene(scene);
         // Added this to center on screen once switched
