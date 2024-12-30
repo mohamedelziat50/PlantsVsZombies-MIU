@@ -65,7 +65,7 @@ public class Yard extends Thread
 
         // Zombie Spawn Interval used in spawnZombie()
         // zombieSpawnInterval = 4 ;
-        zombieSpawnInterval= 17;
+        zombieSpawnInterval= 20;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
@@ -203,7 +203,7 @@ public class Yard extends Thread
         while (gameOn&&timeLeft>0)
         {
             // Decrease the spawn interval dynamically over time
-            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 45000; // Calculate elapsed minutes
+            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 30000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
@@ -214,7 +214,7 @@ public class Yard extends Thread
 
             if(!gameOn||timeLeft<0)
             {
-                zombieSpawnInterval= 17;
+                zombieSpawnInterval= 25;
                 break;
             }
 
@@ -326,7 +326,7 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 17;
+        zombieSpawnInterval= 20;
         sunCounter= 50;
         timeLeft= 4 * 60;
 
