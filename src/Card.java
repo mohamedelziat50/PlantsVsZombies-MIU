@@ -24,7 +24,7 @@ public class Card
     private int cost;
 
     private boolean onCooldown = false;
-    private final int cooldownTime = 5000; // Cooldown duration in milliseconds
+    private final int cooldownTime = 10 * 1000; // Cooldown duration in milliseconds
     private Rectangle cooldownOverlay; // Mask for the visual effect
 
 
