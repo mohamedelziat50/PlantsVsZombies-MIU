@@ -1,4 +1,7 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -6,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -13,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class MainGUI extends Application implements FileOperations
 {
@@ -40,15 +45,19 @@ public class MainGUI extends Application implements FileOperations
         soundtrackplayer.playSoundtrack();
 
         //Main container (ROOT) using Pane layout
-        Pane root = new Pane();
+        AnchorPane root = new AnchorPane();
         // Scene and stage
         scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
         primaryStage.setTitle("PVZ - Main Menu!");
+        MainMenu.loadingScreen(root);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
         // Added this to center on screen once switched
         MainGUI.primaryStage.centerOnScreen();
         primaryStage.show();
+        Yard.preloadZombies();
+
+
 
         // Load user data from binary file into the hashmap
         try {
