@@ -195,7 +195,7 @@ public class Yard extends Thread
 
             grid[row][col].disappear(root); // Now disappear removes from the root directly! (Notice changes in "Plant" class)
             grid[row][col] = null; // Clear the grid cell
-            plantSelectedAudio();
+            shovelPlantAudio();
 
             System.out.println("Plant removed at row: " + row + ", col: " + col);
         }
@@ -397,6 +397,7 @@ public class Yard extends Thread
         root = new AnchorPane();    // Reinitialize root
     }
 
+
     public static void gameOver()
     {
         
@@ -503,9 +504,9 @@ public class Yard extends Thread
 
                 // Handle level completion logic here
                 System.out.println("Level Completed!");
-
-                // Call the loading screen for the main menu
+                hugeWaveText();
                 MainMenu.loadingScreen(root);
+                zombieWaveAudio();
             }
         }));
 
@@ -516,56 +517,77 @@ public class Yard extends Thread
         timeline.play();
     }
 
-    private void readySetPlant() {
-        // Create "Ready" text
-        Text readyText = new Text("READY...");
-        readyText.setFont(Font.font("Comic Sans MS", 85));
-        readyText.setFill(Color.DARKRED);
-        readyText.setLayoutX(WIDTH / 2 - 75);
-        readyText.setLayoutY(HEIGHT / 2);
-        root.getChildren().add(readyText);
+    private void readySetPlant()
+    {
+        // Load images for "READY", "SET", and "PLANT"
+        ImageView readyImage = new ImageView(new Image("images/others/Ready.png"));
+        ImageView setImage = new ImageView(new Image("images/others/Set.png"));
+        ImageView plantImage = new ImageView(new Image("images/others/Plant.png"));
 
-        // Show "Ready" for 1.5 seconds
+        // Set the size of the images
+        readyImage.setFitWidth(400);  // Adjust width according to the image size
+        readyImage.setFitHeight(100); // Adjust height accordingly
+        setImage.setFitWidth(400);    // Same for "SET"
+        setImage.setFitHeight(100);
+        plantImage.setFitWidth(400);  // Same for "PLANT"
+        plantImage.setFitHeight(100);
+
+        // Set initial position of the images (centered)
+        readyImage.setLayoutX(WIDTH / 2 - readyImage.getFitWidth() / 2);
+        readyImage.setLayoutY(HEIGHT / 2 - readyImage.getFitHeight() / 2);
+
+        setImage.setLayoutX(WIDTH / 2 - setImage.getFitWidth() / 2);
+        setImage.setLayoutY(HEIGHT / 2 - setImage.getFitHeight() / 2);
+
+        plantImage.setLayoutX(WIDTH / 2 - plantImage.getFitWidth() / 2);
+        plantImage.setLayoutY(HEIGHT / 2 - plantImage.getFitHeight() / 2);
+
+        // Add "READY" image to the screen
+        root.getChildren().add(readyImage);
+
+        // Show "READY" for 1.5 seconds
         PauseTransition readyPause = new PauseTransition(Duration.seconds(1.5));
         readyPause.setOnFinished(event -> {
-            // Remove "Ready" text
-            root.getChildren().remove(readyText);
+            // Remove "READY" image
+            root.getChildren().remove(readyImage);
 
-            // Show "Set" text
-            Text setText = new Text("SET...");
-            setText.setFont(Font.font("Comic Sans MS", 85));
-            setText.setFill(Color.DARKRED);
-            setText.setLayoutX(WIDTH / 2 - 75);
-            setText.setLayoutY(HEIGHT / 2);
-            root.getChildren().add(setText);
+            // Add "SET" image
+            root.getChildren().add(setImage);
 
-            // Show "Set" for 1.5 seconds
+            // Show "SET" for 1.5 seconds
             PauseTransition setPause = new PauseTransition(Duration.seconds(1.5));
             setPause.setOnFinished(setEvent -> {
-                // Remove "Set" text
-                root.getChildren().remove(setText);
+                // Remove "SET" image
+                root.getChildren().remove(setImage);
 
-                // Show "Plant!" text
-                Text plantText = new Text("PLANT!");
-                plantText.setFont(Font.font("Comic Sans MS", 85));
-                plantText.setFill(Color.DARKRED);
-                plantText.setLayoutX(WIDTH / 2 - 75);
-                plantText.setLayoutY(HEIGHT / 2);
-                root.getChildren().add(plantText);
-                Sun sun = new Sun();
-                sun.appear(root);
+                // Add "PLANT!" image
+                root.getChildren().add(plantImage);
 
                 // Show "PLANT!" for 1.5 seconds and then proceed
                 PauseTransition plantPause = new PauseTransition(Duration.seconds(1.5));
                 plantPause.setOnFinished(goEvent -> {
-                    // Remove "Plant!" text
-                    root.getChildren().remove(plantText);
+                    // Remove "PLANT!" image
+                    root.getChildren().remove(plantImage);
                 });
                 plantPause.play();
             });
             setPause.play();
         });
         readyPause.play();
+    }
+
+    private void hugeWaveText() {
+        ImageView waveImage = new ImageView(new Image("images/others/HugeWave.gif"));
+        waveImage.setFitWidth(500);
+        waveImage.setFitHeight(120);
+        waveImage.setLayoutX(WIDTH / 2 - waveImage.getFitWidth() / 2);
+        waveImage.setLayoutY(HEIGHT / 2 - waveImage.getFitHeight() / 2);
+        root.getChildren().add(waveImage);
+        PauseTransition wavePause = new PauseTransition(Duration.seconds(1.5));
+        wavePause.setOnFinished(event -> {
+            root.getChildren().remove(waveImage);
+        });
+        wavePause.play();
     }
 
     public static void preloadZombies()
@@ -707,6 +729,7 @@ public class Yard extends Thread
         startNewGame();
         zoomAndReveal();
 
+//        zoomAndReveal();
 
         // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
@@ -769,15 +792,15 @@ public class Yard extends Thread
         }
     }
 
-    public void plantSelectedAudio() {
+    public void shovelPlantAudio() {
         try {
-            String path = getClass().getResource("/music/plant selected.mp3").toExternalForm();
+            String path = getClass().getResource("/music/shovel plant.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setVolume(0.1);
             mediaPlayer.play();
         } catch (Exception e) {
-            System.out.println("Error playing selecting sound: " + e.getMessage());
+            System.out.println("Error playing shovel sound: " + e.getMessage());
         }
     }
 
@@ -797,9 +820,6 @@ public class Yard extends Thread
 
     public void zombieSpawnAudio() {
         try {
-            // Check if a zombie spawn sound is already playing
-            zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
-            // List of audio file paths for random selection
             String[] audioPaths = {
                     getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
                     getClass().getResource("/music/zombie s2.mp3").toExternalForm(),
@@ -945,7 +965,7 @@ public class Yard extends Thread
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
         PEASHOOTERCARD.draggingImageViewSetProperties(61, 74, true, false);
         PEASHOOTERCARD.hoverImageViewSetProperties(61, 74, true, false);
-        PEASHOOTERCARD.addToYard(root, yardGrid, this);
+
 
         // SUNFLOWER CARD
         Card SUNFLOWERCARD = new Card(
@@ -957,7 +977,6 @@ public class Yard extends Thread
         SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
         SUNFLOWERCARD.draggingImageViewSetProperties(61, 66, true, false);
         SUNFLOWERCARD.hoverImageViewSetProperties(61, 66, true, false);
-        SUNFLOWERCARD.addToYard(root, yardGrid, this);
 
         // POTATO CARD
         Card POTATOCARD = new Card(
@@ -969,7 +988,6 @@ public class Yard extends Thread
         POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
         POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
         POTATOCARD.hoverImageViewSetProperties(59, 66, true, false);
-        POTATOCARD.addToYard(root, yardGrid, this);
 
         // CHERRY CARD
         Card CHERRYCARD = new Card(
@@ -994,15 +1012,15 @@ public class Yard extends Thread
         ICEDPEACARD.hoverImageViewSetProperties(73, 78, true, false);
 
 
-        Card torchWood=new Card(
+        Card TORCHWOODCARD = new Card(
                 "images/cards/torchwoodCard.png",
                 "images/plants/torchWood.png",
                 TorchWood.class,
                 175
         ); // NULL is used as a workaround to avoid creating a shovel class
-        torchWood.cardImageViewSetProperties(573,21,47,66,true,true);
-        torchWood.draggingImageViewSetProperties(73,78,true,false);
-        torchWood.hoverImageViewSetProperties(64,78,true,false);
+        TORCHWOODCARD.cardImageViewSetProperties(573,21,47,66,true,true);
+        TORCHWOODCARD.draggingImageViewSetProperties(73,78,true,false);
+        TORCHWOODCARD.hoverImageViewSetProperties(64,78,true,false);
 
         // REPEATER CARD
         Card REPEATERCARD = new Card(
@@ -1022,8 +1040,8 @@ public class Yard extends Thread
         Card snowpeaLockedCard = new Card("images/lockedCards/snowpeaLockedCard.png");
         snowpeaLockedCard.cardImageViewSetProperties(520, 21, 47, 66, true, true);
 
-        Card jalapenoLockedCard = new Card("images/lockedCards/jalapenoLockedCard.png");
-        jalapenoLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
+        Card torchWoodLockedCard = new Card("images/lockedCards/torchWoodLockedCard.png");
+        torchWoodLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
 
         Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
         repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
@@ -1032,23 +1050,61 @@ public class Yard extends Thread
         switch(levelNumber)
         {
             case 1:
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
+                SUNFLOWERCARD.addToYard(root, yardGrid, this);
+                POTATOCARD.addToYard(root, yardGrid, this);
+
                 // Add all locked cards to the root pane.
-                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), torchWoodLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
                 break;
             case 2:
-                // Only last 2 cards are not unlocked
-                root.getChildren().addAll(jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
+                SUNFLOWERCARD.addToYard(root, yardGrid, this);
+                POTATOCARD.addToYard(root, yardGrid, this);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
 
+                // Only last 2 cards are not unlocked
+                root.getChildren().addAll(torchWoodLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
                 break;
             case 3:
                 // All cards are unlocked in level 3
                 System.out.println("All cards are unlocked in " + levelNumber);
+
+                // Set the imageview to be christmas as a workaround and for show only
+                PEASHOOTERCARD.setCardImageView(new ImageView("images/cards/PeaShooterCard_christmas.png"));
+                PEASHOOTERCARD.cardImageViewSetProperties(305, 21, 44, 62, true, true);
+
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
-                torchWood.addToYard(root, yardGrid, this);
+                TORCHWOODCARD.addToYard(root, yardGrid, this);
                 REPEATERCARD.addToYard(root, yardGrid, this);
+
+                // Add Christmas cards
+                // SUNFLOWER CHRISTMAS CARD
+                Card SUNFLOWERCARD_CHRISTMAS = new Card(
+                        "images/cards/sunflowerCard_christmas.png",
+                        "images/plants/sunflower.png",
+                        Sunflower_Christmas.class,
+                        50
+                );
+                SUNFLOWERCARD_CHRISTMAS.cardImageViewSetProperties(360, 22, 44, 66, true, true);
+                SUNFLOWERCARD_CHRISTMAS.draggingImageViewSetProperties(61, 66, true, false);
+                SUNFLOWERCARD_CHRISTMAS.hoverImageViewSetProperties(61, 66, true, false);
+                SUNFLOWERCARD_CHRISTMAS.addToYard(root, yardGrid, this);
+
+                Card POTATO_CHRISTMAS = new Card(
+                        "images/cards/potatoCard_christmas.png",
+                        "images/plants/potato.png",
+                        Potato_Christmas.class,
+                        50
+                );
+                POTATO_CHRISTMAS.cardImageViewSetProperties(415, 21, 44, 66, true, true);
+                POTATO_CHRISTMAS.draggingImageViewSetProperties(61, 66, true, false);
+                POTATO_CHRISTMAS.hoverImageViewSetProperties(61, 66, true, false);
+                POTATO_CHRISTMAS.addToYard(root, yardGrid, this);
+
                 break;
         }
     }

@@ -91,24 +91,28 @@ public class Pea extends Characters implements Serializable, Runnable
 
     private void changePeaToFirePea()
     {
-        Platform.runLater(() -> {
-            for (TorchWood torchWood : TorchWood.activeTorchWoods)
+        for (TorchWood torchWood : TorchWood.activeTorchWoods)
+        {
+
+            if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()) && torchWood.isAlive())
             {
-                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()) && torchWood.isAlive())
-                {
+                // Removed firepea sound, caused bugs
+                Platform.runLater(() -> {
                     elementImage.setImage(firePeaImage);
                     elementImage.setPreserveRatio(false);
                     elementImage.setFitWidth(50);
                     elementImage.setFitHeight(37);
+                });
 
-                    damage = 40;  // Adjust damage for FirePea
-                    break; // No need to check further
-                }
+                damage = 40;  // Adjust damage for FirePea
+                break; // No need to check further
             }
-        });
+        }
+
     }
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
-    private synchronized Zombie checkForZombieCollision() {
+    private synchronized Zombie checkForZombieCollision()
+    {
         synchronized (Yard.zombies) {
             for (Zombie zombie : Yard.zombies) {
                 if (!zombie.isAlive()) continue; // Skip dead zombies
@@ -127,10 +131,22 @@ public class Pea extends Characters implements Serializable, Runnable
             String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.1);
+            mediaPlayer.setVolume(0.2);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing pea hit sound: " + e.getMessage());
+        }
+    }
+
+    public void firePeaAudio() {
+        try {
+            String path = getClass().getResource("/music/fire pea.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing firepea sound: " + e.getMessage());
         }
     }
 

@@ -15,9 +15,6 @@ public class Main extends Application
         primaryStage.setTitle("PVZ!");
         primaryStage.getIcons().add(new Image("images/others/icon.png"));
 
-        SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
-        soundtrackplayer.playSoundtrack();
-
         // Only testing for logic, not actual Main Code
         /*
         ArrayList<Plant> unlockedPlants = new ArrayList<>();
