@@ -337,8 +337,8 @@ public class Yard extends Thread
     public static void resetGame() {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval=20;
-        sunCounter=50;
+        zombieSpawnInterval= 3;
+        sunCounter= 10000;
         timeLeft=4*60;
 
         Platform.runLater(() -> {
@@ -702,10 +702,21 @@ public class Yard extends Thread
                 yardImageView = new ImageView(new Image("images/yard-related/nightYard.png"));
                 break;
             case 3:
-                yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
+                yardImageView = new ImageView(new Image("images/yard-related/ChristmasYard.png"));
+
         }
 
-        if(yardImageView != null)
+        // Christmas yard has specific dimensions so there has to be specific dimensions
+        if(parentLevel.getLevelNumber() == 3)
+        {
+            yardImageView.setLayoutX(-238);
+            yardImageView.setLayoutY(0);
+            yardImageView.setFitWidth(1766);
+            yardImageView.setFitHeight(666);
+            // Add yard image view to the root pane
+            root.getChildren().add(yardImageView);
+        }
+        else if(yardImageView != null)
         {
             yardImageView.setFitWidth(WIDTH);
             yardImageView.setFitHeight(HEIGHT);
@@ -849,8 +860,6 @@ public class Yard extends Thread
         torchWood.cardImageViewSetProperties(573,21,47,66,true,true);
         torchWood.draggingImageViewSetProperties(73,78,true,false);
         torchWood.hoverImageViewSetProperties(64,78,true,false);
-
-
 
         // REPEATER CARD
         Card REPEATERCARD = new Card(
