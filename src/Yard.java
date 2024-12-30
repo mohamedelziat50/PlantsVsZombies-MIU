@@ -324,9 +324,9 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 15;
+        zombieSpawnInterval= 2;
         sunCounter= 10000;
-        timeLeft= 60;
+        timeLeft= 20;
 
 
             // Clear all plants and set them inactive
@@ -383,50 +383,153 @@ public class Yard extends Thread
     }
 
 
-    public static void gameOver()
-    {
+    public static void gameOver() {
         gameOn = false;
 
         Platform.runLater(() -> {
-            for(int i=0;i<ROWS;i++){
-                for(int j=0;j<COLUMNS;j++){
-                    if(grid[i][j]!=null){
+            // Clear the grid
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLUMNS; j++) {
+                    if (grid[i][j] != null) {
                         System.out.println("Plant removed");
                         grid[i][j].disappear(root);
-                        grid[i][j]=null;
+                        grid[i][j] = null;
                     }
                 }
             }
 
-            LoadingScreen.show(MainGUI.primaryStage);
+            // Create "Game Over" overlay
+            Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
+            overlay.setFill(Color.BLACK);
+            overlay.setOpacity(0.6);
+
+            // Load "ZombiesWin" image
+            ImageView gameOverImage = new ImageView(new Image("images/others/ZombiesWin.png"));
+            gameOverImage.setPreserveRatio(true);
+            gameOverImage.setFitWidth(520); // Default dimensions
+            gameOverImage.setFitHeight(407);
+
+            // Center the "ZombiesWin" image
+            gameOverImage.setLayoutX(394);
+            gameOverImage.setLayoutY(128);
+
+            // Add overlay and "Game Over" image to the root
+            root.getChildren().addAll(overlay, gameOverImage);
+
+            // Create the zoom animation
+            ScaleTransition zoom = new ScaleTransition(Duration.seconds(3), gameOverImage);
+            zoom.setFromX(0.5); // Start smaller
+            zoom.setFromY(0.5);
+            zoom.setToX(1.0); // Grow to normal size
+            zoom.setToY(1.0);
+            zoom.setInterpolator(Interpolator.EASE_BOTH);
+
+            // Create the shake animation
+            TranslateTransition shake = new TranslateTransition(Duration.seconds(0.1), gameOverImage);
+            shake.setByX(10); // Shake left-right
+            shake.setByY(10); // Shake up-down
+            shake.setAutoReverse(true);
+            shake.setCycleCount(30); // Total shakes
+
+            // Parallel the zoom and shake animations
+            ParallelTransition animation = new ParallelTransition(zoom, shake);
+
+            // Add a pause after the animation
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+
+            // Combine the animations and the pause into a sequential transition
+            SequentialTransition sequential = new SequentialTransition(animation, pause);
+
+            sequential.setOnFinished(event -> {
+                // Remove the overlay and "Game Over" image
+                root.getChildren().removeAll(overlay, gameOverImage);
+
+                // Transition to the loading screen
+                LoadingScreen.show(MainGUI.primaryStage);
+            });
+
+            // Start the sequential transition
+            sequential.play();
         });
 
         System.out.println("You Lost");
         System.out.println("Game has ended, all zombie spawns and threads should stop");
     }
 
-    public static void gameWin()
-    {
+
+    public static void gameWin() {
         gameOn = false;
 
         Platform.runLater(() -> {
-            //  resetGame(); // Reset the game state
-            for(int i=0;i<ROWS;i++){
-                for(int j=0;j<COLUMNS;j++){
-                    if(grid[i][j]!=null){
+            // Reset the game state by clearing the grid
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLUMNS; j++) {
+                    if (grid[i][j] != null) {
                         System.out.println("game reset");
                         grid[i][j].disappear(root);
-                        grid[i][j]=null;
+                        grid[i][j] = null;
                     }
                 }
             }
 
-            LoadingScreen.show(MainGUI.primaryStage);
+            // Create "Game Win" overlay
+            Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
+            overlay.setFill(Color.BLACK);
+            overlay.setOpacity(0.6);
+
+            // Load "PlantsWin" image
+            ImageView gameWinImage = new ImageView(new Image("images/others/PlantsWin.png"));
+            gameWinImage.setPreserveRatio(true);
+            gameWinImage.setFitWidth(762); // Default dimensions
+            gameWinImage.setFitHeight(276);
+
+            // Center the "PlantsWin" image
+            gameWinImage.setLayoutX(258);
+            gameWinImage.setLayoutY(242);
+
+            // Add overlay and "Game Win" image to the root
+            root.getChildren().addAll(overlay, gameWinImage);
+
+            // Create the zoom animation
+            ScaleTransition zoom = new ScaleTransition(Duration.seconds(3), gameWinImage);
+            zoom.setFromX(0.5); // Start smaller
+            zoom.setFromY(0.5);
+            zoom.setToX(1.0); // Grow to normal size
+            zoom.setToY(1.0);
+            zoom.setInterpolator(Interpolator.EASE_BOTH);
+
+            // Create the shake animation
+            TranslateTransition shake = new TranslateTransition(Duration.seconds(0.1), gameWinImage);
+            shake.setByX(10); // Shake left-right
+            shake.setByY(10); // Shake up-down
+            shake.setAutoReverse(true);
+            shake.setCycleCount(30); // Total shakes
+
+            // Parallel the zoom and shake animations
+            ParallelTransition animation = new ParallelTransition(zoom, shake);
+
+            // Add a pause after the animation
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+
+            // Combine the animations and the pause into a sequential transition
+            SequentialTransition sequential = new SequentialTransition(animation, pause);
+
+            sequential.setOnFinished(event -> {
+                // Remove the overlay and "Game Win" image
+                root.getChildren().removeAll(overlay, gameWinImage);
+
+                // Transition to the loading screen
+                LoadingScreen.show(MainGUI.primaryStage);
+            });
+
+            // Start the sequential transition
+            sequential.play();
         });
 
         System.out.println("You Won");
         System.out.println("Game has ended, all zombie spawns and threads should stop");
     }
+
 
     public static void startNewGame()
     {
