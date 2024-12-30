@@ -1,3 +1,5 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -74,46 +76,27 @@ public class LoadingScreen
         pause.play();
     }
 
-    public static void showStartScreen(Stage stage)
+    public static void showStartScreen(AnchorPane root)
     {
-        // Root AnchorPane
-        root = new AnchorPane();
-        root.setPrefSize(600, 400);
+        // Add loading screen
+        Platform.runLater(() -> {
+            ImageView loadingScreenImage = new ImageView(new Image("images/others/loadingScreen.png"));
+            loadingScreenImage.setFitWidth(810);
+            loadingScreenImage.setFitHeight(598);
+            loadingScreenImage.setPreserveRatio(false);
 
-        // Child AnchorPane
-        AnchorPane childPane = new AnchorPane();
-        childPane.setLayoutX(6.0);
-        childPane.setPrefSize(800, 589);
+            root.getChildren().add(loadingScreenImage);
 
-        // ImageView
-        ImageView backgroundImage = new ImageView();
-        backgroundImage.setFitWidth(Yard.WIDTH);
-        backgroundImage.setFitHeight(Yard.HEIGHT);
-        backgroundImage.setLayoutX(-8.0);
-        backgroundImage.setPickOnBounds(true);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(5), event -> {
+                        root.getChildren().remove(loadingScreenImage);
+                        System.out.println("Loading screen removed, proceeding...");
+                    })
+            );
 
-        backgroundImage.setImage(new Image("/images/loadingScreens/feastivus_loadingscreen.png"));
-
-        // Add ImageView to child AnchorPane
-        childPane.getChildren().add(backgroundImage);
-
-        // Add child AnchorPane to root
-        root.getChildren().add(childPane);
-
-        // Set the scene to the stage
-        Scene scene = new Scene(root);
-        Platform.runLater(() -> stage.setScene(scene));
-
-        // Pause for 5 seconds
-        PauseTransition pause = new PauseTransition(Duration.seconds(7));
-        pause.setOnFinished(event -> {
-            System.out.println("Entered Loading Screen");
-            // Return to the main menu or perform another action
-            MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
-            MainGUI.primaryStage.centerOnScreen();
+            timeline.setCycleCount(1);
+            timeline.play();
         });
-
-        pause.play();
     }
 }
 

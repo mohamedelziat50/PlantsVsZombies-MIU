@@ -38,23 +38,40 @@ public class MainGUI extends Application implements FileOperations
     {
         primaryStage = stage;
 
-        // Add ICON
-        primaryStage.setTitle("PVZ!");
-        primaryStage.getIcons().add(new Image("images/others/christmasIcon.png"));
+    // Add ICON and title
+    primaryStage.setTitle("Plants VS Zombies!");
+    primaryStage.getIcons().add(new Image("images/others/christmasIcon.png"));
 
-        //Main container (ROOT) using Pane layout
+    // Main container (ROOT) using Pane layout
         AnchorPane root = new AnchorPane();
-        // Scene and stage
-        scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
-        primaryStage.setTitle("PVZ - Main Menu!");
-        MainMenu.loadingScreen(root);
+
+    // Scene and stage
+        scene = new Scene(root, 800, 598); // Adding the root container to the scene while setting the scene dimensions
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
-        // Added this to center on screen once switched
-        MainGUI.primaryStage.centerOnScreen();
-        primaryStage.show();
-        SoundtrackPlayer.playMainMenutrack();
-        Yard.preloadZombies();
+
+    // To close the option of opening the game in full screen mode since it ruins the dimensions
+        primaryStage.setResizable(false);
+
+    // Display the loading screen at first
+        LoadingScreen.showStartScreen(root);
+
+    // Show the primary stage only after loading screen is initialized
+        Platform.runLater(() -> {
+            // Set the screen title
+            primaryStage.setTitle("PVZ - Main Menu!");
+
+            // Preload necessary assets
+            SoundtrackPlayer.playMainMenutrack();
+            Yard.preloadZombies();
+
+            // Show the primary stage
+            primaryStage.show();
+
+            // Added this to center on screen once switched
+            MainGUI.primaryStage.centerOnScreen();
+        });
+
+
 
         // Load user data from binary file into the hashmap
         try {
@@ -205,8 +222,6 @@ public class MainGUI extends Application implements FileOperations
         level3.setOnMouseExited(e -> {
             levelMenuImage.setImage(new Image("images/menuImages/levelMenu.jpg"));
         });
-
-
     }
 
     //Handling of the SignIn button
