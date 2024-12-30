@@ -38,7 +38,7 @@ public class MainGUI extends Application implements FileOperations
 
         // Add ICON
         primaryStage.setTitle("PVZ!");
-        primaryStage.getIcons().add(new Image("images/others/icon.png"));
+        primaryStage.getIcons().add(new Image("images/others/christmasIcon.png"));
 
         // Sound track player
         SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();

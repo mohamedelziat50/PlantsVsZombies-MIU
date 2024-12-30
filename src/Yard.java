@@ -43,6 +43,8 @@ public class Yard extends Thread
     private double levelDuration; // Total duration for the level (in seconds)
     public static double timeLeft;
     public static int sunCounter;
+    private Timeline timeline; // Declare timeline as a class-level variable
+
 
     // GUI-related variables
     public static AnchorPane root;
@@ -338,16 +340,17 @@ public class Yard extends Thread
     public static void resetGame() {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 20;
+        zombieSpawnInterval= 2;
         sunCounter= 10000;
-        timeLeft=4*60;
+        timeLeft=3*60;
 
-        Platform.runLater(() -> {
+
             // Clear all plants and set them inactive
             plants.forEach(plant -> {
                 if(plants!=null){
+                    Platform.runLater(() -> {
                     plant.disappear(root);
-
+                    });
                 }
             });
             plants.clear();
@@ -355,7 +358,9 @@ public class Yard extends Thread
 
                 peas.forEach(pea -> {
                     if(pea!=null){
+                        Platform.runLater(() -> {
                         pea.disappear(root);
+                        });
 
                     }
                 });
@@ -367,12 +372,13 @@ public class Yard extends Thread
             zombies.forEach(zombie -> {
                 if(zombie!=null)
                 {
-                    zombie.disappear(root);
+                    Platform.runLater(() -> {
+                        zombie.disappear(root);
+                    });
                 }
 
             });
             zombies.clear();
-        });
 
         //Making sure that all the indexes in the grid pane is empty now
         for(int i=0;i<ROWS;i++){
@@ -391,7 +397,6 @@ public class Yard extends Thread
         root = new AnchorPane();    // Reinitialize root
     }
 
-
     public static void gameOver()
     {
         
@@ -408,10 +413,35 @@ public class Yard extends Thread
                     }
                 }
             }
+            MainMenu.loadingScreen(root);
             MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
         });
 
         System.out.println("Game has ended, all zombie spawns and threads should stop");
+    }
+
+    public static void youWon()
+    {
+
+            gameOn = false;
+
+            Platform.runLater(() -> {
+                //  resetGame(); // Reset the game state
+                for (int i = 0; i < ROWS; i++) {
+                    for (int j = 0; j < COLUMNS; j++) {
+                        if (grid[i][j] != null) {
+                            System.out.println("game reset");
+                            grid[i][j].disappear(root);
+                            grid[i][j] = null;
+                        }
+                    }
+                }
+                MainMenu.loadingScreen(root);
+                MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
+            });
+
+            System.out.println("Game has ended, all zombie spawns and threads should stop");
+
     }
 
     public static void startNewGame()
@@ -460,25 +490,30 @@ public class Yard extends Thread
 
 
     // Start the level timer and update the progress bar
-    public void startLevelTimer()
-    {
-
-        // Create a Timeline to update progress every second
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+    public void startLevelTimer() {
+        // Initialize the timeline
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (timeLeft > 0) {
                 timeLeft -= 1;  // Decrease the remaining time by 1 second
                 double progress = timeLeft / levelDuration;  // Calculate progress as a fraction of time left
                 levelProgressBar.setProgress(progress);  // Update the progress bar
             } else {
-                // Level is over, handle level completion logic here
+                // Level is over, stop the timeline
+                timeline.stop();
+
+                // Handle level completion logic here
                 System.out.println("Level Completed!");
 
-               // zombieWaveAudio();
+                // Call the loading screen for the main menu
+                MainMenu.loadingScreen(root);
             }
         }));
+
         // Set the timeline to repeat indefinitely (so it updates every second)
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();  // Start the timeline (the countdown)
+
+        // Start the timeline (the countdown)
+        timeline.play();
     }
 
     private void readySetPlant() {
