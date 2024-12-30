@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.text.Font;
@@ -517,57 +518,84 @@ public class Yard extends Thread
         timeline.play();
     }
 
-    private void readySetPlant()
-    {
+    private void readySetPlant() {
+        // Create a semi-transparent rectangle overlay
+        Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
+        overlay.setFill(Color.BLACK);
+        overlay.setOpacity(0.5);
+
         // Load images for "READY", "SET", and "PLANT"
         ImageView readyImage = new ImageView(new Image("images/others/Ready.png"));
         ImageView setImage = new ImageView(new Image("images/others/Set.png"));
         ImageView plantImage = new ImageView(new Image("images/others/Plant.png"));
+        readyImage.setPreserveRatio(true);
+        setImage.setPreserveRatio(true);
+        plantImage.setPreserveRatio(true);
 
         // Set the size of the images
-        readyImage.setFitWidth(400);  // Adjust width according to the image size
-        readyImage.setFitHeight(100); // Adjust height accordingly
-        setImage.setFitWidth(400);    // Same for "SET"
-        setImage.setFitHeight(100);
-        plantImage.setFitWidth(400);  // Same for "PLANT"
-        plantImage.setFitHeight(100);
+        readyImage.setFitWidth(400);
+        readyImage.setFitHeight(130);
+        setImage.setFitWidth(400);
+        setImage.setFitHeight(130);
+        plantImage.setFitWidth(400);
+        plantImage.setFitHeight(130);
 
         // Set initial position of the images (centered)
-        readyImage.setLayoutX(WIDTH / 2 - readyImage.getFitWidth() / 2);
+        readyImage.setLayoutX((WIDTH / 2 - readyImage.getFitWidth() / 2) + 60);
         readyImage.setLayoutY(HEIGHT / 2 - readyImage.getFitHeight() / 2);
 
-        setImage.setLayoutX(WIDTH / 2 - setImage.getFitWidth() / 2);
+        setImage.setLayoutX((WIDTH / 2 - setImage.getFitWidth() / 2) + 60);
         setImage.setLayoutY(HEIGHT / 2 - setImage.getFitHeight() / 2);
 
-        plantImage.setLayoutX(WIDTH / 2 - plantImage.getFitWidth() / 2);
+        plantImage.setLayoutX((WIDTH / 2 - plantImage.getFitWidth() / 2) + 60);
         plantImage.setLayoutY(HEIGHT / 2 - plantImage.getFitHeight() / 2);
 
-        // Add "READY" image to the screen
-        root.getChildren().add(readyImage);
+        // Add the overlay and "READY" image to the screen
+        root.getChildren().addAll(overlay, readyImage);
 
         // Show "READY" for 1.5 seconds
         PauseTransition readyPause = new PauseTransition(Duration.seconds(1.5));
         readyPause.setOnFinished(event -> {
-            // Remove "READY" image
             root.getChildren().remove(readyImage);
-
-            // Add "SET" image
             root.getChildren().add(setImage);
 
             // Show "SET" for 1.5 seconds
             PauseTransition setPause = new PauseTransition(Duration.seconds(1.5));
             setPause.setOnFinished(setEvent -> {
-                // Remove "SET" image
                 root.getChildren().remove(setImage);
-
-                // Add "PLANT!" image
                 root.getChildren().add(plantImage);
 
-                // Show "PLANT!" for 1.5 seconds and then proceed
+                // Show "PLANT!" for 1.5 seconds
                 PauseTransition plantPause = new PauseTransition(Duration.seconds(1.5));
                 plantPause.setOnFinished(goEvent -> {
-                    // Remove "PLANT!" image
-                    root.getChildren().remove(plantImage);
+                    // Create shake and zoom effects
+                    Timeline shakeTimeline = new Timeline();
+                    Random random = new Random();
+
+                    // Generate random shake and scale
+                    for (int i = 0; i < 20; i++) { // 20 keyframes for a more dramatic effect
+                        double randomX = random.nextDouble() * 20 - 10; // Random X offset (-10 to 10)
+                        double randomY = random.nextDouble() * 20 - 10; // Random Y offset (-10 to 10)
+                        double randomScale = 1 + random.nextDouble() * 0.2; // Random scale (1 to 1.2)
+                        double randomAngle = random.nextDouble() * 20 - 10; // Random rotation (-10 to 10 degrees)
+
+                        KeyFrame keyFrame = new KeyFrame(
+                                Duration.millis(i * 50), // Every 50ms
+                                new KeyValue(plantImage.layoutXProperty(), (WIDTH / 2 - plantImage.getFitWidth() / 2) + 60 + randomX),
+                                new KeyValue(plantImage.layoutYProperty(), (HEIGHT / 2 - plantImage.getFitHeight() / 2) + randomY),
+                                new KeyValue(plantImage.scaleXProperty(), randomScale),
+                                new KeyValue(plantImage.scaleYProperty(), randomScale),
+                                new KeyValue(plantImage.rotateProperty(), randomAngle)
+                        );
+                        shakeTimeline.getKeyFrames().add(keyFrame);
+                    }
+
+                    // When the shake is done, remove the "PLANT!" image and overlay
+                    shakeTimeline.setOnFinished(shakeEvent -> {
+                        root.getChildren().removeAll(plantImage, overlay);
+                    });
+
+                    shakeTimeline.play();
                 });
                 plantPause.play();
             });
@@ -575,6 +603,7 @@ public class Yard extends Thread
         });
         readyPause.play();
     }
+
 
     private void hugeWaveText() {
         ImageView waveImage = new ImageView(new Image("images/others/HugeWave.gif"));
@@ -688,7 +717,7 @@ public class Yard extends Thread
         );
 
         // Freeze on the zoomed-in right position for 4 seconds
-        PauseTransition freezeOnRight = new PauseTransition(Duration.seconds(6));
+        PauseTransition freezeOnRight = new PauseTransition(Duration.seconds(4.5));
         zoomToLeft.setOnFinished(event -> removeStaticZombies()); // Remove zombies during this pause
 
         // Animation to zoom out and show the whole scene
