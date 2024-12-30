@@ -192,7 +192,7 @@ public class Yard extends Thread
 
             grid[row][col].disappear(root); // Now disappear removes from the root directly! (Notice changes in "Plant" class)
             grid[row][col] = null; // Clear the grid cell
-            plantSelectedAudio();
+            shovelPlantAudio();
 
             System.out.println("Plant removed at row: " + row + ", col: " + col);
         }
@@ -470,8 +470,8 @@ public class Yard extends Thread
             } else {
                 // Level is over, handle level completion logic here
                 System.out.println("Level Completed!");
-
-               // zombieWaveAudio();
+                hugeWaveText();
+                zombieWaveAudio();
             }
         }));
         // Set the timeline to repeat indefinitely (so it updates every second)
@@ -480,53 +480,75 @@ public class Yard extends Thread
     }
 
     private void readySetPlant() {
-        // Create "Ready" text
-        Text readyText = new Text("READY...");
-        readyText.setFont(Font.font("Comic Sans MS", 85));
-        readyText.setFill(Color.DARKRED);
-        readyText.setLayoutX(WIDTH / 2 - 75);
-        readyText.setLayoutY(HEIGHT / 2);
-        root.getChildren().add(readyText);
+        // Load images for "READY", "SET", and "PLANT"
+        ImageView readyImage = new ImageView(new Image("images/others/Ready.png"));
+        ImageView setImage = new ImageView(new Image("images/others/Set.png"));
+        ImageView plantImage = new ImageView(new Image("images/others/Plant.png"));
 
-        // Show "Ready" for 1.5 seconds
+        // Set the size of the images
+        readyImage.setFitWidth(400);  // Adjust width according to the image size
+        readyImage.setFitHeight(100); // Adjust height accordingly
+        setImage.setFitWidth(400);    // Same for "SET"
+        setImage.setFitHeight(100);
+        plantImage.setFitWidth(400);  // Same for "PLANT"
+        plantImage.setFitHeight(100);
+
+        // Set initial position of the images (centered)
+        readyImage.setLayoutX(WIDTH / 2 - readyImage.getFitWidth() / 2);
+        readyImage.setLayoutY(HEIGHT / 2 - readyImage.getFitHeight() / 2);
+
+        setImage.setLayoutX(WIDTH / 2 - setImage.getFitWidth() / 2);
+        setImage.setLayoutY(HEIGHT / 2 - setImage.getFitHeight() / 2);
+
+        plantImage.setLayoutX(WIDTH / 2 - plantImage.getFitWidth() / 2);
+        plantImage.setLayoutY(HEIGHT / 2 - plantImage.getFitHeight() / 2);
+
+        // Add "READY" image to the screen
+        root.getChildren().add(readyImage);
+
+        // Show "READY" for 1.5 seconds
         PauseTransition readyPause = new PauseTransition(Duration.seconds(1.5));
         readyPause.setOnFinished(event -> {
-            // Remove "Ready" text
-            root.getChildren().remove(readyText);
+            // Remove "READY" image
+            root.getChildren().remove(readyImage);
 
-            // Show "Set" text
-            Text setText = new Text("SET...");
-            setText.setFont(Font.font("Comic Sans MS", 85));
-            setText.setFill(Color.DARKRED);
-            setText.setLayoutX(WIDTH / 2 - 75);
-            setText.setLayoutY(HEIGHT / 2);
-            root.getChildren().add(setText);
+            // Add "SET" image
+            root.getChildren().add(setImage);
 
-            // Show "Set" for 1.5 seconds
+            // Show "SET" for 1.5 seconds
             PauseTransition setPause = new PauseTransition(Duration.seconds(1.5));
             setPause.setOnFinished(setEvent -> {
-                // Remove "Set" text
-                root.getChildren().remove(setText);
+                // Remove "SET" image
+                root.getChildren().remove(setImage);
 
-                // Show "Plant!" text
-                Text plantText = new Text("PLANT!");
-                plantText.setFont(Font.font("Comic Sans MS", 85));
-                plantText.setFill(Color.DARKRED);
-                plantText.setLayoutX(WIDTH / 2 - 75);
-                plantText.setLayoutY(HEIGHT / 2);
-                root.getChildren().add(plantText);
+                // Add "PLANT!" image
+                root.getChildren().add(plantImage);
 
                 // Show "PLANT!" for 1.5 seconds and then proceed
                 PauseTransition plantPause = new PauseTransition(Duration.seconds(1.5));
                 plantPause.setOnFinished(goEvent -> {
-                    // Remove "Plant!" text
-                    root.getChildren().remove(plantText);
+                    // Remove "PLANT!" image
+                    root.getChildren().remove(plantImage);
                 });
                 plantPause.play();
             });
             setPause.play();
         });
         readyPause.play();
+    }
+
+    private void hugeWaveText() {
+        ImageView waveImage = new ImageView(new Image("images/others/HugeWave.gif"));
+        waveImage.setFitWidth(500);
+        waveImage.setFitHeight(120);
+        waveImage.setLayoutX(WIDTH / 2 - waveImage.getFitWidth() / 2);
+        waveImage.setLayoutY(HEIGHT / 2 - waveImage.getFitHeight() / 2);
+        root.getChildren().add(waveImage);
+        PauseTransition wavePause = new PauseTransition(Duration.seconds(1.5));
+        wavePause.setOnFinished(event -> {
+            root.getChildren().remove(waveImage);
+        });
+        wavePause.play();
     }
 
 //    private void zoomAndReveal() {
@@ -594,6 +616,8 @@ public class Yard extends Thread
 
         generateSunCounter();
 
+        readySetPlant();
+
         zombiesArrivalAudio();
 
          startLevelTimer();
@@ -626,15 +650,15 @@ public class Yard extends Thread
         }
     }
 
-    public void plantSelectedAudio() {
+    public void shovelPlantAudio() {
         try {
-            String path = getClass().getResource("/music/plant selected.mp3").toExternalForm();
+            String path = getClass().getResource("/music/shovel plant.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setVolume(0.1);
             mediaPlayer.play();
         } catch (Exception e) {
-            System.out.println("Error playing selecting sound: " + e.getMessage());
+            System.out.println("Error playing shovel sound: " + e.getMessage());
         }
     }
 
@@ -654,9 +678,6 @@ public class Yard extends Thread
 
     public void zombieSpawnAudio() {
         try {
-            // Check if a zombie spawn sound is already playing
-            zombieSpawnMediaPlayer.stop(); // Stop the previous sound if it's playing
-            // List of audio file paths for random selection
             String[] audioPaths = {
                     getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
                     getClass().getResource("/music/zombie s2.mp3").toExternalForm(),

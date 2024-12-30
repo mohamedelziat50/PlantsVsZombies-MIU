@@ -98,6 +98,7 @@ public class Card
         {
             if (yard.sunCounter < cost)
             {
+                cardUnavailableAudio();
                 System.out.println("Not enough sun to select this card.");
 
                 // Optionally change cursor to indicate that selection is not allowed
@@ -385,6 +386,19 @@ public class Card
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing card sound: " + e.getMessage());
+        }
+    }
+
+    public void cardUnavailableAudio() {
+        try {
+            String path = getClass().getResource("/music/card unavailable.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing unavailable card sound: " + e.getMessage());
         }
     }
 }

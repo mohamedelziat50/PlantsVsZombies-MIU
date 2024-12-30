@@ -96,6 +96,7 @@ public class Pea extends Characters implements Serializable, Runnable
             {
                 if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()) && torchWood.isAlive())
                 {
+                    firePeaAudio();
                     elementImage.setImage(firePeaImage);
                     elementImage.setPreserveRatio(false);
                     elementImage.setFitWidth(50);
@@ -127,10 +128,22 @@ public class Pea extends Characters implements Serializable, Runnable
             String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.1);
+            mediaPlayer.setVolume(0.2);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing pea hit sound: " + e.getMessage());
+        }
+    }
+
+    public void firePeaAudio() {
+        try {
+            String path = getClass().getResource("/music/fire pea.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing firepea sound: " + e.getMessage());
         }
     }
 
