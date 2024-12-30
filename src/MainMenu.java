@@ -1,3 +1,11 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -365,4 +373,28 @@ public class MainMenu implements FileOperations
 
         startGame();
     }
+
+    public static void loadingScreen(AnchorPane root)
+    {
+        // Add loading screen
+        Platform.runLater(() -> {
+            ImageView loadingScreenImage = new ImageView(new Image("images/others/loadingScreen.png"));
+            loadingScreenImage.setFitWidth(810);
+            loadingScreenImage.setFitHeight(598);
+            loadingScreenImage.setPreserveRatio(false);
+
+            root.getChildren().add(loadingScreenImage);
+
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(5), event -> {
+                        root.getChildren().remove(loadingScreenImage);
+                        System.out.println("Loading screen removed, proceeding...");
+                    })
+            );
+
+            timeline.setCycleCount(1);
+            timeline.play();
+        });
+    }
+
 }

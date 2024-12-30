@@ -113,11 +113,16 @@ public abstract class Zombie extends Characters
                 elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
 
-            if (elementImage.getLayoutX() <= -elementImage.getFitWidth()||Yard.timeLeft<=0) { // Ensure zombie fully exits screen
+            if (elementImage.getLayoutX() <= -elementImage.getFitWidth()) { // Ensure zombie fully exits screen
                 //System.out.println("game over");
                 Yard.gameOver();
                 //                System.exit(0);//change to a reasonable function
 
+            }
+
+            if(Yard.timeLeft<=0)
+            {
+                Yard.youWon();
             }
 
             try {
