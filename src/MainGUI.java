@@ -64,7 +64,7 @@ public class MainGUI extends Application implements FileOperations
         }
 
 
-//Contents of Menu1 container
+        //Contents of Menu1 container
         // Background Image of menu 1
         ImageView background = new ImageView(new Image("images/menuImages/SIGNIN.jpg"));
         background.setFitWidth(800);
