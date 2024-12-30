@@ -38,6 +38,7 @@ public class Yard extends Thread
 
     // Variables specific to each level!
     public static volatile boolean gameOn = true;
+    public Timeline timeline;
     private static int zombieSpawnInterval;
     private double levelDuration; // Total duration for the level (in seconds)
     public static double timeLeft;
@@ -71,27 +72,8 @@ public class Yard extends Thread
 
         // Level specific stuff
        // levelDuration = parentLevel.getDurationInSeconds();
-        timeLeft = 4*60;// the game is 4 minutes (4sec*60=4min) for those who don't know
+        timeLeft = 60;// the game is 4 minutes (4sec*60=4min) for those who don't know
         sunCounter=50;
-
-        // Deciding the starting sun counter and the zombie spawn time interval for each level
-//        if(this.parentLevel.getLevelNumber()==1)
-//        {
-//            sunCounter=150;
-//
-//        }
-//        else if(this.parentLevel.getLevelNumber()==2)
-//        {
-//            sunCounter=200;
-//
-//        }
-//        else if (this.parentLevel.getLevelNumber()==3)
-//        {
-//            sunCounter=50;
-//
-//        }
-
-
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
@@ -203,7 +185,8 @@ public class Yard extends Thread
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public void spawnZombie() throws InterruptedException {
+    public void spawnZombie() throws InterruptedException
+    {
         int[] specificNumbers = {134, 207, 298, 376, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
@@ -334,12 +317,13 @@ public class Yard extends Thread
         }
     }
 
-    public static void resetGame() {
+    public static void resetGame()
+    {
         // Reset game state variables
         gameOn = true;
         zombieSpawnInterval= 3;
         sunCounter= 10000;
-        timeLeft=4*60;
+        timeLeft= 60;
 
         Platform.runLater(() -> {
             // Clear all plants and set them inactive
@@ -376,7 +360,7 @@ public class Yard extends Thread
         for(int i=0;i<ROWS;i++){
             for(int j=0;j<COLUMNS;j++){
                 if(grid[i][j]!=null){
-                    System.out.println("game reset");
+                    System.out.println("Plant Removed");
                     grid[i][j].disappear(root);
                     grid[i][j]=null;
                 }
@@ -392,11 +376,31 @@ public class Yard extends Thread
 
     public static void gameOver()
     {
-        
         gameOn = false;
 
         Platform.runLater(() -> {
-            //  resetGame(); // Reset the game state
+            for(int i=0;i<ROWS;i++){
+                for(int j=0;j<COLUMNS;j++){
+                    if(grid[i][j]!=null){
+                        System.out.println("Plant removed");
+                        grid[i][j].disappear(root);
+                        grid[i][j]=null;
+                    }
+                }
+            }
+
+            LoadingScreen.show(MainGUI.primaryStage);
+        });
+
+        System.out.println("You Lost");
+        System.out.println("Game has ended, all zombie spawns and threads should stop");
+    }
+
+    public static void gameWin()
+    {
+        gameOn = false;
+
+        Platform.runLater(() -> {
             for(int i=0;i<ROWS;i++){
                 for(int j=0;j<COLUMNS;j++){
                     if(grid[i][j]!=null){
@@ -406,9 +410,11 @@ public class Yard extends Thread
                     }
                 }
             }
-            MainGUI.primaryStage.setScene(MainGUI.scene); // Transition to main menu
+
+            LoadingScreen.show(MainGUI.primaryStage);
         });
 
+        System.out.println("You Won");
         System.out.println("Game has ended, all zombie spawns and threads should stop");
     }
 
@@ -452,6 +458,7 @@ public class Yard extends Thread
         levelProgressBar.setStyle("-fx-accent: green; -fx-background-color: transparent;");
         levelProgressBar.setLayoutX(725);  // Match the layout to align with the background
         levelProgressBar.setLayoutY(612);
+
         // Add the components to the root layout
         root.getChildren().addAll(backgroundImageView, levelProgressBar);
     }
@@ -460,23 +467,33 @@ public class Yard extends Thread
     // Start the level timer and update the progress bar
     public void startLevelTimer()
     {
-
-        // Create a Timeline to update progress every second
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            if (timeLeft > 0) {
+        // Initialize the timeline
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (timeLeft > 0 && Yard.gameOn)
+            {
                 timeLeft -= 1;  // Decrease the remaining time by 1 second
-                double progress = timeLeft / levelDuration;  // Calculate progress as a fraction of time left
-                levelProgressBar.setProgress(progress);  // Update the progress bar
-            } else {
-                // Level is over, handle level completion logic here
+                System.out.println("Time left: " + timeLeft);
+                levelProgressBar.setProgress(levelProgressBar.getProgress() - 0.01);  // Update the progress bar
+            }
+            else {
+                if(timeLeft <= 0)
+                    gameWin(); // Call the loading screen for the main menu
+
+
+                // Level is over, stop the timeline
+                timeline.stop();
+
+                // Handle level completion logic here
                 System.out.println("Level Completed!");
-                hugeWaveText();
-                zombieWaveAudio();
+
             }
         }));
+
         // Set the timeline to repeat indefinitely (so it updates every second)
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();  // Start the timeline (the countdown)
+
+        // Start the timeline (the countdown)
+        timeline.play();
     }
 
     private void readySetPlant()
@@ -585,7 +602,7 @@ public class Yard extends Thread
     {
         startNewGame();
 
-//        zoomAndReveal();
+        //  zoomAndReveal();
 
         // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
@@ -621,7 +638,7 @@ public class Yard extends Thread
 
         zombiesArrivalAudio();
 
-         startLevelTimer();
+        startLevelTimer();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
