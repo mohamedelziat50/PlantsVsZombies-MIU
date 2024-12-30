@@ -65,7 +65,7 @@ public class Yard extends Thread
 
         // Zombie Spawn Interval used in spawnZombie()
         // zombieSpawnInterval = 4 ;
-        zombieSpawnInterval= 15;
+        zombieSpawnInterval= 20;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
@@ -76,7 +76,7 @@ public class Yard extends Thread
 
         // Level specific stuff
        // levelDuration = parentLevel.getDurationInSeconds();
-        timeLeft = 60;// the game is 4 minutes (4sec*60=4min) for those who don't know
+        timeLeft = 3 * 60;// the game is 4 minutes (4sec*60=4min) for those who don't know
         sunCounter=50;
 
         // 50 doesn't matter, the sun counter replaces it
@@ -200,20 +200,21 @@ public class Yard extends Thread
         int spawnIntervalDecreaseRate = 1; // Amount to decrease spawn interval per minute
         long startTime = System.currentTimeMillis();
 
-        while (gameOn&&timeLeft>0) {
+        while (gameOn&&timeLeft>0)
+        {
             // Decrease the spawn interval dynamically over time
-            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 5000; // Calculate elapsed minutes
+            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 30000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
-                Thread.sleep(zombieSpawnInterval*1000); // Wait before spawning a new zombie
+                Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             if(!gameOn||timeLeft<0)
             {
-                zombieSpawnInterval=20;
+                zombieSpawnInterval= 25;
                 break;
             }
 
@@ -325,10 +326,9 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 17;
-        sunCounter= 10000;
-        timeLeft= 4*60;
-
+        zombieSpawnInterval= 20;
+        sunCounter= 50;
+        timeLeft= 4 * 60;
 
             // Clear all plants and set them inactive
             plants.forEach(plant -> {
@@ -706,6 +706,8 @@ public class Yard extends Thread
                     // When the shake is done, remove the "PLANT!" image and overlay
                     shakeTimeline.setOnFinished(shakeEvent -> {
                         root.getChildren().removeAll(plantImage, overlay);
+                        Sun sun = new Sun();
+                        sun.appear(root);
                     });
 
                     shakeTimeline.play();
@@ -881,6 +883,7 @@ public class Yard extends Thread
         if (levelProgressBar != null)
             root.getChildren().add(levelProgressBar);
 
+        // This will not be used but just leave it
         createLevelDurationBar(root);
 
         // Create Grid Pane
@@ -923,7 +926,7 @@ public class Yard extends Thread
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.1);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing planting sound: " + e.getMessage());
@@ -935,7 +938,7 @@ public class Yard extends Thread
             String path = getClass().getResource("/music/shovel plant.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.1);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing shovel sound: " + e.getMessage());
@@ -947,7 +950,7 @@ public class Yard extends Thread
             String path = getClass().getResource("/music/zombies arrive.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.1);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing zombie sound: " + e.getMessage());
@@ -972,7 +975,7 @@ public class Yard extends Thread
 
             // Create a new MediaPlayer for the selected audio
             zombieSpawnMediaPlayer = new MediaPlayer(media);
-            zombieSpawnMediaPlayer.setVolume(0.1); // Adjust volume as needed
+            zombieSpawnMediaPlayer.setVolume(0.3); // Adjust volume as needed
             zombieSpawnMediaPlayer.play(); // Play the selected audio
 
         } catch (Exception e) {
@@ -986,7 +989,7 @@ public class Yard extends Thread
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.2);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing zombie wave sound: " + e.getMessage());

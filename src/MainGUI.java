@@ -58,7 +58,7 @@ public class MainGUI extends Application implements FileOperations
     // Show the primary stage only after loading screen is initialized
         Platform.runLater(() -> {
             // Set the screen title
-            primaryStage.setTitle("PVZ - Main Menu!");
+            primaryStage.setTitle("Plants Vs Zombies!");
 
             // Preload necessary assets
             SoundtrackPlayer.playMainMenutrack();

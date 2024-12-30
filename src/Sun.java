@@ -37,7 +37,6 @@ public class Sun extends MainElements
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
-
     }
 
     @Override
@@ -52,7 +51,8 @@ public class Sun extends MainElements
             {
                 try
                 {
-                    Thread.sleep(3000); // spawn kol 3 seconds
+                    // Spawn every 10 seconds
+                    Thread.sleep(10000);
 
                     javafx.application.Platform.runLater(() ->
                     {
@@ -139,7 +139,7 @@ public class Sun extends MainElements
             String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.5);
+            mediaPlayer.setVolume(0.3);
 
             mediaPlayer.play();
         } catch (Exception e) {

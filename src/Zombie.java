@@ -110,7 +110,7 @@ public abstract class Zombie extends Characters
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - 2);
+                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
 
             if (elementImage.getLayoutX() <= -elementImage.getFitWidth()) { // Ensure zombie fully exits screen
@@ -135,7 +135,7 @@ public abstract class Zombie extends Characters
 
 
 
-        System.out.println("Zombie takes damage: " + damage);
+        System.out.println("Zombie takes damage: " + damage + " Health: " + health);
 
         // Create a Timeline to reset the brightness after 0.5 seconds
         // Create a ColorAdjust to increase brightness
@@ -216,8 +216,8 @@ public abstract class Zombie extends Characters
                 {
                     targetPlant.takeDamage(attackPower);
 
-                    // Attack every 3 seconds
-                    Thread.sleep(3000);
+                    // Attack every 2 seconds
+                    Thread.sleep(2000);
                 }
             } catch (InterruptedException e)
             {

@@ -50,7 +50,7 @@ public class Peashooter extends Plant
                 }
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                Pea pea = new Pea(30, this);
+                Pea pea = new Pea(15, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
@@ -82,7 +82,7 @@ public class Peashooter extends Plant
             String path = getClass().getResource("/music/peashooter shoots.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.1);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing peashooter sound: " + e.getMessage());

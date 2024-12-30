@@ -131,7 +131,7 @@ public class Pea extends Characters implements Serializable, Runnable
             String path = getClass().getResource("/music/pea hits zombie.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.2);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing pea hit sound: " + e.getMessage());

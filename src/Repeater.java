@@ -47,7 +47,7 @@ public class Repeater extends Plant
                 Thread.sleep(2000);
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                Pea pea = new Pea(40, this);
+                Pea pea = new Pea(15, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
