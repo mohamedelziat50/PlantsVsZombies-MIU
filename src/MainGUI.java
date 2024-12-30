@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,10 +37,6 @@ public class MainGUI extends Application implements FileOperations
         primaryStage.setTitle("PVZ!");
         primaryStage.getIcons().add(new Image("images/others/icon.png"));
 
-        // Sound track player
-        SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
-        soundtrackplayer.playSoundtrack();
-
         //Main container (ROOT) using Pane layout
         Pane root = new Pane();
         // Scene and stage
@@ -49,6 +47,7 @@ public class MainGUI extends Application implements FileOperations
         // Added this to center on screen once switched
         MainGUI.primaryStage.centerOnScreen();
         primaryStage.show();
+        SoundtrackPlayer.playMainMenutrack();
 
         // Load user data from binary file into the hashmap
         try {
@@ -71,7 +70,10 @@ public class MainGUI extends Application implements FileOperations
         signInButton.setLayoutY(207);
         signInButton.setRotate(9);
         signInButton.setOpacity(0);
-        signInButton.setOnAction(e -> handleSignIn(root)); //Linking the signIn button to the event handler
+        signInButton.setOnAction(e -> {
+                buttonClickAudio();
+                handleSignIn(root);
+        }); //Linking the signIn button to the event handler
 
         //SignUp Button creation and sizing
         Button signUpButton = new Button();
@@ -80,7 +82,10 @@ public class MainGUI extends Application implements FileOperations
         signUpButton.setLayoutY(283);
         signUpButton.setRotate(10);
         signUpButton.setOpacity(0);
-        signUpButton.setOnAction(e -> handleSignUp(root)); //Linking the signUp button to the event handler
+        signUpButton.setOnAction(e -> {
+                buttonClickAudio();
+                handleSignUp(root);
+    }); //Linking the signUp button to the event handler
 
         //Exit Button creation and sizing
         Button exitButton = new Button();
@@ -89,7 +94,10 @@ public class MainGUI extends Application implements FileOperations
         exitButton.setLayoutY(358);
         exitButton.setRotate(12);
         exitButton.setOpacity(0);
-        exitButton.setOnAction(e -> handleExit()); //Linking the Exit button to the event handler
+        exitButton.setOnAction(e -> {
+                buttonClickAudio();
+                handleExit();
+    }); //Linking the Exit button to the event handler
 
         //Adding the contents of Menu1 to their corresponding container
         Menu1.getChildren().addAll(background, signInButton, signUpButton, exitButton); //Adding all components to the Main menu 1 container
@@ -105,7 +113,10 @@ public class MainGUI extends Application implements FileOperations
         level1.setLayoutY(207);
         level1.setRotate(9);
         level1.setOpacity(0);
-        level1.setOnAction(e -> handleLevel1(root)); //Linking the Level1 button to the event handler
+        level1.setOnAction(e -> {
+                buttonClickAudio();
+                handleLevel1(root);
+    }); //Linking the Level1 button to the event handler
 
         //level2 Button creation and sizing
         Button level2 = new Button();
@@ -114,7 +125,10 @@ public class MainGUI extends Application implements FileOperations
         level2.setLayoutY(283);
         level2.setRotate(10);
         level2.setOpacity(0);
-        level2.setOnAction(e -> handleLevel2(root)); //Linking the level2 button to the event handler
+        level2.setOnAction(e -> {
+            buttonClickAudio();
+            handleLevel2(root);
+    }); //Linking the level2 button to the event handler
 
         //level3 Button creation and sizing
         Button level3 = new Button();
@@ -123,7 +137,10 @@ public class MainGUI extends Application implements FileOperations
         level3.setLayoutY(358);
         level3.setRotate(12);
         level3.setOpacity(0);
-        level3.setOnAction(e -> handleLevel3(root)); //Linking the level3 button to the event handler
+        level3.setOnAction(e -> {
+            buttonClickAudio();
+            handleLevel3(root);
+        }); //Linking the level3 button to the event handler
 
         //Level background
         ImageView levelMenuImage = new ImageView(new Image("images/menuImages/levelMenu.jpg"));
@@ -232,6 +249,7 @@ public class MainGUI extends Application implements FileOperations
 
         //Back button handling
         back.setOnAction(e -> {
+            buttonClickAudio();
             root.getChildren().removeAll(overlay,signInContainer); // Removes the sign in container and the overlay in order to return to menu 1 when the back button is pressed
         });
 
@@ -271,7 +289,10 @@ public class MainGUI extends Application implements FileOperations
                 exit.setLayoutX(704);
                 exit.setLayoutY(478);
                 exit.setOpacity(0);
-                exit.setOnAction(event -> handleExit()); //Linking the Exit button to the event handler
+                exit.setOnAction(event -> {
+                        buttonClickAudio();
+                        handleExit();
+            }); //Linking the Exit button to the event handler
 
 
                 levelMenu.getChildren().addAll(usernameLabel,logOut,exit); //Adding the components to Menu2 container
@@ -279,6 +300,7 @@ public class MainGUI extends Application implements FileOperations
                 showAlert(root, "Sign-In Successful", "Welcome, " + username);
 
                 logOut.setOnAction(event -> {
+                    buttonClickAudio();
                     levelMenu.getChildren().removeAll(usernameLabel,logOut,exit);
                     root.getChildren().removeAll(levelMenu); // Remove level menu components
                     root.getChildren().addAll(Menu1);; // Redisplay the main menu
@@ -341,6 +363,7 @@ public class MainGUI extends Application implements FileOperations
 
         //Back button handling
         back.setOnAction(e -> {
+            buttonClickAudio();
             root.getChildren().removeAll(overlay, signUpContainer); // Remove both the overlay and menu
         });
 
@@ -385,12 +408,15 @@ public class MainGUI extends Application implements FileOperations
 
     //Handling of the Exit Button
     private void handleExit() {
+        buttonClickAudio();
         System.exit(0);
     }
 
     //Handling of level1
     private void handleLevel1 (Pane root)
     {
+        SoundtrackPlayer.stopTrack();
+        SoundtrackPlayer.playInGametrack1();
         Level testLevel = new Level(1, 60);
         testLevel.startLevel();
         System.out.println("DONE level1");
@@ -398,6 +424,8 @@ public class MainGUI extends Application implements FileOperations
 
     //Handling of level2
     private void handleLevel2 (Pane root){
+        SoundtrackPlayer.stopTrack();
+        SoundtrackPlayer.playInGametrack2();
         Level testLevel = new Level(2, 60);
         testLevel.startLevel();
         System.out.println("DONE level2");
@@ -405,6 +433,8 @@ public class MainGUI extends Application implements FileOperations
 
     //Handling of level3
     private void handleLevel3 (Pane root) {
+        SoundtrackPlayer.stopTrack();
+        SoundtrackPlayer.playInGametrack3();
         Level testLevel = new Level(3, 60);
         testLevel.startLevel();
         System.out.println("DONE level3");
@@ -455,11 +485,24 @@ public class MainGUI extends Application implements FileOperations
 
         //Ok button handling
         okButton.setOnAction(e -> {
+            buttonClickAudio();
             root.getChildren().removeAll(alertContainer); //Removes the alert container to exit
         });
     }
 
+    public void buttonClickAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/button click.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.5);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
 
+        } catch (Exception e) {
+            System.out.println("Error playing button click sound: " + e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);

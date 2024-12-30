@@ -39,6 +39,7 @@ public class snowPea extends Characters implements Serializable, Runnable
                 disappear(Yard.root);
                 return;
             }
+            snowPeaShootsAudio();
             // New thread just delay in case any loading is required
             Thread.sleep(20);
 
@@ -184,6 +185,18 @@ public class snowPea extends Characters implements Serializable, Runnable
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing pea hit sound: " + e.getMessage());
+        }
+    }
+
+    public void snowPeaShootsAudio() {
+        try {
+            String path = getClass().getResource("/music/snow peashooter.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.4);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing snow pea shooting sound: " + e.getMessage());
         }
     }
 
