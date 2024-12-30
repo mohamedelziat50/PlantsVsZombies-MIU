@@ -479,7 +479,8 @@ public class Yard extends Thread
         timeline.play();  // Start the timeline (the countdown)
     }
 
-    private void readySetPlant() {
+    private void readySetPlant()
+    {
         // Load images for "READY", "SET", and "PLANT"
         ImageView readyImage = new ImageView(new Image("images/others/Ready.png"));
         ImageView setImage = new ImageView(new Image("images/others/Set.png"));
@@ -823,7 +824,7 @@ public class Yard extends Thread
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
         PEASHOOTERCARD.draggingImageViewSetProperties(61, 74, true, false);
         PEASHOOTERCARD.hoverImageViewSetProperties(61, 74, true, false);
-        PEASHOOTERCARD.addToYard(root, yardGrid, this);
+
 
         // SUNFLOWER CARD
         Card SUNFLOWERCARD = new Card(
@@ -835,7 +836,6 @@ public class Yard extends Thread
         SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
         SUNFLOWERCARD.draggingImageViewSetProperties(61, 66, true, false);
         SUNFLOWERCARD.hoverImageViewSetProperties(61, 66, true, false);
-        SUNFLOWERCARD.addToYard(root, yardGrid, this);
 
         // POTATO CARD
         Card POTATOCARD = new Card(
@@ -847,7 +847,6 @@ public class Yard extends Thread
         POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
         POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
         POTATOCARD.hoverImageViewSetProperties(59, 66, true, false);
-        POTATOCARD.addToYard(root, yardGrid, this);
 
         // CHERRY CARD
         Card CHERRYCARD = new Card(
@@ -872,15 +871,15 @@ public class Yard extends Thread
         ICEDPEACARD.hoverImageViewSetProperties(73, 78, true, false);
 
 
-        Card torchWood=new Card(
+        Card TORCHWOODCARD = new Card(
                 "images/cards/torchwoodCard.png",
                 "images/plants/torchWood.png",
                 TorchWood.class,
                 175
         ); // NULL is used as a workaround to avoid creating a shovel class
-        torchWood.cardImageViewSetProperties(573,21,47,66,true,true);
-        torchWood.draggingImageViewSetProperties(73,78,true,false);
-        torchWood.hoverImageViewSetProperties(64,78,true,false);
+        TORCHWOODCARD.cardImageViewSetProperties(573,21,47,66,true,true);
+        TORCHWOODCARD.draggingImageViewSetProperties(73,78,true,false);
+        TORCHWOODCARD.hoverImageViewSetProperties(64,78,true,false);
 
         // REPEATER CARD
         Card REPEATERCARD = new Card(
@@ -900,8 +899,8 @@ public class Yard extends Thread
         Card snowpeaLockedCard = new Card("images/lockedCards/snowpeaLockedCard.png");
         snowpeaLockedCard.cardImageViewSetProperties(520, 21, 47, 66, true, true);
 
-        Card jalapenoLockedCard = new Card("images/lockedCards/jalapenoLockedCard.png");
-        jalapenoLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
+        Card torchWoodLockedCard = new Card("images/lockedCards/torchWoodLockedCard.png");
+        torchWoodLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
 
         Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
         repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
@@ -910,23 +909,61 @@ public class Yard extends Thread
         switch(levelNumber)
         {
             case 1:
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
+                SUNFLOWERCARD.addToYard(root, yardGrid, this);
+                POTATOCARD.addToYard(root, yardGrid, this);
+
                 // Add all locked cards to the root pane.
-                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), torchWoodLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
                 break;
             case 2:
-                // Only last 2 cards are not unlocked
-                root.getChildren().addAll(jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
+                SUNFLOWERCARD.addToYard(root, yardGrid, this);
+                POTATOCARD.addToYard(root, yardGrid, this);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
 
+                // Only last 2 cards are not unlocked
+                root.getChildren().addAll(torchWoodLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
                 break;
             case 3:
                 // All cards are unlocked in level 3
                 System.out.println("All cards are unlocked in " + levelNumber);
+
+                // Set the imageview to be christmas as a workaround and for show only
+                PEASHOOTERCARD.setCardImageView(new ImageView("images/cards/PeaShooterCard_christmas.png"));
+                PEASHOOTERCARD.cardImageViewSetProperties(305, 21, 44, 62, true, true);
+
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
-                torchWood.addToYard(root, yardGrid, this);
+                TORCHWOODCARD.addToYard(root, yardGrid, this);
                 REPEATERCARD.addToYard(root, yardGrid, this);
+
+                // Add Christmas cards
+                // SUNFLOWER CHRISTMAS CARD
+                Card SUNFLOWERCARD_CHRISTMAS = new Card(
+                        "images/cards/sunflowerCard_christmas.png",
+                        "images/plants/sunflower.png",
+                        Sunflower_Christmas.class,
+                        50
+                );
+                SUNFLOWERCARD_CHRISTMAS.cardImageViewSetProperties(360, 22, 44, 66, true, true);
+                SUNFLOWERCARD_CHRISTMAS.draggingImageViewSetProperties(61, 66, true, false);
+                SUNFLOWERCARD_CHRISTMAS.hoverImageViewSetProperties(61, 66, true, false);
+                SUNFLOWERCARD_CHRISTMAS.addToYard(root, yardGrid, this);
+
+                Card POTATO_CHRISTMAS = new Card(
+                        "images/cards/potatoCard_christmas.png",
+                        "images/plants/potato.png",
+                        Potato_Christmas.class,
+                        50
+                );
+                POTATO_CHRISTMAS.cardImageViewSetProperties(415, 21, 44, 66, true, true);
+                POTATO_CHRISTMAS.draggingImageViewSetProperties(61, 66, true, false);
+                POTATO_CHRISTMAS.hoverImageViewSetProperties(61, 66, true, false);
+                POTATO_CHRISTMAS.addToYard(root, yardGrid, this);
+
                 break;
         }
     }

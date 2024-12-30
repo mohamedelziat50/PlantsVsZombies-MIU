@@ -91,25 +91,28 @@ public class Pea extends Characters implements Serializable, Runnable
 
     private void changePeaToFirePea()
     {
-        Platform.runLater(() -> {
-            for (TorchWood torchWood : TorchWood.activeTorchWoods)
+        for (TorchWood torchWood : TorchWood.activeTorchWoods)
+        {
+
+            if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()) && torchWood.isAlive())
             {
-                if (elementImage.getBoundsInParent().intersects(torchWood.getElementImage().getBoundsInParent()) && torchWood.isAlive())
-                {
-                    firePeaAudio();
+                // Removed firepea sound, caused bugs
+                Platform.runLater(() -> {
                     elementImage.setImage(firePeaImage);
                     elementImage.setPreserveRatio(false);
                     elementImage.setFitWidth(50);
                     elementImage.setFitHeight(37);
+                });
 
-                    damage = 40;  // Adjust damage for FirePea
-                    break; // No need to check further
-                }
+                damage = 40;  // Adjust damage for FirePea
+                break; // No need to check further
             }
-        });
+        }
+
     }
     // This function checks whether the current pea thread collided with a zombie through the zombie's isColliding function
-    private synchronized Zombie checkForZombieCollision() {
+    private synchronized Zombie checkForZombieCollision()
+    {
         synchronized (Yard.zombies) {
             for (Zombie zombie : Yard.zombies) {
                 if (!zombie.isAlive()) continue; // Skip dead zombies
