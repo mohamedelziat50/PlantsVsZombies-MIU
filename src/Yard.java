@@ -61,7 +61,7 @@ public class Yard extends Thread
 
         // Zombie Spawn Interval used in spawnZombie()
         // zombieSpawnInterval = 4 ;
-        zombieSpawnInterval=20;
+        zombieSpawnInterval=40;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
@@ -338,7 +338,7 @@ public class Yard extends Thread
     public static void resetGame() {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 3;
+        zombieSpawnInterval= 20;
         sunCounter= 10000;
         timeLeft=4*60;
 
@@ -352,15 +352,16 @@ public class Yard extends Thread
             });
             plants.clear();
 
-            Platform.runLater(() -> {
+
                 peas.forEach(pea -> {
                     if(pea!=null){
                         pea.disappear(root);
 
                     }
                 });
-                peas.clear(); // Clear all peas
-            });
+                peas.clear();
+                // Clear all peas
+
 
             // Clear all zombies and set them inactive
             zombies.forEach(zombie -> {
