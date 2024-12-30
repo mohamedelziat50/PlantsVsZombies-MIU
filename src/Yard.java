@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -326,7 +327,7 @@ public class Yard extends Thread
         gameOn = true;
         zombieSpawnInterval= 2;
         sunCounter= 10000;
-        timeLeft= 20;
+        timeLeft= 4*60;
 
 
             // Clear all plants and set them inactive
@@ -413,6 +414,17 @@ public class Yard extends Thread
             gameOverImage.setLayoutX(394);
             gameOverImage.setLayoutY(128);
 
+
+            // Add the larger glow effect (intense green glow)
+            Glow glow = new Glow();
+            glow.setLevel(1.0);  // Intense glow
+
+            // Apply glow effect to the image
+            gameOverImage.setEffect(glow);
+
+            // Set a bigger DropShadow with larger blur radius and green color
+            gameOverImage.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,255,0,1.0), 50, 0, 0, 0);");
+
             // Add overlay and "Game Over" image to the root
             root.getChildren().addAll(overlay, gameOverImage);
 
@@ -435,7 +447,7 @@ public class Yard extends Thread
             ParallelTransition animation = new ParallelTransition(zoom, shake);
 
             // Add a pause after the animation
-            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            PauseTransition pause = new PauseTransition(Duration.seconds(4));
 
             // Combine the animations and the pause into a sequential transition
             SequentialTransition sequential = new SequentialTransition(animation, pause);
@@ -490,6 +502,16 @@ public class Yard extends Thread
             // Add overlay and "Game Win" image to the root
             root.getChildren().addAll(overlay, gameWinImage);
 
+            // Add the larger glow effect (intense green glow)
+            Glow glow = new Glow();
+            glow.setLevel(1.0);  // Intense glow
+
+            // Apply glow effect to the image
+            gameWinImage.setEffect(glow);
+
+            // Set a bigger DropShadow with larger blur radius and green color
+            gameWinImage.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,255,0,1.0), 50, 0, 0, 0);");
+
             // Create the zoom animation
             ScaleTransition zoom = new ScaleTransition(Duration.seconds(3), gameWinImage);
             zoom.setFromX(0.5); // Start smaller
@@ -509,7 +531,7 @@ public class Yard extends Thread
             ParallelTransition animation = new ParallelTransition(zoom, shake);
 
             // Add a pause after the animation
-            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            PauseTransition pause = new PauseTransition(Duration.seconds(4));
 
             // Combine the animations and the pause into a sequential transition
             SequentialTransition sequential = new SequentialTransition(animation, pause);
