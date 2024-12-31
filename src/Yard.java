@@ -398,6 +398,7 @@ public class Yard extends Thread
                     }
                 }
             }
+            gameLossAudio();
 
             // Create "Game Over" overlay
             Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
@@ -483,6 +484,7 @@ public class Yard extends Thread
                     }
                 }
             }
+            gameWinAudio();
 
             // Create "Game Win" overlay
             Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
@@ -1290,6 +1292,30 @@ public class Yard extends Thread
         if (!root.getChildren().contains(Yard.label))
         {
             root.getChildren().add(Yard.label); // Add the label to the scene (root pane)
+        }
+    }
+
+    public static void gameWinAudio() {
+        try {
+            String path = Yard.class.getResource("/music/level win.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing victory sound: " + e.getMessage());
+        }
+    }
+
+    public static void gameLossAudio() {
+        try {
+            String path = Yard.class.getResource("/music/level loss.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing loss sound: " + e.getMessage());
         }
     }
 
