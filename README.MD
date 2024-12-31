@@ -32,7 +32,7 @@ This project is a JavaFX-based game developed as part of our **Object-Oriented P
 ## Video Previews
 1. **Main Menu & Yard Preview:**
 
-https://github.com/user-attachments/assets/19f5afce-308b-4480-8a06-a458e9c381fb
+https://github.com/user-attachments/assets/f43abb73-d497-4d36-9c11-102bfdc5e608
 
 2. **Level 1 Gameplay:**
 
