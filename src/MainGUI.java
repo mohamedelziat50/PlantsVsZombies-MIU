@@ -146,7 +146,7 @@ public class MainGUI extends Application implements FileOperations
                 handleLevel1(root);
             });
             pause.play();
-    }); //Linking the Level1 button to the event handler
+        }); //Linking the Level1 button to the event handler
 
         //level2 Button creation and sizing
         Button level2 = new Button();
@@ -163,7 +163,7 @@ public class MainGUI extends Application implements FileOperations
                 handleLevel2(root);
             });
             pause.play();
-    }); //Linking the level2 button to the event handler
+        }); //Linking the level2 button to the event handler
 
         //level3 Button creation and sizing
         Button level3 = new Button();

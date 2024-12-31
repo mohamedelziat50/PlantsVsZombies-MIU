@@ -88,15 +88,11 @@ public class LoadingScreen
 
             root.getChildren().add(loadingScreenImage);
 
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.seconds(5), event -> {
-                        root.getChildren().remove(loadingScreenImage);
-                        System.out.println("Loading screen removed, proceeding...");
-                    })
-            );
 
-            timeline.setCycleCount(1);
-            timeline.play();
+            root.setOnMouseClicked(e->{
+                root.getChildren().remove(loadingScreenImage);
+            });
+
         });
     }
 }
