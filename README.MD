@@ -52,17 +52,17 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
 
 ### Levels
 - **Level 1:** Beginner Level ![level1-picture](https://github.com/user-attachments/assets/6557c752-5823-4be3-b384-f16039b03b5c)
-- **Level 2:** Intermediate Level *(Insert screenshot here)*
-- **Level 3:** Advanced Level *(Insert screenshot here)*
+- **Level 2:** Intermediate Level ![level2-picture](https://github.com/user-attachments/assets/ce370e11-f187-4823-b46e-d8f6eaec6700)
+- **Level 3:** Advanced Level ![level3-picture](https://github.com/user-attachments/assets/386e3e14-c452-4c80-95da-3d7df7b880f3)
 
 ---
 
 ## Video Previews
 1. **Main Menu & Yard Preview:**
-https://github.com/user-attachments/assets/6c262efd-2171-49bd-a6bc-9758c106260a
+[Video Link](#) *(replace with actual link)*
 
 2. **Level 1 Gameplay:**
-https://github.com/user-attachments/assets/39819069-d9da-487f-a77e-dcd48778d83a
+[Video Link](#) *(replace with actual link)*
 
 3. **Level 3 Gameplay (Christmas Level):**
 [Video Link](#) *(replace with actual link)*
