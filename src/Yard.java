@@ -49,7 +49,7 @@ public class Yard extends Thread
 
 
     // GUI-related variables
-    public static AnchorPane root;
+    public static AnchorPane root=new AnchorPane();
     public static Label label; // Related for sun counter
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
 
@@ -203,7 +203,7 @@ public class Yard extends Thread
         while (gameOn&&timeLeft>0)
         {
             // Decrease the spawn interval dynamically over time
-            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 30000; // Calculate elapsed minutes
+            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 10000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
@@ -326,7 +326,7 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 20;
+        zombieSpawnInterval= 30;
         sunCounter= 50;
         timeLeft= 4 * 60;
 
@@ -398,6 +398,7 @@ public class Yard extends Thread
                     }
                 }
             }
+            gameLossAudio();
 
             // Create "Game Over" overlay
             Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
@@ -483,6 +484,7 @@ public class Yard extends Thread
                     }
                 }
             }
+            gameWinAudio();
 
             // Create "Game Win" overlay
             Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
@@ -1290,6 +1292,30 @@ public class Yard extends Thread
         if (!root.getChildren().contains(Yard.label))
         {
             root.getChildren().add(Yard.label); // Add the label to the scene (root pane)
+        }
+    }
+
+    public static void gameWinAudio() {
+        try {
+            String path = Yard.class.getResource("/music/level win.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing victory sound: " + e.getMessage());
+        }
+    }
+
+    public static void gameLossAudio() {
+        try {
+            String path = Yard.class.getResource("/music/level loss.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing loss sound: " + e.getMessage());
         }
     }
 

@@ -8,9 +8,8 @@ public class Player implements Serializable
      */
     // Username and Password
     private String username, password;
+    private int lastUnlockedLevel;    //unlockedLevels added
 
-    // Removed unlockedLevels, will just let any player select any level!
-    int lastUnlockedLevel;
     /*
         CONSTRUCTORS
      */
@@ -24,6 +23,7 @@ public class Player implements Serializable
     /*
         GETTERS & SETTERS
      */
+
     public String getUsername() {
         return username;
     }
@@ -36,6 +36,13 @@ public class Player implements Serializable
     public void setPassword(String password) {
         this.password = password;
     }
+    public int getLastUnlockedLevel(){
+        return lastUnlockedLevel;
+    }
+    public void setLastUnlockedLevel(int lastUnlockedLevel) {
+        this.lastUnlockedLevel = lastUnlockedLevel;
+    }
+
 
     /*
         METHODS

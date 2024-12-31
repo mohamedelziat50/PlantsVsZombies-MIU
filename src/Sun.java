@@ -15,13 +15,10 @@ import java.util.Random;
 
 public class Sun extends MainElements
 {
-
-
-
     public Sun()
     {
         // Initialize the Peashooter image
-        elementImage = new ImageView(new Image("images/others/sun.png   "));
+        elementImage = new ImageView(new Image("images/others/sun.png"));
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
@@ -37,6 +34,7 @@ public class Sun extends MainElements
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
+
     }
 
     @Override
@@ -52,7 +50,7 @@ public class Sun extends MainElements
                 try
                 {
                     // Spawn every 10 seconds
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
 
                     javafx.application.Platform.runLater(() ->
                     {
@@ -152,7 +150,6 @@ public class Sun extends MainElements
             System.out.println("Error playing sun collecting sound: " + e.getMessage());
         }
     }
-
 
     @Override
     public void disappear(Pane root)

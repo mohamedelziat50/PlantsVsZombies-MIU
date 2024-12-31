@@ -1,4 +1,7 @@
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
