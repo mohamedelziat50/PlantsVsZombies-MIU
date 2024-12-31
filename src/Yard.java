@@ -76,6 +76,8 @@ public class Yard extends Thread
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
+
+        this.levelDuration=levelDuration;
     }
 
     /*
@@ -322,7 +324,9 @@ public class Yard extends Thread
                 System.out.println("Level Completed!");
                 zombieWaveAudio();
             }
+
         }));
+
         // Set the timeline to repeat indefinitely (so it updates every second)
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();  // Start the timeline (the countdown)

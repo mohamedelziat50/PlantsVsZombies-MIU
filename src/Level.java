@@ -37,7 +37,7 @@ public class Level implements Serializable
     {
         currentYard = new Yard(this);
         currentYard.displayYard();
-        MainGUI.primaryStage.setFullScreen(true);
+        MainGUI.primaryStage.setFullScreen(false);
     }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,

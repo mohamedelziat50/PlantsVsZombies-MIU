@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.shape.Rectangle;
 
@@ -27,6 +26,7 @@ public class MainGUI extends Application implements FileOperations
 
     // Static variable to switch scenes in game over/game win
     public static Scene scene;
+    public String username;
 
 
     @Override
@@ -65,6 +65,7 @@ public class MainGUI extends Application implements FileOperations
         background.setFitWidth(800);
         background.setFitHeight(598);
 
+
         //SignIn Button creation and sizing
         Button signInButton = new Button();
         signInButton.setPrefSize(260, 55);
@@ -93,7 +94,7 @@ public class MainGUI extends Application implements FileOperations
         exitButton.setOnAction(e -> handleExit()); //Linking the Exit button to the event handler
 
         //Adding the contents of Menu1 to their corresponding container
-        Menu1.getChildren().addAll(background, signInButton, signUpButton, exitButton); //Adding all components to the Main menu 1 container
+        Menu1.getChildren().addAll(background, signInButton, signUpButton, exitButton);
         root.getChildren().addAll(Menu1); //Adding the Menu1 container to the root container
 
 
@@ -243,7 +244,7 @@ public class MainGUI extends Application implements FileOperations
 
         //Handling the password field after enter is pressed
         passwordField.setOnAction(e -> {
-            String username = usernameField.getText(); //Username is saved into a string
+             username = usernameField.getText(); //Username is saved into a string
             String password = passwordField.getText(); //Pass saved to a string
 
             //If Else statements to check if the entered credentials are valid or not
@@ -267,15 +268,76 @@ public class MainGUI extends Application implements FileOperations
 
                 //Creating the logout button and initializing the dimensions and the sizing of it
                 Button exit=new Button();
-                exit.setPrefWidth(76);
-                exit.setPrefHeight(69);
-                exit.setLayoutX(704);
-                exit.setLayoutY(478);
+                exit.setPrefWidth(66);
+                exit.setPrefHeight(47);
+                exit.setLayoutX(709);
+                exit.setLayoutY(488);
                 exit.setOpacity(0);
                 exit.setOnAction(event -> handleExit()); //Linking the Exit button to the event handler
 
+                //Creating and sizing the background image that appears when sign in is pressed
+                ImageView deleteAcc = new ImageView(new Image("images/menuImages/DeleteACC.png"));
+                deleteAcc.setFitWidth(541);
+                deleteAcc.setFitHeight(381);
+                deleteAcc.setLayoutX(159);
+                deleteAcc.setLayoutY(109);
+                deleteAcc.toFront();
 
-                levelMenu.getChildren().addAll(usernameLabel,logOut,exit); //Adding the components to Menu2 container
+                Label DeleteAlert =new Label("Why are you leaving us "+username+"?");
+                DeleteAlert.prefWidth(157);
+                DeleteAlert.prefHeight(17);
+                DeleteAlert.setLayoutX(316);
+                DeleteAlert.setLayoutY(254);
+                DeleteAlert.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 10px; -fx-text-fill: white;");
+
+                Label DeleteAlert2 =new Label("Do you really want to delete your account?");
+                DeleteAlert2.prefWidth(157);
+                DeleteAlert2.prefHeight(17);
+                DeleteAlert2.setLayoutX(316);
+                DeleteAlert2.setLayoutY(291);
+                DeleteAlert2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 10px; -fx-text-fill: red;");
+
+                Button Cancel =new Button();
+                Cancel.setPrefWidth(108);
+                Cancel.setPrefHeight(25);
+                Cancel.setLayoutX(305); // Adjust position as needed
+                Cancel.setLayoutY(355); // Adjust position as needed
+                Cancel.setOpacity(0);
+
+
+                Button Confirm =new Button();
+                Confirm.setPrefWidth(108);
+                Confirm.setPrefHeight(25);
+                Confirm.setLayoutX(445); // Adjust position as needed
+                Confirm.setLayoutY(355); // Adjust position as needed
+                Confirm.setOpacity(0);
+                Confirm.setOnAction(event -> {
+                    root.getChildren().removeAll(usernameLabel,overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
+                    users.remove(username);
+                    try {
+                        writePlayers(users);  // Attempt to write the updated list of users to the file
+                    } catch (IOException ex) {
+                        // Handle the exception (e.g., show an error message to the user)
+                        showAlert(root, "Save Failed", "Could not save user data.");
+                    }
+                    root.getChildren().addAll(Menu1);
+                    showAlert(root, "Account deleted", "We will miss you "+username);
+                });
+                Cancel.setOnAction(event -> {
+                    root.getChildren().removeAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
+                });
+
+                Button deleteAccount = new Button();
+                deleteAccount.setPrefWidth(43);
+                deleteAccount.setPrefHeight(71);
+                deleteAccount.setLayoutX(647); // Adjust position as needed
+                deleteAccount.setLayoutY(476); // Adjust position as needed
+                deleteAccount.setOpacity(0);
+                deleteAccount.setOnAction(event -> {
+root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
+                        });
+
+                levelMenu.getChildren().addAll(deleteAccount,logOut,exit,usernameLabel); //Adding the components to Menu2 container
                 root.getChildren().addAll(levelMenu);
                 showAlert(root, "Sign-In Successful", "Welcome, " + username);
 
@@ -392,23 +454,153 @@ public class MainGUI extends Application implements FileOperations
     //Handling of level1
     private void handleLevel1 (Pane root)
     {
-        Level testLevel = new Level(1, 60);
-        testLevel.startLevel();
-        System.out.println("DONE level1");
+
+            Image dave = new Image("images/menuImages/Dave.gif");
+            ImageView gifDave = new ImageView(dave);
+            gifDave.setFitHeight(451);
+            gifDave.setFitWidth(612);
+            gifDave.setLayoutY(112);
+            gifDave.setLayoutX(1);
+            //  gifDave.toFront();
+
+            ImageView levelback = new ImageView(new Image("images/yard-related/Yard.png"));  Label message =new Label("Welcome neighbour "+username+ "\nMy name is dave and some people call me CRAZY DAVE!");
+            message.prefWidth(121);
+            message.prefHeight(28);
+            message.setLayoutX(210);
+            message.setLayoutY(165);
+
+            message.toFront();
+            message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+            levelback.setPreserveRatio(true);
+            primaryStage.setWidth(levelback.getImage().getWidth());
+            primaryStage.setHeight(levelback.getImage().getHeight());
+
+
+
+
+
+
+            Label message2 =new Label("I am sure you heard about the......ZOMBIES!! \nI hope you are ready for what is coming \nMy advice is that you should start planting to \ndefend against those evil creatures");
+            message2.setMaxWidth(379);
+            message2.prefHeight(28);
+            message2.setLayoutX(211);
+            message2.setLayoutY(199);
+            message2.toFront();
+            message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+            root.getChildren().removeAll(levelMenu);
+            message.setOnMouseClicked(event -> {
+                root.getChildren().addAll(message2);
+            });
+            root.getChildren().addAll(levelback,gifDave,message);
+
+
+            message2.setOnMouseClicked(event -> {
+                root.getChildren().removeAll(levelback,gifDave,message,message2);
+                Level testLevel = new Level(1, 60);
+                testLevel.startLevel();
+                System.out.println("DONE level1");
+            });
+
+
     }
 
     //Handling of level2
     private void handleLevel2 (Pane root){
-        Level testLevel = new Level(2, 60);
-        testLevel.startLevel();
-        System.out.println("DONE level2");
+            Image dave = new Image("images/menuImages/Dave.gif");
+            ImageView gifDave = new ImageView(dave);
+            gifDave.setFitHeight(451);
+            gifDave.setFitWidth(612);
+            gifDave.setLayoutY(112);
+            gifDave.setLayoutX(1);
+            //  gifDave.toFront();
+
+            ImageView levelback = new ImageView(new Image("images/yard-related/nightYard.png"));
+            Label message =new Label("Good job "+username+ "I see you survived your first day in this crazy town");
+            message.prefWidth(121);
+            message.prefHeight(28);
+            message.setLayoutX(210);
+            message.setLayoutY(165);
+
+            message.toFront();
+            message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+            levelback.setPreserveRatio(true);
+            primaryStage.setWidth(levelback.getImage().getWidth());
+            primaryStage.setHeight(levelback.getImage().getHeight());
+
+
+            Label message2 =new Label("Well let's see if you have the skills to survive another day \nBEWARE! It gets harder at night!!!");
+            message2.setMaxWidth(379);
+            message2.prefHeight(28);
+            message2.setLayoutX(211);
+            message2.setLayoutY(199);
+            message2.toFront();
+            message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+            root.getChildren().removeAll(levelMenu);
+            message.setOnMouseClicked(event -> {
+                root.getChildren().addAll(message2);
+            });
+            root.getChildren().addAll(levelback,gifDave,message);
+
+
+            message2.setOnMouseClicked(event -> {
+                Level testLevel = new Level(2, 60);
+                testLevel.startLevel();
+                System.out.println("DONE level2");
+            });
+
     }
 
     //Handling of level3
     private void handleLevel3 (Pane root) {
-        Level testLevel = new Level(3, 60);
-        testLevel.startLevel();
-        System.out.println("DONE level3");
+        Image dave = new Image("images/menuImages/Xmas.png");
+        ImageView Xmasdave = new ImageView(dave);
+        Xmasdave.setFitHeight(379);
+        Xmasdave.setFitWidth(418);
+        Xmasdave.setLayoutY(168);
+        Xmasdave.setLayoutX(3);
+        //  gifDave.toFront();
+
+        Image davetext = new Image("images/menuImages/DaveText.png");
+        ImageView text = new ImageView(davetext);
+        text.toBack();
+        text.setFitHeight(260);
+        text.setFitWidth(558);
+        text.setLayoutY(31);
+        text.setLayoutX(254);
+
+        ImageView levelback = new ImageView(new Image("images/yard-related/nightYard.png"));
+        Label message =new Label("HO! HO! HOOOOOOO! Happy new year Dr.Mariam "+"\n You survived a whole semester congratulations!");
+        message.prefWidth(121);
+        message.prefHeight(28);
+        message.setLayoutX(307);
+        message.setLayoutY(70);
+        message.toFront();
+        message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 15px; -fx-text-fill: black;");
+        levelback.setPreserveRatio(true);
+        primaryStage.setWidth(levelback.getImage().getWidth());
+        primaryStage.setHeight(levelback.getImage().getHeight());
+
+
+        Label message2 =new Label("I heard this is your last day in the neigboorhood. \nTake care......Zombies are usually hungry in new year's eve!!!");
+        message2.setMaxWidth(379);
+        message2.prefHeight(28);
+        message2.setLayoutX(308);
+        message2.setLayoutY(115);
+        message2.toFront();
+        message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 15px; -fx-text-fill: black;");
+        root.getChildren().removeAll(levelMenu);
+        root.getChildren().addAll(levelback,Xmasdave,text,message);
+
+        message.setOnMouseClicked(event -> {
+            root.getChildren().addAll(message2);
+        });
+
+
+        message2.setOnMouseClicked(event -> {
+            Level testLevel = new Level(3, 60);
+            testLevel.startLevel();
+            System.out.println("DONE level2");
+        });
     }
 
     //Function to display alert when needed
