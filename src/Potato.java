@@ -7,7 +7,7 @@ public class Potato extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public Potato()
     {
-        super(50, 15, 200);
+        super(50, 20, 300);
     }
 
     // Added to be used when placing a plant on the yard
@@ -37,7 +37,7 @@ public class Potato extends Plant
         super.takeDamage(damage);
 
         // Calculate health percentage based on original health (this.health is the current health)
-        double healthPercentage = (double) this.health / 200;  // 200 is the original health value for Potato
+        double healthPercentage = (double) this.health / 300;  // 200 is the original health value for Potato
 
         // Change image based on health percentage
         if (healthPercentage <= 0.30)

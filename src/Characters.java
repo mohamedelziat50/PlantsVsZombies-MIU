@@ -61,4 +61,3 @@ public abstract class Characters extends MainElements implements Serializable
     public abstract void disappear(Pane root);
 }
 
-

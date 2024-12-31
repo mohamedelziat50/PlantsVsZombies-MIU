@@ -1,3 +1,11 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -339,8 +347,7 @@ public class MainMenu implements FileOperations
     public void displayLevels() throws InputMismatchException
     {
         // Exit if the LevelGameData is empty, then something wrong happened.
-        if(LevelGameData.isEmpty())
-        {
+        if (LevelGameData.isEmpty()) {
             System.out.println("No Level Data to display. Logical Error Occurred. Exiting Program");
             System.exit(1);
         }
@@ -355,14 +362,15 @@ public class MainMenu implements FileOperations
         // Display Levels
         displayStars();
         System.out.println("Levels: ");
-        for(int i = 1; i <= LEVEL_COUNT; i++)
+        for (int i = 1; i <= LEVEL_COUNT; i++)
             System.out.println(i + ". Level " + i);
         displayStars();
 
-        int userChoice=0;
+        int userChoice = 0;
         Scanner input = new Scanner(System.in);
         userChoice = input.nextInt();
 
         startGame();
     }
+
 }

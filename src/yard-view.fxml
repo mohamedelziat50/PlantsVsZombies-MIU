@@ -29,6 +29,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints />
@@ -204,20 +205,12 @@
                </GridPane.margin>
             </Button>
             <Button maxHeight="79.0" maxWidth="73.0" mnemonicParsing="false" opacity="0.25" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <ImageView fitHeight="95.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <image>
-                  <Image url="@images/plants/peashooter.gif" />
-               </image>
-               <GridPane.margin>
-                  <Insets bottom="50.0" left="-13.0" />
-               </GridPane.margin>
-            </ImageView>
             <Button alignment="CENTER" maxHeight="79.0" maxWidth="73.0" mnemonicParsing="false" opacity="0.25" text="Place" GridPane.columnIndex="3" GridPane.rowIndex="4" />
             <Button alignment="CENTER" maxHeight="79.0" maxWidth="73.0" mnemonicParsing="false" opacity="0.25" text="Place" GridPane.columnIndex="3" GridPane.rowIndex="5" />
             <Button alignment="CENTER" maxHeight="79.0" maxWidth="73.0" mnemonicParsing="false" opacity="0.25" text="Place" GridPane.columnIndex="3" GridPane.rowIndex="6" />
             <Button alignment="CENTER" maxHeight="79.0" maxWidth="73.0" mnemonicParsing="false" opacity="0.25" text="Place" GridPane.columnIndex="3" GridPane.rowIndex="7" />
             <Button alignment="CENTER" maxHeight="79.0" maxWidth="73.0" mnemonicParsing="false" opacity="0.25" text="Place" GridPane.columnIndex="3" GridPane.rowIndex="8" />
-            <ImageView fitHeight="70.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <ImageView fitHeight="70.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="7">
                <image>
                   <Image url="@images/plants/sunflower.gif" />
                </image>
@@ -230,6 +223,36 @@
             <ImageView fitHeight="250.0" fitWidth="227.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="7">
                <image>
                   <Image url="@images/plants/cherry-explode.gif" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="83.0" fitWidth="60.0" pickOnBounds="true" GridPane.columnIndex="4" GridPane.rowIndex="4">
+               <image>
+                  <Image url="@images/plants/torchWood.gif" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="78.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="5">
+               <image>
+                  <Image url="@images/plants/torchWood.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="95.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="4">
+               <image>
+                  <Image url="@images/plants/peashooter.gif" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="142.0" fitWidth="134.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="10" GridPane.rowIndex="8">
+               <image>
+                  <Image url="@images/zombies1/FootballZombieAttack.gif" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="95.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <image>
+                  <Image url="@../../testing/677279015561356164ebnHpRyz6605-unscreen.gif" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="79.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="6">
+               <image>
+                  <Image url="@../../testing/sunflower_gif_success.gif" />
                </image>
             </ImageView>
          </children>
@@ -260,11 +283,6 @@
             <Image url="@images/plants/icedpeashooter.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="95.0" fitWidth="99.0" layoutX="1057.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/plants/peashooter.gif" />
-         </image>
-      </ImageView>
       <ImageView fitHeight="66.0" fitWidth="47.0" layoutX="358.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/cards/sunflowerCard.png" />
@@ -278,11 +296,6 @@
       <ImageView fitHeight="66.0" fitWidth="59.0" layoutX="924.0" layoutY="244.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/plants/potato.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="70.0" fitWidth="73.0" layoutX="1000.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/plants/sunflower.gif" />
          </image>
       </ImageView>
       <ImageView fitHeight="66.0" fitWidth="59.0" layoutX="1005.0" layoutY="240.0" pickOnBounds="true" preserveRatio="true">
@@ -336,7 +349,7 @@
             <Image url="@images/cards/repeaterCard.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="70.0" fitWidth="80.0" layoutX="998.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="70.0" fitWidth="80.0" layoutX="1055.0" layoutY="560.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/plants/cherry.png" />
          </image>
@@ -347,11 +360,6 @@
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="964.0" layoutY="468.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="142.0" fitWidth="134.0" layoutX="1000.0" layoutY="456.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/zombies1/FootballZombieAttack.gif" />
-         </image>
-      </ImageView>
       <ImageView fitHeight="40.0" fitWidth="60.0" layoutX="175.0" layoutY="178.0" pickOnBounds="true">
          <image>
             <Image url="@images/plants/LawnMower.png" />
@@ -383,7 +391,7 @@
             <Image url="@../../Imitaterscaredyshroomsee-ezgif.com-webp-to-png-converter.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="70.0" fitWidth="76.0" layoutX="1140.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="70.0" fitWidth="76.0" layoutX="1093.0" layoutY="413.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/plants/icedpeashooter_gif.gif" />
          </image>
@@ -391,6 +399,46 @@
       <ImageView fitHeight="78.0" fitWidth="73.0" layoutX="984.0" layoutY="56.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/plants/icedpeashooter.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="37.0" fitWidth="47.0" layoutX="1140.0" layoutY="200.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../../../Downloads/firePeaModified.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="66.0" fitWidth="23.0" layoutX="1105.0" layoutY="189.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/projectiles/pea.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="70.0" fitWidth="73.0" layoutX="1006.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/plants/sunflower.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="95.0" fitWidth="95.0" layoutX="1128.0" layoutY="500.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/plants/peashooter.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="66.0" fitWidth="66.0" layoutX="1074.0" layoutY="240.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../testing/potato_gif_success.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="66.0" fitWidth="44.0" layoutX="415.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/cards/potatoCard_christmas.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="79.0" fitWidth="90.0" layoutX="1079.0" layoutY="310.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../testing/sunflower_gif_success.gif" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="66.0" fitWidth="44.0" layoutX="360.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/cards/sunflowerCard_christmas.png" />
          </image>
       </ImageView>
    </children>

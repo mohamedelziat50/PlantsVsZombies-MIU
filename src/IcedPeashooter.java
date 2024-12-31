@@ -11,7 +11,7 @@ public class IcedPeashooter extends Plant
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public IcedPeashooter()
     {
-        super(175, 15, 50);
+        super(175, 15, 100);
     }
 
     // Added to be used when placing a plant on the yard
@@ -37,19 +37,20 @@ public class IcedPeashooter extends Plant
     public synchronized void run()
     {
         // While the plant is alive, keep shooting.
-        while (isAlive() && !Thread.currentThread().isInterrupted()) // member variable inside characters (inherited)
+        while (isAlive()  && !Thread.currentThread().isInterrupted() && Yard.gameOn&&Yard.timeLeft>0) // member variable inside characters (inherited)
         {
             try
             {
+                // Switch later to duration
                 // Shoot a pea every 7 seconds to be different than normal pea
                 Thread.sleep(7000);
 
-                if (!isAlive() || Thread.currentThread().isInterrupted()) {
+                if (!isAlive() || Thread.currentThread().isInterrupted() ) {
                     break; // Exit the loop immediately
                 }
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                snowPea pea = new snowPea(20, this);
+                snowPea pea = new snowPea(15, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
@@ -78,7 +79,7 @@ public class IcedPeashooter extends Plant
             String path = getClass().getResource("/music/peashooter shoots.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.9);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing peashooter sound: " + e.getMessage());

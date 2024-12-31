@@ -3,6 +3,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Repeater extends Plant
 {
@@ -34,16 +36,18 @@ public class Repeater extends Plant
     @Override
     public void run()
     {
-        // While the plant is alive, keep shooting.
+        // MAGETSH GAMBO LAZEM AZABTO ZAY EL PEA SHOOTER WEL ICED PEA SHOOTER
+
         while (isAlive()) // member variable inside characters (inherited)
         {
             try
             {
+                repeaterAudio();
                 // Shoot a pea every 2.5 seconds since it is faster (repeater plant)
                 Thread.sleep(2000);
 
                 // Pass this plant as a reference to stop the thread in case plant dies!
-                Pea pea = new Pea(50, this);
+                Pea pea = new Pea(15, this);
 
                 // Spawn pea at same location of plant
                 pea.elementImage.setLayoutX(elementImage.getLayoutX() + 65);
@@ -67,6 +71,18 @@ public class Repeater extends Plant
             }
         }
         System.out.println("Peashooter thread ended.");
+    }
+
+    public void repeaterAudio() {
+        try {
+            String path = getClass().getResource("/music/peashooter shoots.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.1);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing repeater sound: " + e.getMessage());
+        }
     }
 
     @Override

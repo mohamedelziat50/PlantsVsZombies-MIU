@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -6,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -40,16 +42,35 @@ public class MainGUI extends Application implements FileOperations
 
         // Sound track player
         SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
-        soundtrackplayer.playSoundtrack();
+        soundtrackplayer.playMainMenutrack();
 
         //Main container (ROOT) using Pane layout
-        Pane root = new Pane();
+        AnchorPane root = new AnchorPane();
+
         // Scene and stage
-        scene = new Scene(root, 800, 598); //Adding the root container to the scene while setting the scene dimensions
-        primaryStage.setTitle("PVZ - Main Menu!");
+        scene = new Scene(root, 800, 598); // Adding the root container to the scene while setting the scene dimensions
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false); //To close the option of opening the game in full screen mode since it ruins the dimensions
-        primaryStage.show();
+
+        // To close the option of opening the game in full screen mode since it ruins the dimensions
+        primaryStage.setResizable(false);
+        // Display the loading screen at first
+        LoadingScreen.showStartScreen(root);
+
+        // Show the primary stage only after loading screen is initialized
+        Platform.runLater(() -> {
+            // Set the screen title
+            primaryStage.setTitle("Plants Vs Zombies!");
+
+            // Preload necessary assets
+            SoundtrackPlayer.playMainMenutrack();
+            Yard.preloadZombies();
+
+            // Show the primary stage
+            primaryStage.show();
+
+            // Added this to center on screen once switched
+            MainGUI.primaryStage.centerOnScreen();
+        });
 
         // Load user data from binary file into the hashmap
         try {
@@ -244,7 +265,7 @@ public class MainGUI extends Application implements FileOperations
 
         //Handling the password field after enter is pressed
         passwordField.setOnAction(e -> {
-             username = usernameField.getText(); //Username is saved into a string
+            username = usernameField.getText(); //Username is saved into a string
             String password = passwordField.getText(); //Pass saved to a string
 
             //If Else statements to check if the entered credentials are valid or not
@@ -334,8 +355,8 @@ public class MainGUI extends Application implements FileOperations
                 deleteAccount.setLayoutY(476); // Adjust position as needed
                 deleteAccount.setOpacity(0);
                 deleteAccount.setOnAction(event -> {
-root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
-                        });
+                    root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
+                });
 
                 levelMenu.getChildren().addAll(deleteAccount,logOut,exit,usernameLabel); //Adding the components to Menu2 container
                 root.getChildren().addAll(levelMenu);
@@ -348,7 +369,7 @@ root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Conf
                     showAlert(root, "Logging out", "Bye, "+username);
                 });
 
-            //Display alert if signIn failed
+                //Display alert if signIn failed
             } else {
                 root.getChildren().removeAll(signInContainer,overlay);
                 showAlert(root, "Sign-In Failed", "Invalid username or password.");
@@ -455,98 +476,98 @@ root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Conf
     private void handleLevel1 (Pane root)
     {
 
-            Image dave = new Image("images/menuImages/Dave.gif");
-            ImageView gifDave = new ImageView(dave);
-            gifDave.setFitHeight(451);
-            gifDave.setFitWidth(612);
-            gifDave.setLayoutY(112);
-            gifDave.setLayoutX(1);
-            //  gifDave.toFront();
+        Image dave = new Image("images/menuImages/Dave.gif");
+        ImageView gifDave = new ImageView(dave);
+        gifDave.setFitHeight(451);
+        gifDave.setFitWidth(612);
+        gifDave.setLayoutY(112);
+        gifDave.setLayoutX(1);
+        //  gifDave.toFront();
 
-            ImageView levelback = new ImageView(new Image("images/yard-related/Yard.png"));  Label message =new Label("Welcome neighbour "+username+ "\nMy name is dave and some people call me CRAZY DAVE!");
-            message.prefWidth(121);
-            message.prefHeight(28);
-            message.setLayoutX(210);
-            message.setLayoutY(165);
+        ImageView levelback = new ImageView(new Image("images/yard-related/Yard.png"));  Label message =new Label("Welcome neighbour "+username+ "\nMy name is dave and some people call me CRAZY DAVE!");
+        message.prefWidth(121);
+        message.prefHeight(28);
+        message.setLayoutX(210);
+        message.setLayoutY(165);
 
-            message.toFront();
-            message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
-            levelback.setPreserveRatio(true);
-            primaryStage.setWidth(levelback.getImage().getWidth());
-            primaryStage.setHeight(levelback.getImage().getHeight());
-
-
+        message.toFront();
+        message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+        levelback.setPreserveRatio(true);
+        primaryStage.setWidth(levelback.getImage().getWidth());
+        primaryStage.setHeight(levelback.getImage().getHeight());
 
 
 
 
-            Label message2 =new Label("I am sure you heard about the......ZOMBIES!! \nI hope you are ready for what is coming \nMy advice is that you should start planting to \ndefend against those evil creatures");
-            message2.setMaxWidth(379);
-            message2.prefHeight(28);
-            message2.setLayoutX(211);
-            message2.setLayoutY(199);
-            message2.toFront();
-            message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
-            root.getChildren().removeAll(levelMenu);
-            message.setOnMouseClicked(event -> {
-                root.getChildren().addAll(message2);
-            });
-            root.getChildren().addAll(levelback,gifDave,message);
 
 
-            message2.setOnMouseClicked(event -> {
-                root.getChildren().removeAll(levelback,gifDave,message,message2);
-                Level testLevel = new Level(1, 60);
-                testLevel.startLevel();
-                System.out.println("DONE level1");
-            });
+        Label message2 =new Label("I am sure you heard about the......ZOMBIES!! \nI hope you are ready for what is coming \nMy advice is that you should start planting to \ndefend against those evil creatures");
+        message2.setMaxWidth(379);
+        message2.prefHeight(28);
+        message2.setLayoutX(211);
+        message2.setLayoutY(199);
+        message2.toFront();
+        message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+        root.getChildren().removeAll(levelMenu);
+        message.setOnMouseClicked(event -> {
+            root.getChildren().addAll(message2);
+        });
+        root.getChildren().addAll(levelback,gifDave,message);
+
+
+        message2.setOnMouseClicked(event -> {
+            root.getChildren().removeAll(levelback,gifDave,message,message2);
+            Level testLevel = new Level(1, 60);
+            testLevel.startLevel();
+            System.out.println("DONE level1");
+        });
 
 
     }
 
     //Handling of level2
     private void handleLevel2 (Pane root){
-            Image dave = new Image("images/menuImages/Dave.gif");
-            ImageView gifDave = new ImageView(dave);
-            gifDave.setFitHeight(451);
-            gifDave.setFitWidth(612);
-            gifDave.setLayoutY(112);
-            gifDave.setLayoutX(1);
-            //  gifDave.toFront();
+        Image dave = new Image("images/menuImages/Dave.gif");
+        ImageView gifDave = new ImageView(dave);
+        gifDave.setFitHeight(451);
+        gifDave.setFitWidth(612);
+        gifDave.setLayoutY(112);
+        gifDave.setLayoutX(1);
+        //  gifDave.toFront();
 
-            ImageView levelback = new ImageView(new Image("images/yard-related/nightYard.png"));
-            Label message =new Label("Good job "+username+ "I see you survived your first day in this crazy town");
-            message.prefWidth(121);
-            message.prefHeight(28);
-            message.setLayoutX(210);
-            message.setLayoutY(165);
+        ImageView levelback = new ImageView(new Image("images/yard-related/nightYard.png"));
+        Label message =new Label("Good job "+username+ "I see you survived your first day in this crazy town");
+        message.prefWidth(121);
+        message.prefHeight(28);
+        message.setLayoutX(210);
+        message.setLayoutY(165);
 
-            message.toFront();
-            message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
-            levelback.setPreserveRatio(true);
-            primaryStage.setWidth(levelback.getImage().getWidth());
-            primaryStage.setHeight(levelback.getImage().getHeight());
-
-
-            Label message2 =new Label("Well let's see if you have the skills to survive another day \nBEWARE! It gets harder at night!!!");
-            message2.setMaxWidth(379);
-            message2.prefHeight(28);
-            message2.setLayoutX(211);
-            message2.setLayoutY(199);
-            message2.toFront();
-            message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
-            root.getChildren().removeAll(levelMenu);
-            message.setOnMouseClicked(event -> {
-                root.getChildren().addAll(message2);
-            });
-            root.getChildren().addAll(levelback,gifDave,message);
+        message.toFront();
+        message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+        levelback.setPreserveRatio(true);
+        primaryStage.setWidth(levelback.getImage().getWidth());
+        primaryStage.setHeight(levelback.getImage().getHeight());
 
 
-            message2.setOnMouseClicked(event -> {
-                Level testLevel = new Level(2, 60);
-                testLevel.startLevel();
-                System.out.println("DONE level2");
-            });
+        Label message2 =new Label("Well let's see if you have the skills to survive another day \nBEWARE! It gets harder at night!!!");
+        message2.setMaxWidth(379);
+        message2.prefHeight(28);
+        message2.setLayoutX(211);
+        message2.setLayoutY(199);
+        message2.toFront();
+        message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
+        root.getChildren().removeAll(levelMenu);
+        message.setOnMouseClicked(event -> {
+            root.getChildren().addAll(message2);
+        });
+        root.getChildren().addAll(levelback,gifDave,message);
+
+
+        message2.setOnMouseClicked(event -> {
+            Level testLevel = new Level(2, 60);
+            testLevel.startLevel();
+            System.out.println("DONE level2");
+        });
 
     }
 
@@ -592,6 +613,7 @@ root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Conf
         root.getChildren().addAll(levelback,Xmasdave,text,message);
 
         message.setOnMouseClicked(event -> {
+
             root.getChildren().addAll(message2);
         });
 

@@ -2,6 +2,8 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ public class Cherry extends Plant
 {
     public Cherry()
     {
-        super(150, 15, 50); // Dummy values for health, damage, and cost
+        super(150, 20, 300); // Dummy values for health, damage, and cost
     }
 
     public Cherry(int x, int y)
@@ -50,6 +52,7 @@ public class Cherry extends Plant
 
             // Step 3: Trigger explosion effect
             explode();
+            cherryBombAudio();
 
             // Step 4: Remove the cherry from the grid after 1 second
             PauseTransition removeCherry = new PauseTransition(Duration.seconds(3));
@@ -106,6 +109,21 @@ public class Cherry extends Plant
             Yard.grid[this.getX()][this.getY()] = null;
         }
     }
+
+    public void cherryBombAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/cherry bomb.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.5);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
+
+        } catch (Exception e) {
+            System.out.println("Error playing cherry bomb sound: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public void takeDamage(int damage) {

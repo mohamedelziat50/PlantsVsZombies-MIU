@@ -15,10 +15,13 @@ import java.util.Random;
 
 public class Sun extends MainElements
 {
+
+
+
     public Sun()
     {
         // Initialize the Peashooter image
-        elementImage = new ImageView(new Image("images/others/sun.png"));
+        elementImage = new ImageView(new Image("images/others/sun.png   "));
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
@@ -30,11 +33,10 @@ public class Sun extends MainElements
         super(x, y);
 
         // Initialize the Peashooter image
-        elementImage = new ImageView(new Image("images/plants/sun.png"));
+        elementImage = new ImageView(new Image("images/others/sun.png"));
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
-
     }
 
     @Override
@@ -49,7 +51,8 @@ public class Sun extends MainElements
             {
                 try
                 {
-                    Thread.sleep(3000); // spawn kol 3 seconds
+                    // Spawn every 10 seconds
+                    Thread.sleep(10000);
 
                     javafx.application.Platform.runLater(() ->
                     {
@@ -71,29 +74,7 @@ public class Sun extends MainElements
                                 new KeyFrame(Duration.seconds(7), new KeyValue(sun.getElementImage().layoutYProperty(), stopY)) // Stop in lower part
                         );
 
-
-
-                        // pressing on the sun logic and animation
-                        sun.getElementImage().setOnMouseClicked(event ->
-                        {
-                            sunCollectedAudio();
-                            // pressing on the sun logic and animation
-                            Timeline collectAnimation = new Timeline(
-                                    new KeyFrame(Duration.ZERO, new KeyValue(sun.getElementImage().layoutXProperty(), sun.getElementImage().getLayoutX())),
-                                    new KeyFrame(Duration.ZERO, new KeyValue(sun.getElementImage().layoutYProperty(), sun.getElementImage().getLayoutY())),
-                                    new KeyFrame(Duration.seconds(1), new KeyValue(sun.getElementImage().layoutXProperty(), 220)), // Yard X position
-                                    new KeyFrame(Duration.seconds(1), new KeyValue(sun.getElementImage().layoutYProperty(), 12))  // Yard Y position
-                            );
-
-                            collectAnimation.setOnFinished(event2 -> root.getChildren().remove(sun.getElementImage())); // remove after collection
-                            collectAnimation.play();
-
-                            Yard.sunCounter+=25;
-                            Yard.label.setText(String.valueOf(Yard.sunCounter));
-
-                            // Stop the drop animation once clicked
-                            dropAnimation.stop();
-                        });
+                        sun.setCollectible(root);
 
                         dropAnimation.setOnFinished(e ->
                         {
@@ -120,18 +101,52 @@ public class Sun extends MainElements
         sunThread.start();
     }
 
-    public void sunCollectedAudio() {
-    try {
-        String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
-        Media media = new Media(path);
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setVolume(0.5);
+    public void setCollectible(Pane root) {
+        // Add a flag to check if the sun has already been collected
+        final boolean[] isCollected = {false}; // Use an array to allow modification inside the lambda
 
-        mediaPlayer.play();
-    } catch (Exception e) {
-        System.out.println("Error playing sun collecting sound: " + e.getMessage());
+        elementImage.setOnMouseClicked(event -> {
+            // Check if the sun has already been collected
+            if (isCollected[0]) {
+                return; // Exit if already collected
+            }
+
+            // Mark the sun as collected
+            isCollected[0] = true;
+
+            // Play the sun collection sound
+            sunCollectedAudio();
+
+            // Collection animation
+            Timeline collectAnimation = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(elementImage.layoutXProperty(), elementImage.getLayoutX())),
+                    new KeyFrame(Duration.ZERO, new KeyValue(elementImage.layoutYProperty(), elementImage.getLayoutY())),
+                    new KeyFrame(Duration.seconds(1), new KeyValue(elementImage.layoutXProperty(), 220)), // Move to yard counter
+                    new KeyFrame(Duration.seconds(1), new KeyValue(elementImage.layoutYProperty(), 12))  // Move to yard counter
+            );
+
+            collectAnimation.setOnFinished(event2 -> root.getChildren().remove(elementImage)); // Remove after collection
+            collectAnimation.play();
+
+            // Increment the counter and update the label
+            Yard.sunCounter += 25;
+            Yard.label.setText(String.valueOf(Yard.sunCounter));
+        });
     }
-}
+
+    public void sunCollectedAudio() {
+        try {
+            String path = getClass().getResource("/music/sun pickup.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing sun collecting sound: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public void disappear(Pane root)

@@ -10,7 +10,7 @@ public class ConeZombie extends Zombie
     // Added to be able to use in the loading of files related to "level" class & in fileOperations interface
     public ConeZombie()
     {
-        super(10, 0.5, 100);
+        super(10, 0.4, 150);
         elementImage=new ImageView(new Image("images/zombies1/ConeZombie.gif"));
         //ImageView image = new ImageView(new Image("images/zombies/walking-plants-vs-zombies.gif"));
         elementImage.setFitHeight(155);
@@ -40,5 +40,4 @@ public class ConeZombie extends Zombie
     }
 
 }
-
 

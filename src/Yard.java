@@ -1,18 +1,19 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.text.Font;
@@ -23,7 +24,7 @@ import java.util.Random;
 
 public class Yard extends Thread
 {
-    public Level parentLevel;
+    public static Level parentLevel;
 
     // YARD CONSTANT VARIABLES
     public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
@@ -35,12 +36,17 @@ public class Yard extends Thread
     // Used for collision handling between plants/peas & zombies
     public static volatile ArrayList<Zombie> zombies = new ArrayList<>(); // Collision With peas
     public static volatile ArrayList<Plant> plants = new ArrayList<>(); // Collision with plants (zombies side)
+    public static volatile ArrayList<Pea> peas = new ArrayList<>(); // Collision with plants (zombies side)
+    private ArrayList<ImageView> staticZombies = new ArrayList<>();
 
     // Variables specific to each level!
-    private int zombieSpawnInterval;
+    public static volatile boolean gameOn = true;
+    private static int zombieSpawnInterval;
     private double levelDuration; // Total duration for the level (in seconds)
-    private double timeLeft;
+    public static double timeLeft;
     public static int sunCounter;
+    private Timeline timeline; // Declare timeline as a class-level variable
+
 
     // GUI-related variables
     public static AnchorPane root;
@@ -58,26 +64,23 @@ public class Yard extends Thread
         root = new AnchorPane();
 
         // Zombie Spawn Interval used in spawnZombie()
-        zombieSpawnInterval = 5 ;
+        // zombieSpawnInterval = 4 ;
+        zombieSpawnInterval= 20;
 
         // Initialize Characters 2D Array to keep a-hold of Zombies, Plants, LawnMower, and possibly peas.
         grid = new Characters[ROWS][COLUMNS];
 
-        // Clear previous plants/zombies arraylists incase started multiple levels in the same run.
+        // Clear previous plants/zombies arraylists in case started multiple levels in the same run.
         plants.clear();
         zombies.clear();
 
         // Level specific stuff
-        levelDuration = parentLevel.getDurationInSeconds();
-        timeLeft = levelDuration;
-
-        // Suncounter for each yard
-        sunCounter = 1500;
+       // levelDuration = parentLevel.getDurationInSeconds();
+        timeLeft = 3 * 60;// the game is 4 minutes (4sec*60=4min) for those who don't know
+        sunCounter=50;
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
-
-        this.levelDuration=levelDuration;
     }
 
     /*
@@ -128,6 +131,13 @@ public class Yard extends Thread
             // Call the plants' subclass over-ridden appear function.
             plant.appear(root);
 
+            // If it's a Sunflower, start producing suns
+            if (plant instanceof Sunflower) {
+                Sunflower sunflower = (Sunflower) plant;  // Safe cast
+                sunflower.startSunProduction(root);  // Pass both parameters
+            }
+
+
             // Audio for placing a plant.
             plantPlacedAudio();
 
@@ -168,7 +178,7 @@ public class Yard extends Thread
 
             grid[row][col].disappear(root); // Now disappear removes from the root directly! (Notice changes in "Plant" class)
             grid[row][col] = null; // Clear the grid cell
-            plantSelectedAudio();
+            shovelPlantAudio();
 
             System.out.println("Plant removed at row: " + row + ", col: " + col);
         }
@@ -179,60 +189,103 @@ public class Yard extends Thread
 
     /* spawns a zombie, used setZombieSpawnInterval in seconds to detect how much would it
      take to spawn another zombie */
-    public  void spawnZombie() throws InterruptedException
+    public void spawnZombie() throws InterruptedException
     {
         int[] specificNumbers = {134, 207, 298, 376, 468}; // Predefined Y positions for zombie spawn
         int minx = 957; // Minimum X position
         int maxx = 1202; // Maximum X position
         Random random = new Random();
 
-        while (Zombie.gameRunning)
+        int minSpawnInterval = 2; // Minimum spawn interval in seconds
+        int spawnIntervalDecreaseRate = 1; // Amount to decrease spawn interval per minute
+        long startTime = System.currentTimeMillis();
+
+        while (gameOn&&timeLeft>0)
         {
-            try
-            {
-                Thread.sleep(  1* 1000); // Wait before spawning a new zombie
-            }
-            catch (InterruptedException e) {
+            // Decrease the spawn interval dynamically over time
+            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 30000; // Calculate elapsed minutes
+            zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
+
+            try {
+                Thread.sleep(zombieSpawnInterval * 1000); // Wait before spawning a new zombie
+            } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+
+            if(!gameOn||timeLeft<0)
+            {
+                zombieSpawnInterval= 25;
+                break;
             }
 
             int randomIndex = random.nextInt(specificNumbers.length); // Generate a random index for Y position
             int y = specificNumbers[randomIndex];
             int x = random.nextInt((maxx - minx) + 1) + minx; // Generate random X position within the defined range
 
-            int z = random.nextInt((4 - 1) + 1) + 1;
-            Zombie zombie;
-
-            if (z == 1) {
-                zombie = new DefaultZombie(x, y);
-            } else if (z == 2) {
-                zombie = new HelmetZombie(x, y);
-            } else if (z == 3) {
-                zombie = new ConeZombie(x, y);
-            } else {
-                zombie = new FootballZombie(x, y);
+            Zombie zombie = null;
+            // Check the level and set the zombie type based on the level number
+            if (this.parentLevel.getLevelNumber() == 1) {
+                // Level 1: Choose between DefaultZombie or HelmetZombie
+                int z = random.nextInt(2) + 1; // Random number between 1 and 2
+                if (z == 1) {
+                    zombie = new DefaultZombie(x, y);
+                } else {
+                    zombie = new ConeZombie(x, y);
+                }
+            } else if (this.parentLevel.getLevelNumber() == 2) {
+                // Level 2: Choose between DefaultZombie, HelmetZombie, or ConeZombie
+                int z = random.nextInt(3) + 1; // Random number between 1 and 3
+                if (z == 1) {
+                    zombie = new DefaultZombie(x, y);
+                } else if (z == 2) {
+                    zombie = new HelmetZombie(x, y);
+                } else {
+                    zombie = new ConeZombie(x, y);
+                }
+            } else if (this.parentLevel.getLevelNumber() == 3) {
+                // Level 3: Choose between DefaultZombie, HelmetZombie, ConeZombie, or FootballZombie
+                int z = random.nextInt(4) + 1; // Random number between 1 and 4
+                if (z == 1) {
+                    zombie = new DefaultZombie(x, y);
+                } else if (z == 2) {
+                    zombie = new HelmetZombie(x, y);
+                } else if (z == 3) {
+                    zombie = new ConeZombie(x, y);
+                } else {
+                    zombie = new FootballZombie(x, y);
+                }
             }
 
-           // Create a new zombie at the random position
+            // If zombie is still null (though it shouldn't happen with above conditions), assign a default zombie
+            if (zombie == null) {
+                zombie = new DefaultZombie(x, y);
+            }
+
+            // Create a new zombie at the random position
             zombie.setAlive(true);
 
             // Added to be used with collision handling (with pea)
             zombies.add(zombie);
 
-            zombie.appear(root,x,y);
-
-            zombieSpawnAudio();
-
-
+            // Run the zombie appearance and audio in the UI thread
+            Zombie finalZombie = zombie;
+            Platform.runLater(() -> {
+                if(gameOn)
+                {
+                    finalZombie.appear(root, x, y);
+                    zombieSpawnAudio();
+                }
+            });
 
             System.out.println("Zombie placed at x: " + x + ", y: " + y);
-            new Thread(() -> {
-                while (zombie.isAlive()) {
-                    zombie.move();
 
+            // Create a new thread for the zombie movement
+            Zombie finalZombie1 = zombie;
+            new Thread(() -> {
+                while (gameOn && finalZombie1.isAlive()) {
+                    finalZombie1.move();
 
                     // Check if this specific lawnmower intersects with the zombie
-                  //  zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop
                     for (int i = 0; i < ROWS; i++) {
                         if (lawnMowers[i] != null && !lawnMowers[i].isActive()) {
                             // Get the bounds of the lawnmower
@@ -242,11 +295,11 @@ public class Yard extends Thread
                             double lawnMowerBottom = lawnMowers[i].elementImage.getLayoutY() + lawnMowers[i].elementImage.getFitHeight();
 
                             // Get the bounds of the zombie
-                            double zombieCenterY = zombie.getElementImage().getLayoutY() + (zombie.getElementImage().getFitHeight() / 2);
+                            double zombieCenterY = finalZombie1.getElementImage().getLayoutY() + (finalZombie1.getElementImage().getFitHeight() / 2);
 
                             // Check if the zombie is within the bounds of this lawnmower's row
                             if (zombieCenterY >= lawnMowerTop && zombieCenterY <= lawnMowerBottom &&
-                                    zombie.getElementImage().getBoundsInParent().intersects(
+                                    finalZombie1.getElementImage().getBoundsInParent().intersects(
                                             lawnMowerLeft,
                                             lawnMowerTop,
                                             lawnMowerRight - lawnMowerLeft,
@@ -259,23 +312,258 @@ public class Yard extends Thread
                         }
                     }
 
-
-
                     try {
                         Thread.sleep(20); // Control the speed of the zombie movement
                     } catch (InterruptedException e) {
-                        System.out.println("Zombie spawning interrupted. Exiting thread.");
-                        Thread.currentThread().interrupt(); // Preserve the interruption status
-                    }
-                    finally {
-                        System.out.println("Zombie spawning thread has exited.");
+                        e.printStackTrace();
                     }
                 }
             }).start();
         }
-        Zombie.killAllThreadsExceptJavaFX();
-        MainGUI.primaryStage.setScene(MainGUI.scene);
     }
+
+    public static void resetGame()
+    {
+        // Reset game state variables
+        gameOn = true;
+        zombieSpawnInterval= 20;
+        sunCounter= 50;
+        timeLeft= 4 * 60;
+
+            // Clear all plants and set them inactive
+            plants.forEach(plant -> {
+                if(plants!=null){
+                    Platform.runLater(() -> {
+                    plant.disappear(root);
+                    });
+                }
+            });
+            plants.clear();
+
+
+                peas.forEach(pea -> {
+                    if(pea!=null){
+                        Platform.runLater(() -> {
+                        pea.disappear(root);
+                        });
+
+                    }
+                });
+
+                peas.clear();
+                // Clear all peas
+
+
+            // Clear all zombies and set them inactive
+            zombies.forEach(zombie -> {
+                if(zombie!=null)
+                {
+                    Platform.runLater(() -> {
+                        zombie.disappear(root);
+                    });
+                }
+
+            });
+            zombies.clear();
+
+        //Making sure that all the indexes in the grid pane is empty now
+        for(int i=0;i<ROWS;i++){
+            for(int j=0;j<COLUMNS;j++){
+                if(grid[i][j]!=null){
+                    System.out.println("Plant Removed");
+                    grid[i][j].disappear(root);
+                    grid[i][j]=null;
+                }
+
+            }
+        }
+
+        // Reset other game-related elements
+        root.getChildren().clear(); // Remove all nodes from the yard
+        root = new AnchorPane();    // Reinitialize root
+    }
+
+
+    public static void gameOver() {
+        gameOn = false;
+
+        Platform.runLater(() -> {
+            // Clear the grid
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLUMNS; j++) {
+                    if (grid[i][j] != null) {
+                        System.out.println("Plant removed");
+                        grid[i][j].disappear(root);
+                        grid[i][j] = null;
+                    }
+                }
+            }
+
+            // Create "Game Over" overlay
+            Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
+            overlay.setFill(Color.BLACK);
+            overlay.setOpacity(0.6);
+
+            // Load "ZombiesWin" image
+            ImageView gameOverImage = new ImageView(new Image("images/others/ZombiesWin.png"));
+            gameOverImage.setPreserveRatio(true);
+            gameOverImage.setFitWidth(520); // Default dimensions
+            gameOverImage.setFitHeight(407);
+
+            // Center the "ZombiesWin" image
+            gameOverImage.setLayoutX(394);
+            gameOverImage.setLayoutY(128);
+
+
+            // Add the larger glow effect (intense green glow)
+            Glow glow = new Glow();
+            glow.setLevel(1.0);  // Intense glow
+
+            // Apply glow effect to the image
+            gameOverImage.setEffect(glow);
+
+            // Set a bigger DropShadow with larger blur radius and green color
+            gameOverImage.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,255,0,1.0), 50, 0, 0, 0);");
+
+            // Add overlay and "Game Over" image to the root
+            root.getChildren().addAll(overlay, gameOverImage);
+
+            // Create the zoom animation
+            ScaleTransition zoom = new ScaleTransition(Duration.seconds(3), gameOverImage);
+            zoom.setFromX(0.5); // Start smaller
+            zoom.setFromY(0.5);
+            zoom.setToX(1.0); // Grow to normal size
+            zoom.setToY(1.0);
+            zoom.setInterpolator(Interpolator.EASE_BOTH);
+
+            // Create the shake animation
+            TranslateTransition shake = new TranslateTransition(Duration.seconds(0.1), gameOverImage);
+            shake.setByX(10); // Shake left-right
+            shake.setByY(10); // Shake up-down
+            shake.setAutoReverse(true);
+            shake.setCycleCount(30); // Total shakes
+
+            // Parallel the zoom and shake animations
+            ParallelTransition animation = new ParallelTransition(zoom, shake);
+
+            // Add a pause after the animation
+            PauseTransition pause = new PauseTransition(Duration.seconds(4));
+
+            // Combine the animations and the pause into a sequential transition
+            SequentialTransition sequential = new SequentialTransition(animation, pause);
+
+            sequential.setOnFinished(event -> {
+                // Remove the overlay and "Game Over" image
+                root.getChildren().removeAll(overlay, gameOverImage);
+
+                // Transition to the loading screen
+                LoadingScreen.show(MainGUI.primaryStage);
+            });
+
+            // Start the sequential transition
+            sequential.play();
+        });
+
+        System.out.println("You Lost");
+        System.out.println("Game has ended, all zombie spawns and threads should stop");
+    }
+
+
+    public static void gameWin() {
+        gameOn = false;
+
+        Platform.runLater(() -> {
+            // Reset the game state by clearing the grid
+            for (int i = 0; i < ROWS; i++) {
+                for (int j = 0; j < COLUMNS; j++) {
+                    if (grid[i][j] != null) {
+                        System.out.println("game reset");
+                        grid[i][j].disappear(root);
+                        grid[i][j] = null;
+                    }
+                }
+            }
+
+            // Create "Game Win" overlay
+            Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
+            overlay.setFill(Color.BLACK);
+            overlay.setOpacity(0.6);
+
+            // Load "PlantsWin" image
+            ImageView gameWinImage = new ImageView(new Image("images/others/PlantsWin.png"));
+            gameWinImage.setPreserveRatio(true);
+            gameWinImage.setFitWidth(762); // Default dimensions
+            gameWinImage.setFitHeight(276);
+
+            // Center the "PlantsWin" image
+            gameWinImage.setLayoutX(258);
+            gameWinImage.setLayoutY(242);
+
+            // Add overlay and "Game Win" image to the root
+            root.getChildren().addAll(overlay, gameWinImage);
+
+            // Add the larger glow effect (intense green glow)
+            Glow glow = new Glow();
+            glow.setLevel(1.0);  // Intense glow
+
+            // Apply glow effect to the image
+            gameWinImage.setEffect(glow);
+
+            // Set a bigger DropShadow with larger blur radius and green color
+            gameWinImage.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,255,0,1.0), 50, 0, 0, 0);");
+
+            // Create the zoom animation
+            ScaleTransition zoom = new ScaleTransition(Duration.seconds(3), gameWinImage);
+            zoom.setFromX(0.5); // Start smaller
+            zoom.setFromY(0.5);
+            zoom.setToX(1.0); // Grow to normal size
+            zoom.setToY(1.0);
+            zoom.setInterpolator(Interpolator.EASE_BOTH);
+
+            // Create the shake animation
+            TranslateTransition shake = new TranslateTransition(Duration.seconds(0.1), gameWinImage);
+            shake.setByX(10); // Shake left-right
+            shake.setByY(10); // Shake up-down
+            shake.setAutoReverse(true);
+            shake.setCycleCount(30); // Total shakes
+
+            // Parallel the zoom and shake animations
+            ParallelTransition animation = new ParallelTransition(zoom, shake);
+
+            // Add a pause after the animation
+            PauseTransition pause = new PauseTransition(Duration.seconds(4));
+
+            // Combine the animations and the pause into a sequential transition
+            SequentialTransition sequential = new SequentialTransition(animation, pause);
+
+            sequential.setOnFinished(event -> {
+                // Remove the overlay and "Game Win" image
+                root.getChildren().removeAll(overlay, gameWinImage);
+
+                // Transition to the loading screen
+                LoadingScreen.show(MainGUI.primaryStage);
+            });
+
+            // Start the sequential transition
+            sequential.play();
+        });
+
+        System.out.println("You Won");
+        System.out.println("Game has ended, all zombie spawns and threads should stop");
+    }
+
+
+    public static void startNewGame()
+    {
+        resetGame(); // Clear the game state first
+
+        // Initialize root if not already done
+        root = new AnchorPane();
+        Yard.root = root; // Make root globally accessible if necessary
+
+    }
+
+
 
     @Override
     public void run()
@@ -305,6 +593,7 @@ public class Yard extends Thread
         levelProgressBar.setStyle("-fx-accent: green; -fx-background-color: transparent;");
         levelProgressBar.setLayoutX(725);  // Match the layout to align with the background
         levelProgressBar.setLayoutY(612);
+
         // Add the components to the root layout
         root.getChildren().addAll(backgroundImageView, levelProgressBar);
     }
@@ -313,67 +602,115 @@ public class Yard extends Thread
     // Start the level timer and update the progress bar
     public void startLevelTimer()
     {
-        // Create a Timeline to update progress every second
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            if (timeLeft > 0) {
+        // Initialize the timeline
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (timeLeft > 0 && Yard.gameOn)
+            {
                 timeLeft -= 1;  // Decrease the remaining time by 1 second
-                double progress = timeLeft / levelDuration;  // Calculate progress as a fraction of time left
-                levelProgressBar.setProgress(progress);  // Update the progress bar
-            } else {
-                // Level is over, handle level completion logic here
-                System.out.println("Level Completed!");
-                zombieWaveAudio();
+                System.out.println("Time left: " + timeLeft);
+                levelProgressBar.setProgress(levelProgressBar.getProgress() - 0.01);  // Update the progress bar
             }
+            else {
+                if(timeLeft <= 0)
+                    gameWin(); // Call the loading screen for the main menu
 
+
+                // Level is over, stop the timeline
+                timeline.stop();
+
+                // Handle level completion logic here
+                System.out.println("Level Completed!");
+
+            }
         }));
 
         // Set the timeline to repeat indefinitely (so it updates every second)
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();  // Start the timeline (the countdown)
+
+        // Start the timeline (the countdown)
+        timeline.play();
     }
 
     private void readySetPlant() {
-        // Create "Ready" text
-        Text readyText = new Text("READY...");
-        readyText.setFont(Font.font("Comic Sans MS", 85));
-        readyText.setFill(Color.DARKRED);
-        readyText.setLayoutX(WIDTH / 2 - 75);
-        readyText.setLayoutY(HEIGHT / 2);
-        root.getChildren().add(readyText);
+        // Create a semi-transparent rectangle overlay
+        Rectangle overlay = new Rectangle(WIDTH, HEIGHT);
+        overlay.setFill(Color.BLACK);
+        overlay.setOpacity(0.5);
 
-        // Show "Ready" for 1.5 seconds
+        // Load images for "READY", "SET", and "PLANT"
+        ImageView readyImage = new ImageView(new Image("images/others/Ready.png"));
+        ImageView setImage = new ImageView(new Image("images/others/Set.png"));
+        ImageView plantImage = new ImageView(new Image("images/others/Plant.png"));
+        readyImage.setPreserveRatio(true);
+        setImage.setPreserveRatio(true);
+        plantImage.setPreserveRatio(true);
+
+        // Set the size of the images
+        readyImage.setFitWidth(400);
+        readyImage.setFitHeight(130);
+        setImage.setFitWidth(400);
+        setImage.setFitHeight(130);
+        plantImage.setFitWidth(400);
+        plantImage.setFitHeight(130);
+
+        // Set initial position of the images (centered)
+        readyImage.setLayoutX((WIDTH / 2 - readyImage.getFitWidth() / 2) + 60);
+        readyImage.setLayoutY(HEIGHT / 2 - readyImage.getFitHeight() / 2);
+
+        setImage.setLayoutX((WIDTH / 2 - setImage.getFitWidth() / 2) + 60);
+        setImage.setLayoutY(HEIGHT / 2 - setImage.getFitHeight() / 2);
+
+        plantImage.setLayoutX((WIDTH / 2 - plantImage.getFitWidth() / 2) + 60);
+        plantImage.setLayoutY(HEIGHT / 2 - plantImage.getFitHeight() / 2);
+
+        // Add the overlay and "READY" image to the screen
+        root.getChildren().addAll(overlay, readyImage);
+
+        // Show "READY" for 1.5 seconds
         PauseTransition readyPause = new PauseTransition(Duration.seconds(1.5));
         readyPause.setOnFinished(event -> {
-            // Remove "Ready" text
-            root.getChildren().remove(readyText);
+            root.getChildren().remove(readyImage);
+            root.getChildren().add(setImage);
 
-            // Show "Set" text
-            Text setText = new Text("SET...");
-            setText.setFont(Font.font("Comic Sans MS", 85));
-            setText.setFill(Color.DARKRED);
-            setText.setLayoutX(WIDTH / 2 - 75);
-            setText.setLayoutY(HEIGHT / 2);
-            root.getChildren().add(setText);
-
-            // Show "Set" for 1.5 seconds
+            // Show "SET" for 1.5 seconds
             PauseTransition setPause = new PauseTransition(Duration.seconds(1.5));
             setPause.setOnFinished(setEvent -> {
-                // Remove "Set" text
-                root.getChildren().remove(setText);
+                root.getChildren().remove(setImage);
+                root.getChildren().add(plantImage);
 
-                // Show "Plant!" text
-                Text plantText = new Text("PLANT!");
-                plantText.setFont(Font.font("Comic Sans MS", 85));
-                plantText.setFill(Color.DARKRED);
-                plantText.setLayoutX(WIDTH / 2 - 75);
-                plantText.setLayoutY(HEIGHT / 2);
-                root.getChildren().add(plantText);
-
-                // Show "PLANT!" for 1.5 seconds and then proceed
+                // Show "PLANT!" for 1.5 seconds
                 PauseTransition plantPause = new PauseTransition(Duration.seconds(1.5));
                 plantPause.setOnFinished(goEvent -> {
-                    // Remove "Plant!" text
-                    root.getChildren().remove(plantText);
+                    // Create shake and zoom effects
+                    Timeline shakeTimeline = new Timeline();
+                    Random random = new Random();
+
+                    // Generate random shake and scale
+                    for (int i = 0; i < 20; i++) { // 20 keyframes for a more dramatic effect
+                        double randomX = random.nextDouble() * 20 - 10; // Random X offset (-10 to 10)
+                        double randomY = random.nextDouble() * 20 - 10; // Random Y offset (-10 to 10)
+                        double randomScale = 1 + random.nextDouble() * 0.2; // Random scale (1 to 1.2)
+                        double randomAngle = random.nextDouble() * 20 - 10; // Random rotation (-10 to 10 degrees)
+
+                        KeyFrame keyFrame = new KeyFrame(
+                                Duration.millis(i * 50), // Every 50ms
+                                new KeyValue(plantImage.layoutXProperty(), (WIDTH / 2 - plantImage.getFitWidth() / 2) + 60 + randomX),
+                                new KeyValue(plantImage.layoutYProperty(), (HEIGHT / 2 - plantImage.getFitHeight() / 2) + randomY),
+                                new KeyValue(plantImage.scaleXProperty(), randomScale),
+                                new KeyValue(plantImage.scaleYProperty(), randomScale),
+                                new KeyValue(plantImage.rotateProperty(), randomAngle)
+                        );
+                        shakeTimeline.getKeyFrames().add(keyFrame);
+                    }
+
+                    // When the shake is done, remove the "PLANT!" image and overlay
+                    shakeTimeline.setOnFinished(shakeEvent -> {
+                        root.getChildren().removeAll(plantImage, overlay);
+                        Sun sun = new Sun();
+                        sun.appear(root);
+                    });
+
+                    shakeTimeline.play();
                 });
                 plantPause.play();
             });
@@ -382,9 +719,160 @@ public class Yard extends Thread
         readyPause.play();
     }
 
+
+    private void hugeWaveText() {
+        ImageView waveImage = new ImageView(new Image("images/others/HugeWave.gif"));
+        waveImage.setFitWidth(500);
+        waveImage.setFitHeight(120);
+        waveImage.setLayoutX(WIDTH / 2 - waveImage.getFitWidth() / 2);
+        waveImage.setLayoutY(HEIGHT / 2 - waveImage.getFitHeight() / 2);
+        root.getChildren().add(waveImage);
+        PauseTransition wavePause = new PauseTransition(Duration.seconds(1.5));
+        wavePause.setOnFinished(event -> {
+            root.getChildren().remove(waveImage);
+        });
+        wavePause.play();
+    }
+
+    public static void preloadZombies()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            ImageView zombie = new ImageView("images/yardStaticZombies/" + i + ".gif");
+            // You can cache these images here if needed, like storing them in an ArrayList or a Map
+        }
+    }
+
+    // Method to show static zombie images
+    public void showStaticZombies()
+    {
+        Platform.runLater(() -> {
+            // Clear any existing zombie images to prevent duplicates
+            staticZombies.forEach(zombie -> root.getChildren().remove(zombie));
+            staticZombies.clear();
+
+            // Add static zombie images
+            for (int i = 0; i < 8; i++)
+            {
+                ImageView zombie = new ImageView(new Image("images/yardStaticZombies/" + i  + ".gif")); // Replace with actual paths
+                zombie.setFitWidth(127); // Adjust dimensions
+                zombie.setFitHeight(164);
+                zombie.setPreserveRatio(true);
+                int offsetY = 163;
+
+                if(i==0)
+                    zombie.setLayoutY(130); // Staggered layout for better visuals
+                else if(i==1)
+                    zombie.setLayoutY(170); // Staggered layout for better visuals
+                else if(i==2)
+                    zombie.setLayoutY(210); // Staggered layout for better visuals
+                else if(i==3)
+                    zombie.setLayoutY(250); // Staggered layout for better visuals
+                else if(i==4)
+                    zombie.setLayoutY(290); // Staggered layout for better visuals
+                else if(i==5)
+                    zombie.setLayoutY(330); // Staggered layout for better visuals
+                else if(i==6)
+                    zombie.setLayoutY(370); // Staggered layout for better visuals
+                else if(i==7)
+                    zombie.setLayoutY(410); // Staggered layout for better visuals
+
+
+                if(i%2==0)
+                {
+                    zombie.setLayoutX(950);
+                }
+                else
+                {
+                    zombie.setLayoutX(1060);
+                }
+
+                staticZombies.add(zombie);
+                root.getChildren().add(zombie);
+            }
+        });
+    }
+
+    // Method to remove static zombies
+    private void removeStaticZombies() {
+        Platform.runLater(() -> {
+            staticZombies.forEach(zombie -> root.getChildren().remove(zombie));
+            staticZombies.clear();
+        });
+    }
+
+
+    private void zoomAndReveal()
+    {
+        // Initial freeze for 2 seconds
+        PauseTransition initialFreeze = new PauseTransition(Duration.seconds(2));
+
+        // Animation to zoom into the left side
+        Timeline zoomToRight = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(root.scaleXProperty(), 1),
+                        new KeyValue(root.scaleYProperty(), 1),
+                        new KeyValue(root.layoutXProperty(), 0)
+                ),
+                new KeyFrame(Duration.seconds(1),
+                        new KeyValue(root.scaleXProperty(), 1.5), // Zoom in
+                        new KeyValue(root.scaleYProperty(), 1.5),
+                        new KeyValue(root.layoutXProperty(), -WIDTH * 0.25) // Focus on the left
+                )
+        );
+
+        // Animation to pan to the right while staying zoomed
+        Timeline zoomToLeft = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(root.layoutXProperty(), -WIDTH * 0.25)
+                ),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(root.layoutXProperty(), WIDTH * 0.25) // Pan to the right
+                )
+        );
+
+        // Freeze on the zoomed-in right position for 4 seconds
+        PauseTransition freezeOnRight = new PauseTransition(Duration.seconds(4.5));
+        zoomToLeft.setOnFinished(event -> removeStaticZombies()); // Remove zombies during this pause
+
+        // Animation to zoom out and show the whole scene
+        Timeline zoomOut = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(root.scaleXProperty(), 1.5),
+                        new KeyValue(root.scaleYProperty(), 1.5),
+                        new KeyValue(root.layoutXProperty(), WIDTH * 0.25)
+                ),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(root.scaleXProperty(), 1), // Zoom out
+                        new KeyValue(root.scaleYProperty(), 1),
+                        new KeyValue(root.layoutXProperty(), 0) // Reset layout to the original
+                )
+        );
+
+
+        // Sequence the animations
+        SequentialTransition sequence = new SequentialTransition(
+                initialFreeze,
+                zoomToRight,
+                freezeOnRight,
+                zoomToLeft,
+                zoomOut
+        );
+
+        // On completion, call the readySetPlant method
+        sequence.setOnFinished(event -> readySetPlant());
+
+        // Start the sequence
+        sequence.play();
+    }
+
     // Added function called to display the yard when the level starts.
     public void displayYard()
     {
+        showStaticZombies();
+        startNewGame();
+        zoomAndReveal();
+
         // Set AnchorPane size
         root.setPrefSize(WIDTH, HEIGHT);
 
@@ -395,6 +883,7 @@ public class Yard extends Thread
         if (levelProgressBar != null)
             root.getChildren().add(levelProgressBar);
 
+        // This will not be used but just leave it
         createLevelDurationBar(root);
 
         // Create Grid Pane
@@ -415,20 +904,19 @@ public class Yard extends Thread
 
         generateSunCounter();
 
-        readySetPlant();
-
         zombiesArrivalAudio();
 
-        // startLevelTimer();
+        startLevelTimer();
 
         // Create the scene and set it on the primary stage
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.setCursor(new ImageCursor(new Image("images/others/cursor.png")));
 
-        Sun sun = new Sun();
-        sun.appear(root);
-
         MainGUI.primaryStage.setScene(scene);
+        // Added this to center on screen once switched
+        MainGUI.primaryStage.centerOnScreen();
+
+
         this.start();
     }
 
@@ -438,22 +926,22 @@ public class Yard extends Thread
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.7);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing planting sound: " + e.getMessage());
         }
     }
 
-    public void plantSelectedAudio() {
+    public void shovelPlantAudio() {
         try {
-            String path = getClass().getResource("/music/plant selected.mp3").toExternalForm();
+            String path = getClass().getResource("/music/shovel plant.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.7);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
-            System.out.println("Error playing selecting sound: " + e.getMessage());
+            System.out.println("Error playing shovel sound: " + e.getMessage());
         }
     }
 
@@ -462,7 +950,7 @@ public class Yard extends Thread
             String path = getClass().getResource("/music/zombies arrive.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.7);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing zombie sound: " + e.getMessage());
@@ -473,7 +961,6 @@ public class Yard extends Thread
 
     public void zombieSpawnAudio() {
         try {
-            // List of audio file paths for random selection
             String[] audioPaths = {
                     getClass().getResource("/music/zombie s1.mp3").toExternalForm(),
                     getClass().getResource("/music/zombie s2.mp3").toExternalForm(),
@@ -488,7 +975,7 @@ public class Yard extends Thread
 
             // Create a new MediaPlayer for the selected audio
             zombieSpawnMediaPlayer = new MediaPlayer(media);
-            zombieSpawnMediaPlayer.setVolume(0.4); // Adjust volume as needed
+            zombieSpawnMediaPlayer.setVolume(0.3); // Adjust volume as needed
             zombieSpawnMediaPlayer.play(); // Play the selected audio
 
         } catch (Exception e) {
@@ -502,7 +989,7 @@ public class Yard extends Thread
             System.out.println("Path: " + path);
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.9);
+            mediaPlayer.setVolume(0.3);
             mediaPlayer.play();
         } catch (Exception e) {
             System.out.println("Error playing zombie wave sound: " + e.getMessage());
@@ -519,10 +1006,21 @@ public class Yard extends Thread
                 yardImageView = new ImageView(new Image("images/yard-related/nightYard.png"));
                 break;
             case 3:
-                yardImageView = new ImageView(new Image("images/yard-related/Yard.png"));
+                yardImageView = new ImageView(new Image("images/yard-related/ChristmasYard.png"));
+
         }
 
-        if(yardImageView != null)
+        // Christmas yard has specific dimensions so there has to be specific dimensions
+        if(parentLevel.getLevelNumber() == 3)
+        {
+            yardImageView.setLayoutX(-238);
+            yardImageView.setLayoutY(0);
+            yardImageView.setFitWidth(1766);
+            yardImageView.setFitHeight(666);
+            // Add yard image view to the root pane
+            root.getChildren().add(yardImageView);
+        }
+        else if(yardImageView != null)
         {
             yardImageView.setFitWidth(WIDTH);
             yardImageView.setFitHeight(HEIGHT);
@@ -608,7 +1106,7 @@ public class Yard extends Thread
         PEASHOOTERCARD.cardImageViewSetProperties(304, 21, 47, 71, true, true);
         PEASHOOTERCARD.draggingImageViewSetProperties(61, 74, true, false);
         PEASHOOTERCARD.hoverImageViewSetProperties(61, 74, true, false);
-        PEASHOOTERCARD.addToYard(root, yardGrid, this);
+
 
         // SUNFLOWER CARD
         Card SUNFLOWERCARD = new Card(
@@ -620,7 +1118,6 @@ public class Yard extends Thread
         SUNFLOWERCARD.cardImageViewSetProperties(358, 21, 47, 66, true, true);
         SUNFLOWERCARD.draggingImageViewSetProperties(61, 66, true, false);
         SUNFLOWERCARD.hoverImageViewSetProperties(61, 66, true, false);
-        SUNFLOWERCARD.addToYard(root, yardGrid, this);
 
         // POTATO CARD
         Card POTATOCARD = new Card(
@@ -632,7 +1129,6 @@ public class Yard extends Thread
         POTATOCARD.cardImageViewSetProperties(413, 21, 47, 66, true, true);
         POTATOCARD.draggingImageViewSetProperties(59, 66, true, false);
         POTATOCARD.hoverImageViewSetProperties(59, 66, true, false);
-        POTATOCARD.addToYard(root, yardGrid, this);
 
         // CHERRY CARD
         Card CHERRYCARD = new Card(
@@ -656,16 +1152,16 @@ public class Yard extends Thread
         ICEDPEACARD.draggingImageViewSetProperties(73, 78, true, false);
         ICEDPEACARD.hoverImageViewSetProperties(73, 78, true, false);
 
-        // JALAPENO CARD
-        Card JALAPENOCARD = new Card(
-                "images/cards/jalapenoCard.png",
-                "images/plants/jalapeno.png",
-                Jalepeno.class,
-                125
-        );
-        JALAPENOCARD.cardImageViewSetProperties(573, 21, 47, 66, true, true);
-        JALAPENOCARD.draggingImageViewSetProperties(41, 78, true, false);
-        JALAPENOCARD.hoverImageViewSetProperties(41, 78, true, false);
+
+        Card TORCHWOODCARD = new Card(
+                "images/cards/torchwoodCard.png",
+                "images/plants/torchWood.png",
+                TorchWood.class,
+                175
+        ); // NULL is used as a workaround to avoid creating a shovel class
+        TORCHWOODCARD.cardImageViewSetProperties(573,21,47,66,true,true);
+        TORCHWOODCARD.draggingImageViewSetProperties(73,78,true,false);
+        TORCHWOODCARD.hoverImageViewSetProperties(64,78,true,false);
 
         // REPEATER CARD
         Card REPEATERCARD = new Card(
@@ -685,8 +1181,8 @@ public class Yard extends Thread
         Card snowpeaLockedCard = new Card("images/lockedCards/snowpeaLockedCard.png");
         snowpeaLockedCard.cardImageViewSetProperties(520, 21, 47, 66, true, true);
 
-        Card jalapenoLockedCard = new Card("images/lockedCards/jalapenoLockedCard.png");
-        jalapenoLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
+        Card torchWoodLockedCard = new Card("images/lockedCards/torchWoodLockedCard.png");
+        torchWoodLockedCard.cardImageViewSetProperties(573, 21, 47, 66, true, true);
 
         Card repeaterLockedCard = new Card("images/lockedCards/repeaterLockedCard.png");
         repeaterLockedCard.cardImageViewSetProperties(626, 21, 47, 66, true, true);
@@ -695,23 +1191,61 @@ public class Yard extends Thread
         switch(levelNumber)
         {
             case 1:
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
+                SUNFLOWERCARD.addToYard(root, yardGrid, this);
+                POTATOCARD.addToYard(root, yardGrid, this);
+
                 // Add all locked cards to the root pane.
-                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                root.getChildren().addAll(cherryLockedCard.getCardImageView(), snowpeaLockedCard.getCardImageView(), torchWoodLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
                 break;
             case 2:
-                // Only last 2 cards are not unlocked
-                root.getChildren().addAll(jalapenoLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
+                SUNFLOWERCARD.addToYard(root, yardGrid, this);
+                POTATOCARD.addToYard(root, yardGrid, this);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
 
+                // Only last 2 cards are not unlocked
+                root.getChildren().addAll(torchWoodLockedCard.getCardImageView(), repeaterLockedCard.getCardImageView());
                 break;
             case 3:
                 // All cards are unlocked in level 3
                 System.out.println("All cards are unlocked in " + levelNumber);
+
+                // Set the imageview to be christmas as a workaround and for show only
+                PEASHOOTERCARD.setCardImageView(new ImageView("images/cards/PeaShooterCard_christmas.png"));
+                PEASHOOTERCARD.cardImageViewSetProperties(305, 21, 44, 62, true, true);
+
+                PEASHOOTERCARD.addToYard(root, yardGrid, this);
                 CHERRYCARD.addToYard(root, yardGrid, this);
                 ICEDPEACARD.addToYard(root, yardGrid, this);
-                JALAPENOCARD.addToYard(root, yardGrid, this);
+                TORCHWOODCARD.addToYard(root, yardGrid, this);
                 REPEATERCARD.addToYard(root, yardGrid, this);
+
+                // Add Christmas cards
+                // SUNFLOWER CHRISTMAS CARD
+                Card SUNFLOWERCARD_CHRISTMAS = new Card(
+                        "images/cards/sunflowerCard_christmas.png",
+                        "images/plants/sunflower.png",
+                        Sunflower_Christmas.class,
+                        50
+                );
+                SUNFLOWERCARD_CHRISTMAS.cardImageViewSetProperties(360, 22, 44, 66, true, true);
+                SUNFLOWERCARD_CHRISTMAS.draggingImageViewSetProperties(61, 66, true, false);
+                SUNFLOWERCARD_CHRISTMAS.hoverImageViewSetProperties(61, 66, true, false);
+                SUNFLOWERCARD_CHRISTMAS.addToYard(root, yardGrid, this);
+
+                Card POTATO_CHRISTMAS = new Card(
+                        "images/cards/potatoCard_christmas.png",
+                        "images/plants/potato.png",
+                        Potato_Christmas.class,
+                        50
+                );
+                POTATO_CHRISTMAS.cardImageViewSetProperties(415, 21, 44, 66, true, true);
+                POTATO_CHRISTMAS.draggingImageViewSetProperties(61, 66, true, false);
+                POTATO_CHRISTMAS.hoverImageViewSetProperties(61, 66, true, false);
+                POTATO_CHRISTMAS.addToYard(root, yardGrid, this);
+
                 break;
         }
     }
@@ -746,10 +1280,10 @@ public class Yard extends Thread
     {
         // Make sure sunCounterLabel is initialized and positioned properly
         // Only set the initial label if it's not set yet
-            Yard.label.setText(String.valueOf(sunCounter)); // Initial value of sun counter
-            Yard.label.setStyle("-fx-font-size: 20px; -fx-text-fill: black; -fx-font-weight: bold;"); // Style the label
-            Yard.label.setLayoutX(248); // Position on the X-axis
-            Yard.label.setLayoutY(65); // Position on the Y-axis
+        Yard.label.setText(String.valueOf(sunCounter)); // Initial value of sun counter
+        Yard.label.setStyle("-fx-font-size: 20px; -fx-text-fill: black; -fx-font-weight: bold;"); // Style the label
+        Yard.label.setLayoutX(248); // Position on the X-axis
+        Yard.label.setLayoutY(65); // Position on the Y-axis
 
 
         // Add the label to the root pane to ensure it's visible on the screen

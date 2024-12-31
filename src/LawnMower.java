@@ -3,6 +3,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class LawnMower extends MainElements {
     private boolean isActive;
@@ -36,6 +38,7 @@ public class LawnMower extends MainElements {
     public void activate(AnchorPane root) {
         if (!isActive) {
             isActive = true;
+            lawnMowerAudio();
             // Start a new thread or animation to move the lawnmower
             new Thread(() -> {
                 elementImage.setImage(new Image("images/zombies1/LawnCleaner1.png"));
@@ -46,7 +49,7 @@ public class LawnMower extends MainElements {
         }
     }
 
-    private void moveLawnMower(AnchorPane root) {
+    private synchronized void moveLawnMower(AnchorPane root) {
         double[] layoutX = new double[2];
         layoutX[0] = elementImage.getLayoutX();
 
@@ -61,22 +64,30 @@ public class LawnMower extends MainElements {
 
             // Check for collision with zombies (only for the moving lawnmower)
             for (Zombie zombie : Yard.zombies) {
-                if (zombie.isAlive()) {
-                    // Create a smaller bounding box for collision detection
-                    double lawnMowerLeft = elementImage.getLayoutX() ; // Adjust bounds by adding a margin
-                    double lawnMowerRight = elementImage.getLayoutX() + elementImage.getFitWidth() ; // Adjust bounds by subtracting a margin
-                    double lawnMowerTop = elementImage.getLayoutY()+10 ;
-                    double lawnMowerBottom = elementImage.getLayoutY() + elementImage.getFitHeight()-60 ;
 
-                    // Check if this specific lawnmower intersects with the zombie
-                    if (zombie.getElementImage().getBoundsInParent().intersects(lawnMowerLeft, lawnMowerTop, lawnMowerRight - lawnMowerLeft, lawnMowerBottom - lawnMowerTop)) {
-                        zombie.setAlive(false); // Kill the zombie
-                        Platform.runLater(() -> {
-                            zombie.disappear(root); // Remove zombie from screen
-                        });
-                        break; // Exit the loop to prevent multiple collisions with neighboring lawnmowers
-                    }
+                // Create a smaller bounding box for collision detection
+                double lawnMowerLeft = elementImage.getLayoutX();
+                double lawnMowerRight = elementImage.getLayoutX() + elementImage.getFitWidth();
+                double lawnMowerTop = elementImage.getLayoutY();
+                double lawnMowerBottom = elementImage.getLayoutY() + elementImage.getFitHeight();
+
+                // Get the bounds of the zombie
+                double zombieCenterY = zombie.getElementImage().getLayoutY() + (zombie.getElementImage().getFitHeight() / 2);
+
+                // Check if the zombie is within the bounds of this lawnmower's row
+                if (zombie.isAlive()&&zombieCenterY >= lawnMowerTop && zombieCenterY <= lawnMowerBottom &&
+                        zombie.getElementImage().getBoundsInParent().intersects(
+                                lawnMowerLeft,
+                                lawnMowerTop,
+                                lawnMowerRight - lawnMowerLeft,
+                                lawnMowerBottom - lawnMowerTop
+                        )) {
+                    zombie.setAlive(false); // Kill the zombie
+                    Platform.runLater(() -> {
+                        zombie.disappear(root); // Remove zombie from screen
+                    });
                 }
+
             }
 
             try {
@@ -92,7 +103,19 @@ public class LawnMower extends MainElements {
         });
     }
 
+    public void lawnMowerAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/lawnmower.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.5);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
 
+        } catch (Exception e) {
+            System.out.println("Error playing lawnMower sound: " + e.getMessage());
+        }
+    }
 
     public boolean isActive() {
         return isActive;

@@ -1,18 +1,21 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-
-import java.util.Map;
 
 public abstract class Zombie extends Characters
 {
     protected int attackPower;
     protected double speed;
     // ADD WAITING TIME FOR ATTACKING
-    public static volatile boolean gameRunning = true;
 
     private volatile boolean isAttacking = false;
     private volatile boolean slowed = false;
@@ -94,7 +97,12 @@ public abstract class Zombie extends Characters
     public synchronized void move()
     {
         // Skip movement if already attacking or dead
-        if (!isAlive() || isAttacking || !gameRunning) return;
+        if (!isAlive() || isAttacking) return;
+
+        if (!Yard.gameOn) {
+            System.out.println("Zombie thread stopping as game is over.");
+            return; // Exit the method to stop movement
+        }
 
         Plant targetPlant = checkForPlantCollision();
 
@@ -102,12 +110,12 @@ public abstract class Zombie extends Characters
             attack(targetPlant); // Handle attack
         } else {
             Platform.runLater(() -> {
-                elementImage.setLayoutX(elementImage.getLayoutX() - 3);
+                elementImage.setLayoutX(elementImage.getLayoutX() - speed);
             });
 
-            if (elementImage.getLayoutX() < 0) {
-                System.out.println("game over");
-                Zombie.endGame();
+            if (elementImage.getLayoutX() <= -elementImage.getFitWidth()) { // Ensure zombie fully exits screen
+                //System.out.println("game over");
+                Yard.gameOver();
             }
 
             try {
@@ -121,36 +129,54 @@ public abstract class Zombie extends Characters
 
 
     @Override
-    public void takeDamage(int damage)
-    {
+    public void takeDamage(int damage) {
         health -= damage;
-        System.out.println("Zombie takes damage: " + damage);
 
-        if (health <= 0)
-        {
-            // Set the volatile thread flag to be false / Mark As Dead
-            setAlive(false);
+
+
+
+        System.out.println("Zombie takes damage: " + damage + " Health: " + health);
+
+        // Create a Timeline to reset the brightness after 0.5 seconds
+        // Create a ColorAdjust to increase brightness
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.5); // Increase brightness
+        elementImage.setEffect(colorAdjust);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(200), // Duration of 0.5 seconds
+                        new KeyValue(colorAdjust.brightnessProperty(),0) // Reset effect to normal
+                )
+        );
+        timeline.setCycleCount(1); // Run the timeline only once
+        timeline.play(); // Start the timeline
+
+        // Check if the zombie is dead
+        if (health <= 0) {
+            setAlive(false); // Mark zombie as dead
+
+            synchronized (Yard.zombies) {
+                Yard.zombies.remove(this); // Remove from the list
+            }
 
             Platform.runLater(() -> {
                 disappear(Yard.root); // Remove zombie from the screen
             });
 
-            synchronized (Yard.zombies)
-            {
-                Yard.zombies.remove(this); // Remove from the list
-            }
+
         }
     }
+
 
     // This functions attacks a collided plant (Thread since it also accesses shared resources of itself, and Plant array list)
     private void attack(Plant targetPlant)
     {
         // If zombie is current attacking, prevent many threads for attacking.
-        if (isAttacking || !gameRunning)
+        if (isAttacking)
             return;
 
         // Set is attacking to be true to create a new attacking thread
         isAttacking = true;
+        zombieEatingAudio();
 
         // Store original speed to use later
         double originalSpeed = this.getSpeed();
@@ -164,19 +190,19 @@ public abstract class Zombie extends Characters
             elementImage.setPreserveRatio(true);
 
         }
-       else if(this instanceof ConeZombie){
+        else if(this instanceof ConeZombie){
             elementImage.setImage(new Image("images/zombies1/ConeheadZombieAttack.gif"));
             elementImage.setFitHeight(155);
             elementImage.setFitWidth(134);
             elementImage.setPreserveRatio(true);
         }
-       else if(this instanceof DefaultZombie){
+        else if(this instanceof DefaultZombie){
             elementImage.setImage(new Image("images/zombies1/ZombieAttack.gif"));
             elementImage.setFitHeight(155);
             elementImage.setFitWidth(134);
             elementImage.setPreserveRatio(true);
         }
-       else if(this instanceof HelmetZombie){
+        else if(this instanceof HelmetZombie){
             elementImage.setImage(new Image("images/zombies1/BucketheadZombieAttack.gif"));
             elementImage.setFitHeight(155);
             elementImage.setFitWidth(134);
@@ -190,8 +216,8 @@ public abstract class Zombie extends Characters
                 {
                     targetPlant.takeDamage(attackPower);
 
-                    // Attack every 3 seconds
-                    Thread.sleep(3000);
+                    // Attack every 2 seconds
+                    Thread.sleep(2000);
                 }
             } catch (InterruptedException e)
             {
@@ -200,27 +226,27 @@ public abstract class Zombie extends Characters
             } finally {
                 isAttacking = false;
                 Platform.runLater(()->{
-                    if(this instanceof FootballZombie){
+                    if(this instanceof FootballZombie && this.isAlive()){
                         elementImage.setImage(new Image("images/zombies1/FootballZombie.gif"));
                         elementImage.setFitWidth(120);
                         elementImage.setFitHeight(125);
                         elementImage.setPreserveRatio(true);
                     }
-                    else if(this instanceof DefaultZombie){
-                          elementImage.setImage(new Image("images/zombies1/Zombie.gif"));
+                    else if(this instanceof DefaultZombie && this.isAlive()){
+                        elementImage.setImage(new Image("images/zombies1/Zombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
 
                     }
-                    else if(this instanceof ConeZombie){
+                    else if(this instanceof ConeZombie && this.isAlive()){
                         elementImage.setImage(new Image("images/zombies1/ConeZombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
                     }
-                    else if(this instanceof HelmetZombie){
-                       elementImage.setImage(new Image("images/zombies1/BucketheadZombie.gif"));
+                    else if(this instanceof HelmetZombie && this.isAlive()){
+                        elementImage.setImage(new Image("images/zombies1/BucketheadZombie.gif"));
                         elementImage.setFitHeight(155);
                         elementImage.setFitWidth(134);
                         elementImage.setPreserveRatio(true);
@@ -234,37 +260,6 @@ public abstract class Zombie extends Characters
         attackThread.setDaemon(true);
         attackThread.start();
     }
-
-    public static void endGame() {
-        System.out.println("Ending the game...");
-
-        // Stop the game
-        gameRunning = false;
-
-        // Stop all non-JavaFX threads
-        killAllThreadsExceptJavaFX();
-
-        System.out.println("Cleared threads and shared resources...");
-
-        // Clear shared resources
-        synchronized (Yard.zombies) {
-            Yard.zombies.clear();
-        }
-        synchronized (Yard.plants) {
-            Yard.plants.clear();
-        }
-
-        // Transition back to the main menu
-        Platform.runLater(() -> {
-            System.out.println("Returning to Main Menu...");
-            try {
-                MainGUI.primaryStage.setScene(MainGUI.scene); // Ensure MainGUI.scene is not null
-            } catch (Exception e) {
-                System.err.println("Error transitioning to Main Menu: " + e.getMessage());
-            }
-        });
-    }
-
 
 
     @Override
@@ -302,9 +297,15 @@ public abstract class Zombie extends Characters
             elementImage.setFitWidth(134);
             elementImage.setPreserveRatio(true);
         }
+        double gifDurationInSeconds;
 
+        if(this instanceof FootballZombie){
+            gifDurationInSeconds=0.8;
+        }
+        else{
+            gifDurationInSeconds=1.6;
+        }
 
-        double gifDurationInSeconds = 2; // Replace with the actual duration of the GIF
 
         // Create a PauseTransition to wait for the GIF to finish
         PauseTransition pause = new PauseTransition(Duration.seconds(gifDurationInSeconds));
@@ -317,23 +318,17 @@ public abstract class Zombie extends Characters
         pause.play();
     }
 
-    public static void killAllThreadsExceptJavaFX() {
-        Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
-        for (Thread thread : allThreads.keySet()) {
-            String threadName = thread.getName();
+    public void zombieEatingAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/zombie eating.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.3);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
 
-            if (!"JavaFX Application Thread".equals(threadName) && !thread.isDaemon()) {
-                try {
-                    if (gameRunning && thread.getState() != Thread.State.TERMINATED) {
-                        thread.interrupt(); // Signal to stop
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error interrupting thread: " + threadName);
-                }
-            }
+        } catch (Exception e) {
+            System.out.println("Error playing zombie eating sound: " + e.getMessage());
         }
     }
-
-
-
 }
