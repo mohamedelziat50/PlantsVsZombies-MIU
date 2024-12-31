@@ -1,9 +1,11 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 import java.util.HashMap;
@@ -12,8 +14,7 @@ import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MainMenu implements FileOperations
-{
+public class MainMenu implements FileOperations {
     /*
         MEMBER VARIABLES
      */
@@ -30,22 +31,18 @@ public class MainMenu implements FileOperations
     /*
         CONSTRUCTORS
      */
-    public MainMenu()
-    {
+    public MainMenu() {
         // Set the currentPlayer to be unknown.
         currentPlayer = null;
 
         // Load all players from the file, using implemented loadPlayers() function.
-        try
-        {
+        try {
             // Load players from file, so that the players' data is available for operations.
             PlayersGameData = loadPlayers();
 
             // Load all levels' data from file
             LevelGameData = loadLevels();
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             System.out.println("Exception inside MainMenu(): Error loading data from file: " + exception);
         }
     }
@@ -54,8 +51,7 @@ public class MainMenu implements FileOperations
         METHODS
      */
     // Removed Function to display stars on terminal.
-    public void displayStars()
-    {
+    public void displayStars() {
         // Number of stars to display.
         final int numberOfStars = 20;
 
@@ -66,8 +62,7 @@ public class MainMenu implements FileOperations
     }
 
     // Function to display MainMenu, takes in Scanner as input for re-usability.
-    public void displayMenu(Scanner input)
-    {
+    public void displayMenu(Scanner input) {
         // // Initialize user choice for the loop.
         int userChoice = 0;
 
@@ -199,18 +194,15 @@ public class MainMenu implements FileOperations
     }
 
     // Removed start game on terminal old code
-    public void startGame()
-    {
+    public void startGame() {
 
     }
 
     // Removed displayGrid game on terminal old code
 
-    public boolean signIn(Scanner input)
-    {
+    public boolean signIn(Scanner input) {
         // If there are no players, return false immediately.
-        if(PlayersGameData.isEmpty())
-        {
+        if (PlayersGameData.isEmpty()) {
             System.out.println("No players exist in the system.");
             return false;
         }
@@ -220,8 +212,7 @@ public class MainMenu implements FileOperations
         String username = input.nextLine();
 
         // If player doesn't exist, return false
-        if(!PlayersGameData.containsKey(username))
-        {
+        if (!PlayersGameData.containsKey(username)) {
             System.out.println("Player not found.");
             return false;
         }
@@ -230,8 +221,7 @@ public class MainMenu implements FileOperations
         System.out.print("Enter password: ");
 
         // If password doesn't match, return false
-        if(! PlayersGameData.get(username).getPassword().equals(input.nextLine()))
-        {
+        if (!PlayersGameData.get(username).getPassword().equals(input.nextLine())) {
             System.out.println("Incorrect password.");
             return false;
         }
@@ -241,15 +231,13 @@ public class MainMenu implements FileOperations
         return true;
     }
 
-    public boolean createAccount(Scanner input)
-    {
+    public boolean createAccount(Scanner input) {
         // Input username
         System.out.print("Enter username: ");
         String username = input.nextLine();
 
         // Check if user exists first!
-        if(PlayersGameData.containsKey(username))
-        {
+        if (PlayersGameData.containsKey(username)) {
             System.out.println("Player already exists.");
             return false;
         }
@@ -265,13 +253,10 @@ public class MainMenu implements FileOperations
         PlayersGameData.put(newPlayer.getUsername(), newPlayer);
 
         // Try-Catch Block
-        try
-        {
+        try {
             // Write new player hashMap with the added player to the file.
             writePlayers(PlayersGameData);
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             System.out.println("Exception inside createAccount(): Error saving account: " + exception);
             return false;
         }
@@ -280,10 +265,8 @@ public class MainMenu implements FileOperations
         return true;
     }
 
-    public void displayUsers()
-    {
-        if(PlayersGameData.isEmpty())
-        {
+    public void displayUsers() {
+        if (PlayersGameData.isEmpty()) {
             System.out.println("No Player Data to display.");
             return;
         }
@@ -295,29 +278,26 @@ public class MainMenu implements FileOperations
         // Display Users
         displayStars();
         System.out.println("Available Users: ");
-        for(String username: sortedUsers)
+        for (String username : sortedUsers)
             System.out.println(username);
         displayStars();
     }
 
-    public void signOut()
-    {
-        if(currentPlayer != null)
+    public void signOut() {
+        if (currentPlayer != null)
             currentPlayer = null;
     }
 
-    public boolean deleteAccount(Scanner input)
-    {
+    public boolean deleteAccount(Scanner input) {
         // For-some reason, just check!
-        if(currentPlayer == null)
+        if (currentPlayer == null)
             return false;
 
         // Input password
         System.out.print("Re-write password for deletion: ");
 
         // If password doesn't match, return false and sign out player.
-        if(!currentPlayer.getPassword().equals(input.nextLine()))
-        {
+        if (!currentPlayer.getPassword().equals(input.nextLine())) {
             System.out.println("Incorrect password. Signing out.");
             signOut();
             return false;
@@ -327,13 +307,10 @@ public class MainMenu implements FileOperations
         PlayersGameData.remove(currentPlayer.getUsername());
 
         // Try-Catch Block
-        try
-        {
+        try {
             // Write new player hashMap with the deleted player to the file.
             writePlayers(PlayersGameData);
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             System.out.println("Exception inside deleteAccount(): Error deleting account: " + exception);
             return false;
         }
@@ -372,5 +349,64 @@ public class MainMenu implements FileOperations
 
         startGame();
     }
+
+    public static void zombieHand(AnchorPane root) {
+        // Load the zombie hand image
+        ImageView zombieHandImage = new ImageView(new Image("images/others/zombieHand.png"));
+        zombieHandImage.setPreserveRatio(true);
+        zombieHandImage.setFitWidth(181); // Adjust to match the hand size
+        zombieHandImage.setFitHeight(257);
+
+        // Initial position of the hand (below the visible area)
+        zombieHandImage.setLayoutX(191);  // Left-hand side position
+        zombieHandImage.setLayoutY(380); // Below the screen (off the ground)
+
+        // Add the zombie hand image to the root
+        root.getChildren().add(zombieHandImage);
+
+        // Create the scaling animation (hand grows larger)
+        ScaleTransition scale = new ScaleTransition(Duration.seconds(1), zombieHandImage);
+        scale.setFromX(0.5); // Start smaller
+        scale.setFromY(0.5);
+        scale.setToX(1.0); // Full size
+        scale.setToY(1.0);
+        scale.setInterpolator(Interpolator.EASE_BOTH);
+
+        // Create the translation animation (hand moves upwards)
+        TranslateTransition translate = new TranslateTransition(Duration.seconds(1), zombieHandImage);
+        translate.setFromY(200); // Start below the ground
+        translate.setToY(0);     // Ends in the visible area
+        translate.setInterpolator(Interpolator.EASE_OUT);
+
+        // Combine animations in parallel
+        ParallelTransition handAnimation = new ParallelTransition(scale, translate);
+
+        try
+        {
+            String path = MainMenu.class.getResource("/music/zombieEvilLaugh.mp3").toExternalForm();
+            Media sound = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setVolume(0.3);
+            mediaPlayer.play();
+        }
+        catch(Exception e)
+        {
+            System.out.println("error loading zombie hand sound");
+        }
+        handAnimation.setOnFinished(event -> {
+            // Pause for a moment before removing the zombie hand
+            PauseTransition pause = new PauseTransition(Duration.seconds(5));
+            pause.setOnFinished(e -> {
+                // Remove the zombie hand image after the pause
+                root.getChildren().remove(zombieHandImage);
+            });
+            pause.play();
+        });
+
+        // Start the hand animation and brightness timeline
+        handAnimation.play();
+    }
+
+
 
 }
