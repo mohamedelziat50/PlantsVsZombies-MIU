@@ -14,6 +14,35 @@ This project is a JavaFX-based game developed as part of our **Object-Oriented P
 - 🔊 **Lovely Sounds:** Enjoy immersive sound effects throughout the game.
 - 🔧 **JavaFX Implementation:** Built entirely using JavaFX for a dynamic user interface.
 
+## Screenshots
+
+### Main Menu
+- **Authentication:**
+![mainMenu1](https://github.com/user-attachments/assets/d7a9e0b2-61c9-49ed-920a-8999552296dc)
+- **Start Adventure!:**
+![mainMenu2](https://github.com/user-attachments/assets/75988136-d2be-498b-9fde-d2683511863f)
+
+### Levels
+- **Level 1:** Beginner Level ![level1-picture](https://github.com/user-attachments/assets/6557c752-5823-4be3-b384-f16039b03b5c)
+- **Level 2:** Intermediate Level ![level2-picture](https://github.com/user-attachments/assets/ce370e11-f187-4823-b46e-d8f6eaec6700)
+- **Level 3:** Advanced Level ![level3-picture](https://github.com/user-attachments/assets/386e3e14-c452-4c80-95da-3d7df7b880f3)
+
+---
+
+## Video Previews
+1. **Main Menu & Yard Preview:**
+
+https://github.com/user-attachments/assets/19f5afce-308b-4480-8a06-a458e9c381fb
+
+2. **Level 1 Gameplay:**
+
+https://github.com/user-attachments/assets/17cb7b19-ec85-45d3-9c72-9ac74e11ba05
+
+3. **Level 3 Gameplay (Christmas Level):**
+[Video Link](#) *(replace with actual link)*
+
+---
+
 ---
 
 ## How to Run
@@ -42,35 +71,6 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
      ```
 4. **Run the Project:**
    Click `Run` to launch the game.
-
----
-
-## Screenshots
-
-### Main Menu
-- **Authentication:**
-![mainMenu1](https://github.com/user-attachments/assets/d7a9e0b2-61c9-49ed-920a-8999552296dc)
-- **Start Adventure!:**
-![mainMenu2](https://github.com/user-attachments/assets/75988136-d2be-498b-9fde-d2683511863f)
-
-### Levels
-- **Level 1:** Beginner Level ![level1-picture](https://github.com/user-attachments/assets/6557c752-5823-4be3-b384-f16039b03b5c)
-- **Level 2:** Intermediate Level ![level2-picture](https://github.com/user-attachments/assets/ce370e11-f187-4823-b46e-d8f6eaec6700)
-- **Level 3:** Advanced Level ![level3-picture](https://github.com/user-attachments/assets/386e3e14-c452-4c80-95da-3d7df7b880f3)
-
----
-
-## Video Previews
-1. **Main Menu & Yard Preview:**
-
-https://github.com/user-attachments/assets/19f5afce-308b-4480-8a06-a458e9c381fb
-
-2. **Level 1 Gameplay:**
-
-https://github.com/user-attachments/assets/978f24db-2017-41cf-85ad-3b1353754a0e
-
-3. **Level 3 Gameplay (Christmas Level):**
-[Video Link](#) *(replace with actual link)*
 
 ---
 
