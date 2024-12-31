@@ -109,7 +109,7 @@ public class LawnMower extends MainElements {
             String path = getClass().getResource("/music/lawnmower.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.4);
+            mediaPlayer.setVolume(0.5);
             javafx.application.Platform.runLater(() -> mediaPlayer.play());
 
         } catch (Exception e) {

@@ -12,7 +12,7 @@ public class Cherry extends Plant
 {
     public Cherry()
     {
-        super(150, 15, 300); // Dummy values for health, damage, and cost
+        super(150, 20, 300); // Dummy values for health, damage, and cost
     }
 
     public Cherry(int x, int y)
@@ -116,7 +116,7 @@ public class Cherry extends Plant
             String path = getClass().getResource("/music/cherry bomb.mp3").toExternalForm();
             Media media = new Media(path);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.4);
+            mediaPlayer.setVolume(0.5);
             javafx.application.Platform.runLater(() -> mediaPlayer.play());
 
         } catch (Exception e) {
