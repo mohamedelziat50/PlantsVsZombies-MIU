@@ -48,7 +48,9 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
 ## Screenshots
 
 ### Main Menu
+- **Authentication:**
 ![mainMenu1](https://github.com/user-attachments/assets/d7a9e0b2-61c9-49ed-920a-8999552296dc)
+- **Start Adventure!:**
 ![mainMenu2](https://github.com/user-attachments/assets/75988136-d2be-498b-9fde-d2683511863f)
 
 ### Levels
@@ -60,10 +62,10 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
 
 ## Video Previews
 1. **Main Menu & Yard Preview:**
-[Video Link](#) *(replace with actual link)*
+https://github.com/user-attachments/assets/19f5afce-308b-4480-8a06-a458e9c381fb
 
 2. **Level 1 Gameplay:**
-[Video Link](#) *(replace with actual link)*
+https://github.com/user-attachments/assets/978f24db-2017-41cf-85ad-3b1353754a0e
 
 3. **Level 3 Gameplay (Christmas Level):**
 [Video Link](#) *(replace with actual link)*
