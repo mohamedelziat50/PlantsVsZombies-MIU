@@ -706,6 +706,8 @@ public class Yard extends Thread
                     // When the shake is done, remove the "PLANT!" image and overlay
                     shakeTimeline.setOnFinished(shakeEvent -> {
                         root.getChildren().removeAll(plantImage, overlay);
+                        Sun sun = new Sun();
+                        sun.appear(root);
                     });
 
                     shakeTimeline.play();

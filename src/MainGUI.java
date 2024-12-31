@@ -1,4 +1,5 @@
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -46,7 +47,7 @@ public class MainGUI extends Application implements FileOperations
         AnchorPane root = new AnchorPane();
 
     // Scene and stage
-        scene = new Scene(root, 800, 598); // Adding the root container to the scene while setting the scene dimensions
+        scene = new Scene(root, 800, 596); // Adding the root container to the scene while setting the scene dimensions
         primaryStage.setScene(scene);
 
     // To close the option of opening the game in full screen mode since it ruins the dimensions
@@ -138,8 +139,13 @@ public class MainGUI extends Application implements FileOperations
         level1.setRotate(9);
         level1.setOpacity(0);
         level1.setOnAction(e -> {
-                buttonClickAudio();
+            buttonClickAudio();
+            MainMenu.zombieHand(root);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); //allow the zombie hand to be done before switching scenes
+            pause.setOnFinished(event -> {
                 handleLevel1(root);
+            });
+            pause.play();
     }); //Linking the Level1 button to the event handler
 
         //level2 Button creation and sizing
@@ -151,7 +157,12 @@ public class MainGUI extends Application implements FileOperations
         level2.setOpacity(0);
         level2.setOnAction(e -> {
             buttonClickAudio();
-            handleLevel2(root);
+            MainMenu.zombieHand(root);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); //allow the zombie hand to be done before switching scenes
+            pause.setOnFinished(event -> {
+                handleLevel2(root);
+            });
+            pause.play();
     }); //Linking the level2 button to the event handler
 
         //level3 Button creation and sizing
@@ -163,8 +174,15 @@ public class MainGUI extends Application implements FileOperations
         level3.setOpacity(0);
         level3.setOnAction(e -> {
             buttonClickAudio();
-            handleLevel3(root);
-        }); //Linking the level3 button to the event handler
+            MainMenu.zombieHand(root);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); //allow the zombie hand to be done before switching scenes
+            pause.setOnFinished(event -> {
+                handleLevel3(root);
+            });
+            pause.play();
+        });
+
+        //Linking the level3 button to the event handler
 
         //Level background
         ImageView levelMenuImage = new ImageView(new Image("images/menuImages/levelMenu.jpg"));
@@ -201,6 +219,7 @@ public class MainGUI extends Application implements FileOperations
 
         // level1 Button hover effect
         level1.setOnMouseEntered(e -> {
+
             levelMenuImage.setImage(new Image("images/menuImages/lev1Hover.jpg"));
         });
         level1.setOnMouseExited(e -> {
