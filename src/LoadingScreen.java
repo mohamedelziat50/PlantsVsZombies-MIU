@@ -88,10 +88,10 @@ public class LoadingScreen
 
             root.getChildren().add(loadingScreenImage);
 
-           root.setOnMouseClicked(e->{
-               root.getChildren().remove(loadingScreenImage);
-           });
 
+            root.setOnMouseClicked(e->{
+                root.getChildren().remove(loadingScreenImage);
+            });
 
         });
     }

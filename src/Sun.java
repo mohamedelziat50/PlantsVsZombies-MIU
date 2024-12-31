@@ -15,13 +15,10 @@ import java.util.Random;
 
 public class Sun extends MainElements
 {
-
-
-
     public Sun()
     {
         // Initialize the Peashooter image
-        elementImage = new ImageView(new Image("images/others/sun.png   "));
+        elementImage = new ImageView(new Image("images/others/sun.png"));
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
@@ -37,6 +34,7 @@ public class Sun extends MainElements
         elementImage.setFitWidth(90);
         elementImage.setFitHeight(85);
         elementImage.setPreserveRatio(true);
+
     }
 
     @Override
@@ -119,10 +117,16 @@ public class Sun extends MainElements
 
             // Collection animation
             Timeline collectAnimation = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(elementImage.layoutXProperty(), elementImage.getLayoutX())),
-                    new KeyFrame(Duration.ZERO, new KeyValue(elementImage.layoutYProperty(), elementImage.getLayoutY())),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(elementImage.layoutXProperty(), 220)), // Move to yard counter
-                    new KeyFrame(Duration.seconds(1), new KeyValue(elementImage.layoutYProperty(), 12))  // Move to yard counter
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(elementImage.layoutXProperty(), elementImage.getLayoutX()),
+                            new KeyValue(elementImage.layoutYProperty(), elementImage.getLayoutY()),
+                            new KeyValue(elementImage.opacityProperty(), 1.0) // Start with full opacity
+                    ),
+                    new KeyFrame(Duration.seconds(1),
+                            new KeyValue(elementImage.layoutXProperty(), 220), // Move to yard counter
+                            new KeyValue(elementImage.layoutYProperty(), 12),  // Move to yard counter
+                            new KeyValue(elementImage.opacityProperty(), 0)   // Fade out to 0 opacity
+                    )
             );
 
             collectAnimation.setOnFinished(event2 -> root.getChildren().remove(elementImage)); // Remove after collection
@@ -146,7 +150,6 @@ public class Sun extends MainElements
             System.out.println("Error playing sun collecting sound: " + e.getMessage());
         }
     }
-
 
     @Override
     public void disappear(Pane root)
