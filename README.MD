@@ -48,7 +48,8 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
 ## Screenshots
 
 ### Main Menu
-*(Insert main menu screenshot here)*
+![mainMenu1](https://github.com/user-attachments/assets/d7a9e0b2-61c9-49ed-920a-8999552296dc)
+![mainMenu2](https://github.com/user-attachments/assets/75988136-d2be-498b-9fde-d2683511863f)
 
 ### Levels
 - **Level 1:** Beginner Level ![level1-picture](https://github.com/user-attachments/assets/6557c752-5823-4be3-b384-f16039b03b5c)
