@@ -1,3 +1,4 @@
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -10,10 +11,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class MainGUI extends Application implements FileOperations
 {
@@ -94,7 +98,10 @@ public class MainGUI extends Application implements FileOperations
         signInButton.setLayoutY(207);
         signInButton.setRotate(9);
         signInButton.setOpacity(0);
-        signInButton.setOnAction(e -> handleSignIn(root)); //Linking the signIn button to the event handler
+        signInButton.setOnAction(e -> {
+            handleSignIn(root);
+            buttonClickAudio();
+                }); //Linking the signIn button to the event handler
 
         //SignUp Button creation and sizing
         Button signUpButton = new Button();
@@ -103,7 +110,10 @@ public class MainGUI extends Application implements FileOperations
         signUpButton.setLayoutY(283);
         signUpButton.setRotate(10);
         signUpButton.setOpacity(0);
-        signUpButton.setOnAction(e -> handleSignUp(root)); //Linking the signUp button to the event handler
+        signUpButton.setOnAction(e -> {
+            handleSignUp(root);
+            buttonClickAudio();
+        }); //Linking the signUp button to the event handler
 
         //Exit Button creation and sizing
         Button exitButton = new Button();
@@ -112,7 +122,10 @@ public class MainGUI extends Application implements FileOperations
         exitButton.setLayoutY(358);
         exitButton.setRotate(12);
         exitButton.setOpacity(0);
-        exitButton.setOnAction(e -> handleExit()); //Linking the Exit button to the event handler
+        exitButton.setOnAction(e -> {
+            handleExit();
+            buttonClickAudio();
+        }); //Linking the Exit button to the event handler
 
         //Adding the contents of Menu1 to their corresponding container
         Menu1.getChildren().addAll(background, signInButton, signUpButton, exitButton);
@@ -128,7 +141,15 @@ public class MainGUI extends Application implements FileOperations
         level1.setLayoutY(207);
         level1.setRotate(9);
         level1.setOpacity(0);
-        level1.setOnAction(e -> handleLevel1(root)); //Linking the Level1 button to the event handler
+        level1.setOnAction(e -> {
+            buttonClickAudio();
+            MainMenu.zombieHand(root);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); //allow the zombie hand to be done before switching scenes
+            pause.setOnFinished(event -> {
+                handleLevel1(root);
+            });
+            pause.play();
+        });//Linking the Level1 button to the event handler
 
         //level2 Button creation and sizing
         Button level2 = new Button();
@@ -137,7 +158,15 @@ public class MainGUI extends Application implements FileOperations
         level2.setLayoutY(283);
         level2.setRotate(10);
         level2.setOpacity(0);
-        level2.setOnAction(e -> handleLevel2(root)); //Linking the level2 button to the event handler
+        level2.setOnAction(e -> {
+            buttonClickAudio();
+            MainMenu.zombieHand(root);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); //allow the zombie hand to be done before switching scenes
+            pause.setOnFinished(event -> {
+                handleLevel2(root);
+            });
+            pause.play();
+        });//Linking the level2 button to the event handler
 
         //level3 Button creation and sizing
         Button level3 = new Button();
@@ -146,7 +175,15 @@ public class MainGUI extends Application implements FileOperations
         level3.setLayoutY(358);
         level3.setRotate(12);
         level3.setOpacity(0);
-        level3.setOnAction(e -> handleLevel3(root)); //Linking the level3 button to the event handler
+        level3.setOnAction(e -> {
+            buttonClickAudio();
+            MainMenu.zombieHand(root);
+            PauseTransition pause = new PauseTransition(Duration.seconds(5)); //allow the zombie hand to be done before switching scenes
+            pause.setOnFinished(event -> {
+                handleLevel3(root);
+            });
+            pause.play();
+        }); //Linking the level3 button to the event handler
 
         //Level background
         ImageView levelMenuImage = new ImageView(new Image("images/menuImages/levelMenu.jpg"));
@@ -255,7 +292,8 @@ public class MainGUI extends Application implements FileOperations
 
         //Back button handling
         back.setOnAction(e -> {
-            root.getChildren().removeAll(overlay,signInContainer); // Removes the sign in container and the overlay in order to return to menu 1 when the back button is pressed
+            root.getChildren().removeAll(overlay,signInContainer);// Removes the sign in container and the overlay in order to return to menu 1 when the back button is pressed
+            buttonClickAudio();
         });
 
 
@@ -294,7 +332,10 @@ public class MainGUI extends Application implements FileOperations
                 exit.setLayoutX(709);
                 exit.setLayoutY(488);
                 exit.setOpacity(0);
-                exit.setOnAction(event -> handleExit()); //Linking the Exit button to the event handler
+                exit.setOnAction(event -> {
+                    handleExit();
+                    buttonClickAudio();
+                }); //Linking the Exit button to the event handler
 
                 //Creating and sizing the background image that appears when sign in is pressed
                 ImageView deleteAcc = new ImageView(new Image("images/menuImages/DeleteACC.png"));
@@ -333,6 +374,7 @@ public class MainGUI extends Application implements FileOperations
                 Confirm.setLayoutY(355); // Adjust position as needed
                 Confirm.setOpacity(0);
                 Confirm.setOnAction(event -> {
+                    buttonClickAudio();
                     root.getChildren().removeAll(usernameLabel,overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
                     users.remove(username);
                     try {
@@ -345,6 +387,7 @@ public class MainGUI extends Application implements FileOperations
                     showAlert(root, "Account deleted", "We will miss you "+username);
                 });
                 Cancel.setOnAction(event -> {
+                    buttonClickAudio();
                     root.getChildren().removeAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
                 });
 
@@ -355,6 +398,7 @@ public class MainGUI extends Application implements FileOperations
                 deleteAccount.setLayoutY(476); // Adjust position as needed
                 deleteAccount.setOpacity(0);
                 deleteAccount.setOnAction(event -> {
+                    buttonClickAudio();
                     root.getChildren().addAll(overlay,deleteAcc,DeleteAlert,DeleteAlert2,Cancel,Confirm);
                 });
 
@@ -363,6 +407,7 @@ public class MainGUI extends Application implements FileOperations
                 showAlert(root, "Sign-In Successful", "Welcome, " + username);
 
                 logOut.setOnAction(event -> {
+                    buttonClickAudio();
                     levelMenu.getChildren().removeAll(usernameLabel,logOut,exit);
                     root.getChildren().removeAll(levelMenu); // Remove level menu components
                     root.getChildren().addAll(Menu1);; // Redisplay the main menu
@@ -425,6 +470,7 @@ public class MainGUI extends Application implements FileOperations
 
         //Back button handling
         back.setOnAction(e -> {
+            buttonClickAudio();
             root.getChildren().removeAll(overlay, signUpContainer); // Remove both the overlay and menu
         });
 
@@ -484,7 +530,10 @@ public class MainGUI extends Application implements FileOperations
         gifDave.setLayoutX(1);
         //  gifDave.toFront();
 
-        ImageView levelback = new ImageView(new Image("images/yard-related/Yard.png"));  Label message =new Label("Welcome neighbour "+username+ "\nMy name is dave and some people call me CRAZY DAVE!");
+        ImageView levelback = new ImageView(new Image("images/yard-related/Yard.png"));
+        levelback.setFitWidth(1278);
+        levelback.setFitHeight(650);
+        Label message =new Label("Welcome neighbour "+username+ "\nMy name is dave and some people call me CRAZY DAVE!");
         message.prefWidth(121);
         message.prefHeight(28);
         message.setLayoutX(210);
@@ -493,8 +542,7 @@ public class MainGUI extends Application implements FileOperations
         message.toFront();
         message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
         levelback.setPreserveRatio(true);
-        primaryStage.setWidth(levelback.getImage().getWidth());
-        primaryStage.setHeight(levelback.getImage().getHeight());
+
 
 
 
@@ -508,18 +556,19 @@ public class MainGUI extends Application implements FileOperations
         message2.setLayoutY(199);
         message2.toFront();
         message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
-        root.getChildren().removeAll(levelMenu);
+
         message.setOnMouseClicked(event -> {
             root.getChildren().addAll(message2);
+            message.setDisable(true);
         });
         root.getChildren().addAll(levelback,gifDave,message);
 
 
         message2.setOnMouseClicked(event -> {
-            root.getChildren().removeAll(levelback,gifDave,message,message2);
+            root.getChildren().removeAll(message2,levelback,gifDave,message);
             Level testLevel = new Level(1, 60);
             testLevel.startLevel();
-            System.out.println("DONE level1");
+            System.out.println("DONE level2");
         });
 
 
@@ -536,6 +585,8 @@ public class MainGUI extends Application implements FileOperations
         //  gifDave.toFront();
 
         ImageView levelback = new ImageView(new Image("images/yard-related/nightYard.png"));
+        levelback.setFitWidth(1278);
+        levelback.setFitHeight(650);
         Label message =new Label("Good job "+username+ "I see you survived your first day in this crazy town");
         message.prefWidth(121);
         message.prefHeight(28);
@@ -545,8 +596,7 @@ public class MainGUI extends Application implements FileOperations
         message.toFront();
         message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
         levelback.setPreserveRatio(true);
-        primaryStage.setWidth(levelback.getImage().getWidth());
-        primaryStage.setHeight(levelback.getImage().getHeight());
+
 
 
         Label message2 =new Label("Well let's see if you have the skills to survive another day \nBEWARE! It gets harder at night!!!");
@@ -556,14 +606,15 @@ public class MainGUI extends Application implements FileOperations
         message2.setLayoutY(199);
         message2.toFront();
         message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 13px; -fx-text-fill: black;");
-        root.getChildren().removeAll(levelMenu);
         message.setOnMouseClicked(event -> {
             root.getChildren().addAll(message2);
+            message.setDisable(true);
         });
         root.getChildren().addAll(levelback,gifDave,message);
 
 
         message2.setOnMouseClicked(event -> {
+            root.getChildren().removeAll(message2,levelback,gifDave,message);
             Level testLevel = new Level(2, 60);
             testLevel.startLevel();
             System.out.println("DONE level2");
@@ -589,7 +640,9 @@ public class MainGUI extends Application implements FileOperations
         text.setLayoutY(31);
         text.setLayoutX(254);
 
-        ImageView levelback = new ImageView(new Image("images/yard-related/nightYard.png"));
+        ImageView levelback = new ImageView(new Image("images/yard-related/ChristmasYard.png"));
+        levelback.setFitWidth(1278);
+        levelback.setFitHeight(650);
         Label message =new Label("HO! HO! HOOOOOOO! Happy new year Dr.Mariam "+"\n You survived a whole semester congratulations!");
         message.prefWidth(121);
         message.prefHeight(28);
@@ -597,9 +650,8 @@ public class MainGUI extends Application implements FileOperations
         message.setLayoutY(70);
         message.toFront();
         message.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 15px; -fx-text-fill: black;");
-        levelback.setPreserveRatio(true);
-        primaryStage.setWidth(levelback.getImage().getWidth());
-        primaryStage.setHeight(levelback.getImage().getHeight());
+        levelback.setPreserveRatio(false);
+
 
 
         Label message2 =new Label("I heard this is your last day in the neigboorhood. \nTake care......Zombies are usually hungry in new year's eve!!!");
@@ -609,16 +661,17 @@ public class MainGUI extends Application implements FileOperations
         message2.setLayoutY(115);
         message2.toFront();
         message2.setStyle("-fx-font-family: 'Book Antiqua'; -fx-font-size: 15px; -fx-text-fill: black;");
-        root.getChildren().removeAll(levelMenu);
         root.getChildren().addAll(levelback,Xmasdave,text,message);
 
         message.setOnMouseClicked(event -> {
 
             root.getChildren().addAll(message2);
+            message.setDisable(true);
         });
 
 
         message2.setOnMouseClicked(event -> {
+            root.getChildren().removeAll(message2,levelback,Xmasdave,message,text);
             Level testLevel = new Level(3, 60);
             testLevel.startLevel();
             System.out.println("DONE level2");
@@ -670,8 +723,24 @@ public class MainGUI extends Application implements FileOperations
 
         //Ok button handling
         okButton.setOnAction(e -> {
+            buttonClickAudio();
             root.getChildren().removeAll(alertContainer); //Removes the alert container to exit
+            buttonClickAudio();
         });
+    }
+
+    public void buttonClickAudio() {
+        try {
+            // Path to the sun collected sound
+            String path = getClass().getResource("/music/button click.mp3").toExternalForm();
+            Media media = new Media(path);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.5);
+            javafx.application.Platform.runLater(() -> mediaPlayer.play());
+
+        } catch (Exception e) {
+            System.out.println("Error playing button click sound: " + e.getMessage());
+        }
     }
 
 

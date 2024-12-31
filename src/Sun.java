@@ -50,7 +50,7 @@ public class Sun extends MainElements
                 try
                 {
                     // Spawn every 10 seconds
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
 
                     javafx.application.Platform.runLater(() ->
                     {

@@ -1,11 +1,3 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
-
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.scene.effect.ColorAdjust;
@@ -351,7 +343,7 @@ public class MainMenu implements FileOperations {
             System.out.println(i + ". Level " + i);
         displayStars();
 
-        int userChoice=0;
+        int userChoice = 0;
         Scanner input = new Scanner(System.in);
         userChoice = input.nextInt();
 

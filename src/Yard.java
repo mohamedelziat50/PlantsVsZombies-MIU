@@ -49,7 +49,7 @@ public class Yard extends Thread
 
 
     // GUI-related variables
-    public static AnchorPane root;
+    public static AnchorPane root=new AnchorPane();
     public static Label label; // Related for sun counter
     private ProgressBar levelProgressBar;  // The progress bar to track level duration
 
@@ -203,7 +203,7 @@ public class Yard extends Thread
         while (gameOn&&timeLeft>0)
         {
             // Decrease the spawn interval dynamically over time
-            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 30000; // Calculate elapsed minutes
+            long elapsedMinutes = (System.currentTimeMillis() - startTime) / 10000; // Calculate elapsed minutes
             zombieSpawnInterval = Math.max(minSpawnInterval, zombieSpawnInterval - (int) (elapsedMinutes * spawnIntervalDecreaseRate));
 
             try {
@@ -326,7 +326,7 @@ public class Yard extends Thread
     {
         // Reset game state variables
         gameOn = true;
-        zombieSpawnInterval= 20;
+        zombieSpawnInterval= 30;
         sunCounter= 50;
         timeLeft= 4 * 60;
 
