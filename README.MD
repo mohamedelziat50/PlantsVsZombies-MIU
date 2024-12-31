@@ -8,10 +8,10 @@ This project is a JavaFX-based game developed as part of our **Object-Oriented P
 ## Features
 - 🎮 **Engaging Gameplay:** Battle zombies using various plant abilities.
 - 🎨 **Custom Levels:** Three progressively challenging levels:
-  - **Level 1:** Start with 3 cards.
-  - **Level 2:** Unlock 2 more cards (total 5 cards).
-  - **Level 3:** Unlock 2 more cards (total 7 cards), themed for **Christmas**.
-- 🔊 **Lovely Sounds:** Enjoy immersive sound effects throughout the game.
+  - **Level 1:** Start with 3 cards, themed for the **Day**
+  - **Level 2:** Unlock 2 more cards (total 5 cards), themed for the **Night**
+  - **Level 3:** Unlock 2 more cards (total 7 cards),  specially themed for **Christmas**, inspired by our project's discussion on the last day of the year.
+- 🔊 **Sounds:** Enjoy immersive sound effects throughout the game.
 - 🔧 **JavaFX Implementation:** Built entirely using JavaFX for a dynamic user interface.
 
 ## Screenshots
@@ -19,7 +19,7 @@ This project is a JavaFX-based game developed as part of our **Object-Oriented P
 ### Main Menu
 - **Authentication:**
 ![mainMenu1](https://github.com/user-attachments/assets/d7a9e0b2-61c9-49ed-920a-8999552296dc)
-- **Start Adventure!:**
+- **Adventure:**
 ![mainMenu2](https://github.com/user-attachments/assets/75988136-d2be-498b-9fde-d2683511863f)
 
 ### Levels
@@ -39,7 +39,8 @@ https://github.com/user-attachments/assets/19f5afce-308b-4480-8a06-a458e9c381fb
 https://github.com/user-attachments/assets/17cb7b19-ec85-45d3-9c72-9ac74e11ba05
 
 3. **Level 3 Gameplay (Christmas Level):**
-[Video Link](#) *(replace with actual link)*
+
+https://github.com/user-attachments/assets/f9f44384-3bc2-4d2a-955b-ece9ccd564d7
 
 ---
 
@@ -50,7 +51,7 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
 
 ### Prerequisites
 - **JavaFX SDK** (e.g., `javafx-sdk-23.0.1`).
-- **IntelliJ IDEA** (recommended for easy setup).
+- **IntelliJ IDEA** (recommended for easy setup, but other platforms, such as NetBeans, can also be used).
 
 ### Steps
 1. **Clone the Repository:**
