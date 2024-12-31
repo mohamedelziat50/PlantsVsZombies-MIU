@@ -62,9 +62,11 @@ To run the project, JavaFX must be installed and configured. Follow these steps 
 
 ## Video Previews
 1. **Main Menu & Yard Preview:**
+
 https://github.com/user-attachments/assets/19f5afce-308b-4480-8a06-a458e9c381fb
 
 2. **Level 1 Gameplay:**
+
 https://github.com/user-attachments/assets/978f24db-2017-41cf-85ad-3b1353754a0e
 
 3. **Level 3 Gameplay (Christmas Level):**
