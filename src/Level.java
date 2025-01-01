@@ -42,6 +42,14 @@ public class Level implements Serializable
         currentYard = new Yard(this);
         currentYard.displayYard();
         // Main.primaryStage.setFullScreen(true);
+        SoundtrackPlayer.stopTrack();
+
+        if(levelNumber == 1)
+            SoundtrackPlayer.playInGametrack1();
+        else if(levelNumber == 2)
+            SoundtrackPlayer.playInGametrack2();
+        else if(levelNumber == 3)
+            SoundtrackPlayer.playInGametrack3();
     }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,

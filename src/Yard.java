@@ -459,6 +459,9 @@ public class Yard extends Thread
 
                 // Transition to the loading screen
                 LoadingScreen.show(MainGUI.primaryStage);
+
+                SoundtrackPlayer.stopTrack();
+                SoundtrackPlayer.playMainMenutrack();
             });
 
             // Start the sequential transition
@@ -544,6 +547,9 @@ public class Yard extends Thread
 
                 // Transition to the loading screen
                 LoadingScreen.show(MainGUI.primaryStage);
+
+                SoundtrackPlayer.stopTrack();
+                SoundtrackPlayer.playMainMenutrack();
             });
 
             // Start the sequential transition
