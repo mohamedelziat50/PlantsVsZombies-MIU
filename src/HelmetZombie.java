@@ -26,12 +26,6 @@ public class HelmetZombie extends Zombie {
     }
 
     @Override
-    public void action()
-    {
-
-    }
-
-    @Override
     public void appear(Pane root) {
 
     }

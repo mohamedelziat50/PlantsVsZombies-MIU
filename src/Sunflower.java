@@ -52,12 +52,6 @@ public class Sunflower extends Plant
     {
     }
 
-    @Override
-    public void action()
-    {
-
-    }
-
     public void startSunProduction(AnchorPane root)
     {
         //to produce sun every 5 seconds

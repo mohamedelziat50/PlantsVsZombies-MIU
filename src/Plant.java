@@ -27,9 +27,6 @@ public abstract class Plant extends Characters implements Runnable
     public abstract void run();
 
     @Override
-    public abstract void action();
-
-    @Override
     public void takeDamage(int damage)
     {
         health -= damage;

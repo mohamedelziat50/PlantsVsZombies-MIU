@@ -99,10 +99,4 @@ public class Peashooter extends Plant
         System.out.println("Peashooter takes damage: " + damage + " Current health: " + this.health);
     }
 
-    @Override
-    public void action()
-    {
-
-    }
-
 }

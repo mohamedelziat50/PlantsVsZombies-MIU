@@ -261,10 +261,6 @@ public abstract class Zombie extends Characters
         attackThread.start();
     }
 
-
-    @Override
-    public abstract void action();
-
     @Override
     public abstract void appear(Pane root);
 

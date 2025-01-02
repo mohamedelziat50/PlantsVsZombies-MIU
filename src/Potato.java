@@ -57,13 +57,7 @@ public class Potato extends Plant
     @Override
     public void run()
     {
-
-    }
-
-    @Override
-    public void action()
-    {
-        //to be implemented
+        // Potato simply plays a defense role that takes damage
     }
 
 }
