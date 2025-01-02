@@ -1,20 +1,20 @@
 # Plants vs Zombies - MIU
 
 ## Overview
-This project is a JavaFX-based game developed as part of our **Object-Oriented Programming Project**. It showcases a strategic gameplay experience with custom-designed levels while utilizing core OOP concepts such as encapsulation, inheritance, abstraction, and additional features like threading, collision handling, etc.
+This project is a JavaFX-based game developed as part of our **Object-Oriented Programming Course Project**. It showcases a strategic gameplay experience with custom-designed levels while utilizing core OOP concepts such as encapsulation, inheritance, abstraction, and additional features like threading, collision handling, etc.
 
 ---
 
 ## Features
 - 🎮 **Engaging Gameplay:** Battle zombies using various plant abilities.
 - 🎨 **Custom Levels:** Three progressively challenging levels:
-  - **Level 1:** Start with 3 cards, themed for the **Day**
-  - **Level 2:** Unlock 2 more cards (total 5 cards), themed for the **Night**
+  - **Level 1:** Start with 3 cards, themed for the **Day**.
+  - **Level 2:** Unlock 2 more cards (total 5 cards), themed for the **Night**.
   - **Level 3:** Unlock 2 more cards (total 7 cards),  specially themed for **Christmas**, inspired by our project's discussion on the last day of the year.
   - **Difficulty:** The game progressively gets harder as you advance through the levels, ensuring an exciting challenge for players.
 
 - 🔊 **Sounds:** Enjoy immersive sound effects throughout the game. Only the **Main Menu soundtrack** is included in the preview to provide users with a novel feeling during gameplay. Gameplay soundtracks are unlocked during actual gameplay to enhance the **experience**. 😉
-- ⏱️ **Game Duration:** Each session offers an immersive experience lasting approximately 4 minutes.
+- ⏱️ **Game Duration:** Each level offers an immersive experience lasting approximately 4 minutes.
 
 - 🔧 **JavaFX Implementation:** Built entirely using JavaFX for a dynamic user interface.
 

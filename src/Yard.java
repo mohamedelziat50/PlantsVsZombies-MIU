@@ -24,10 +24,11 @@ import java.util.Random;
 
 public class Yard extends Thread
 {
+    // Each yard needs to have a parent level
     public static Level parentLevel;
 
     // YARD CONSTANT VARIABLES
-    public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650;
+    public static final int ROWS = 5, COLUMNS = 9, WIDTH = 1278, HEIGHT = 650, MINUTES = 4, SUNCOUNTER = 50, PREVIEW_SECONDS = 15;
 
     // IMPORTANT ARRAYS FOR GAMEPLAY TRACKING OF PLANTS & LAWNMOWERS
     public static volatile Characters[][] grid; // Used Placement of plants
@@ -42,11 +43,9 @@ public class Yard extends Thread
     // Variables specific to each level!
     public static volatile boolean gameOn = true;
     private static int zombieSpawnInterval;
-    private double levelDuration; // Total duration for the level (in seconds)
     public static double timeLeft;
     public static int sunCounter;
     private Timeline timeline; // Declare timeline as a class-level variable
-
 
     // GUI-related variables
     public static AnchorPane root=new AnchorPane();
@@ -76,8 +75,8 @@ public class Yard extends Thread
 
         // Level specific stuff
        // levelDuration = parentLevel.getDurationInSeconds();
-        timeLeft = 3 * 60;// the game is 4 minutes (4sec*60=4min) for those who don't know
-        sunCounter=50;
+        timeLeft = (MINUTES * 60) + PREVIEW_SECONDS;// the game is 4 minutes (4sec*60=4min) for those who don't know
+        sunCounter= SUNCOUNTER;
 
         // 50 doesn't matter, the sun counter replaces it
         label = new Label("50");
@@ -327,8 +326,8 @@ public class Yard extends Thread
         // Reset game state variables
         gameOn = true;
         zombieSpawnInterval= 30;
-        sunCounter= 50;
-        timeLeft= 4 * 60;
+        sunCounter = SUNCOUNTER;
+        timeLeft= (MINUTES * 60) + PREVIEW_SECONDS;
 
             // Clear all plants and set them inactive
             plants.forEach(plant -> {
@@ -370,7 +369,7 @@ public class Yard extends Thread
         for(int i=0;i<ROWS;i++){
             for(int j=0;j<COLUMNS;j++){
                 if(grid[i][j]!=null){
-                    System.out.println("Plant Removed");
+                    System.out.println("Plant Removed from Grid");
                     grid[i][j].disappear(root);
                     grid[i][j]=null;
                 }
@@ -392,7 +391,7 @@ public class Yard extends Thread
             for (int i = 0; i < ROWS; i++) {
                 for (int j = 0; j < COLUMNS; j++) {
                     if (grid[i][j] != null) {
-                        System.out.println("Plant removed");
+                        System.out.println("Plant removed from Grid");
                         grid[i][j].disappear(root);
                         grid[i][j] = null;
                     }
@@ -481,7 +480,7 @@ public class Yard extends Thread
             for (int i = 0; i < ROWS; i++) {
                 for (int j = 0; j < COLUMNS; j++) {
                     if (grid[i][j] != null) {
-                        System.out.println("game reset");
+                        System.out.println("Plant removed from Grid");
                         grid[i][j].disappear(root);
                         grid[i][j] = null;
                     }
@@ -610,18 +609,33 @@ public class Yard extends Thread
     // Start the level timer and update the progress bar
     public void startLevelTimer()
     {
+        // Initial progress is 1.0 (100%), and it decreases to 0.0 as timeLeft decreases to 0
+        levelProgressBar.setProgress(1.0);
+
+        // Variable to hold original time
+        double originalTime = timeLeft;
+
         // Initialize the timeline
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (timeLeft > 0 && Yard.gameOn)
             {
-                timeLeft -= 1;  // Decrease the remaining time by 1 second
-                System.out.println("Time left: " + timeLeft);
-                levelProgressBar.setProgress(levelProgressBar.getProgress() - 0.01);  // Update the progress bar
-            }
-            else {
-                if(timeLeft <= 0)
-                    gameWin(); // Call the loading screen for the main menu
+                // Decrease the remaining time by 1 second
+                timeLeft -= 1;
 
+                // Use Platform.runLater for UI updates
+                Platform.runLater(() -> {
+                    // Update the progress bar proportionally
+                    levelProgressBar.setProgress(timeLeft / originalTime);
+
+                    // For Debugging purposes
+                    System.out.println("Time left: " + timeLeft);
+                });
+            }
+            else
+            {
+                // Call the loading screen for the main menu
+                if(timeLeft <= 0)
+                    gameWin();
 
                 // Level is over, stop the timeline
                 timeline.stop();

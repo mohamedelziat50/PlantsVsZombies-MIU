@@ -42,7 +42,7 @@ public class MainGUI extends Application implements FileOperations
 
         // Add ICON
         primaryStage.setTitle("PVZ!");
-        primaryStage.getIcons().add(new Image("images/others/icon.png"));
+        primaryStage.getIcons().add(new Image("images/others/christmasIcon.png"));
 
         // Sound track player
         SoundtrackPlayer soundtrackplayer = new SoundtrackPlayer();
@@ -568,7 +568,7 @@ public class MainGUI extends Application implements FileOperations
             root.getChildren().removeAll(message2,levelback,gifDave,message);
             Level testLevel = new Level(1, 60);
             testLevel.startLevel();
-            System.out.println("DONE level2");
+            System.out.println("Level 1 Selected");
         });
 
 
@@ -617,7 +617,7 @@ public class MainGUI extends Application implements FileOperations
             root.getChildren().removeAll(message2,levelback,gifDave,message);
             Level testLevel = new Level(2, 60);
             testLevel.startLevel();
-            System.out.println("DONE level2");
+            System.out.println("Level 2 Selected");
         });
 
     }
@@ -674,7 +674,7 @@ public class MainGUI extends Application implements FileOperations
             root.getChildren().removeAll(message2,levelback,Xmasdave,message,text);
             Level testLevel = new Level(3, 60);
             testLevel.startLevel();
-            System.out.println("DONE level2");
+            System.out.println("Level 3 Selected");
         });
     }
 
