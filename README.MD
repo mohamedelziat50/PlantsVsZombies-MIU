@@ -11,7 +11,10 @@ This project is a JavaFX-based game developed as part of our **Object-Oriented P
   - **Level 1:** Start with 3 cards, themed for the **Day**
   - **Level 2:** Unlock 2 more cards (total 5 cards), themed for the **Night**
   - **Level 3:** Unlock 2 more cards (total 7 cards),  specially themed for **Christmas**, inspired by our project's discussion on the last day of the year.
+  - **Difficulty:** The game progressively gets harder as you advance through the levels, ensuring an exciting challenge for players.
+
 - 🔊 **Sounds:** Enjoy immersive sound effects throughout the game. Only the **Main Menu soundtrack** is included in the preview to provide users with a novel feeling during gameplay. Gameplay soundtracks are unlocked during actual gameplay to enhance the **experience**. 😉
+- ⏱️ **Game Duration:** Each session offers an immersive experience lasting approximately 4 minutes.
 
 - 🔧 **JavaFX Implementation:** Built entirely using JavaFX for a dynamic user interface.
 
@@ -37,7 +40,7 @@ https://github.com/user-attachments/assets/f43abb73-d497-4d36-9c11-102bfdc5e608
 
 2. **Level 1 Gameplay:**
 
-https://github.com/user-attachments/assets/17cb7b19-ec85-45d3-9c72-9ac74e11ba05
+https://github.com/user-attachments/assets/341b2e8d-24b0-46b7-9ff9-df0412788867
 
 3. **Level 3 Gameplay (Christmas Level):**
 
