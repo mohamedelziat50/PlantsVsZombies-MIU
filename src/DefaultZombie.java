@@ -27,12 +27,6 @@ public class DefaultZombie extends Zombie
         super.y = y;
     }
 
-
-    @Override
-    public void action()
-    {
-
-    }
     @Override
     public void appear(Pane root) {
 

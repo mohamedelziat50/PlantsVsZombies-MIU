@@ -129,9 +129,4 @@ public class Cherry extends Plant
     public void takeDamage(int damage) {
         // Cherry does not take damage
     }
-
-    @Override
-    public void action() {
-        // Cherry has no action; it's an instant effect plant
-    }
 }

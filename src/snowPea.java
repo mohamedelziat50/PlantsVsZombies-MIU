@@ -218,12 +218,6 @@ public class snowPea extends Characters implements Serializable, Runnable
     }
 
     @Override
-    public void action()
-    {
-
-    }
-
-    @Override
     public void takeDamage(int damage)
     {
         // Leave empty. (Has to be over-ridden)

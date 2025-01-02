@@ -36,8 +36,6 @@ public class Repeater extends Plant
     @Override
     public void run()
     {
-        // MAGETSH GAMBO LAZEM AZABTO ZAY EL PEA SHOOTER WEL ICED PEA SHOOTER
-
         while (isAlive()) // member variable inside characters (inherited)
         {
             try
@@ -93,12 +91,6 @@ public class Repeater extends Plant
 
         // Add any specific behavior for this subclass if needed
         System.out.println("Repeater takes damage: " + damage + " Current health: " + this.health);
-    }
-
-    @Override
-    public void action()
-    {
-
     }
 
 }

@@ -39,17 +39,17 @@ public class Level implements Serializable
     // Thus it should return a scene with the yard and everything on it! To be called in Main
     public void startLevel()
     {
-        currentYard = new Yard(this);
-        currentYard.displayYard();
-        // Main.primaryStage.setFullScreen(true);
+        // Stop and pick new soundtrack before displaying Yard
         SoundtrackPlayer.stopTrack();
-
         if(levelNumber == 1)
             SoundtrackPlayer.playInGametrack1();
         else if(levelNumber == 2)
             SoundtrackPlayer.playInGametrack2();
         else if(levelNumber == 3)
             SoundtrackPlayer.playInGametrack3();
+
+        currentYard = new Yard(this);
+        currentYard.displayYard();
     }
 
     // Once level is selected in MainMenu by the player, this method will initialize and prepare the Yard for the game,

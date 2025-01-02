@@ -51,9 +51,6 @@ public abstract class Characters extends MainElements implements Serializable
     // Add to be over-ridden by both Plant and Zombie classes
     public abstract void takeDamage(int damage);
 
-    // Added this to be over-ridden by plants, pea, and zombies.
-    public abstract void action();
-
     @Override
     public abstract void appear(Pane root);
 

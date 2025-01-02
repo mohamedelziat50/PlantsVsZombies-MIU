@@ -50,10 +50,4 @@ public class TorchWood extends Plant {
         // No specific thread logic for TorchWood in this implementation
     }
 
-    @Override
-    public void action()
-    {
-        // Define any action when needed
-    }
-
 }
