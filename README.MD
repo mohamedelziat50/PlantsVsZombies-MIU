@@ -1,6 +1,9 @@
-# Plants vs Zombies - MIU
+# 🌱 Plants vs Zombies - MIU  
 
 ## Overview
+> 🏆 **Best Project Award – Object-Oriented Programming (OOP)**  
+> 📄 [View Certificate](https://github.com/mohamedelziat50/PlantsVsZombies-MIU/blob/best-project/Documents/Best%20Project%20Certificate%20-%20OOP.pdf)
+
 This project is a JavaFX-based game developed as part of our **Object-Oriented Programming Course Project**. It showcases a strategic gameplay experience with custom-designed levels while utilizing core OOP concepts such as encapsulation, inheritance, abstraction, and additional features like threading, collision handling, etc.
 
 ---
